@@ -10,8 +10,6 @@ int fibonacci_main(int x) {
 }
 
 
-
-
 /*** R
 fibonacci_main(10)
 */
