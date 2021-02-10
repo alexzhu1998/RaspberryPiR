@@ -65,8 +65,8 @@ the Gertboard.
 */
 
 // [[Rcpp::export]]
-int setUp() {
-    return wiringPiSetup();
+void setUp() {
+    wiringPiSetup();
 }
 
 // [[Rcpp::export]]
