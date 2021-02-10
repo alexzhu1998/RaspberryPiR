@@ -5,6 +5,17 @@
 
 using namespace Rcpp;
 
+// exec
+std::string exec(const char* cmd);
+RcppExport SEXP _RaspberryPiR_exec(SEXP cmdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type cmd(cmdSEXP);
+    rcpp_result_gen = Rcpp::wrap(exec(cmd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fibonacci_main
 int fibonacci_main(int x);
 RcppExport SEXP _RaspberryPiR_fibonacci_main(SEXP xSEXP) {
@@ -28,6 +39,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_exec", (DL_FUNC) &_RaspberryPiR_exec, 1},
     {"_RaspberryPiR_fibonacci_main", (DL_FUNC) &_RaspberryPiR_fibonacci_main, 1},
     {"_RaspberryPiR_rcpp_hello_world", (DL_FUNC) &_RaspberryPiR_rcpp_hello_world, 0},
     {NULL, NULL, 0}
