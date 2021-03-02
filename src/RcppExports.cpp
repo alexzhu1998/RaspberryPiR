@@ -5,14 +5,15 @@
 
 using namespace Rcpp;
 
-// exec
-std::string exec(const char* cmd);
-RcppExport SEXP _RaspberryPiR_exec(SEXP cmdSEXP) {
+// readDHT
+int readDHT(int freq, int iterations);
+RcppExport SEXP _RaspberryPiR_readDHT(SEXP freqSEXP, SEXP iterationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char* >::type cmd(cmdSEXP);
-    rcpp_result_gen = Rcpp::wrap(exec(cmd));
+    Rcpp::traits::input_parameter< int >::type freq(freqSEXP);
+    Rcpp::traits::input_parameter< int >::type iterations(iterationsSEXP);
+    rcpp_result_gen = Rcpp::wrap(readDHT(freq, iterations));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -27,21 +28,54 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _RaspberryPiR_rcpp_hello_world() {
+// voltage
+int voltage();
+RcppExport SEXP _RaspberryPiR_voltage() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
+    rcpp_result_gen = Rcpp::wrap(voltage());
+    return rcpp_result_gen;
+END_RCPP
+}
+// pins
+int pins();
+RcppExport SEXP _RaspberryPiR_pins() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(pins());
+    return rcpp_result_gen;
+END_RCPP
+}
+// setUp
+void setUp();
+RcppExport SEXP _RaspberryPiR_setUp() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    setUp();
+    return R_NilValue;
+END_RCPP
+}
+// digitalRead
+int digitalRead(int pin);
+RcppExport SEXP _RaspberryPiR_digitalRead(SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(digitalRead(pin));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RaspberryPiR_exec", (DL_FUNC) &_RaspberryPiR_exec, 1},
+    {"_RaspberryPiR_readDHT", (DL_FUNC) &_RaspberryPiR_readDHT, 2},
     {"_RaspberryPiR_fibonacci_main", (DL_FUNC) &_RaspberryPiR_fibonacci_main, 1},
-    {"_RaspberryPiR_rcpp_hello_world", (DL_FUNC) &_RaspberryPiR_rcpp_hello_world, 0},
+    {"_RaspberryPiR_voltage", (DL_FUNC) &_RaspberryPiR_voltage, 0},
+    {"_RaspberryPiR_pins", (DL_FUNC) &_RaspberryPiR_pins, 0},
+    {"_RaspberryPiR_setUp", (DL_FUNC) &_RaspberryPiR_setUp, 0},
+    {"_RaspberryPiR_digitalRead", (DL_FUNC) &_RaspberryPiR_digitalRead, 1},
     {NULL, NULL, 0}
 };
 

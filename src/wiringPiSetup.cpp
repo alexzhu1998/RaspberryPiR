@@ -74,6 +74,12 @@ void pinMode(ledpin,OUTPUT) {
     pinMode(ledpin,OUTPUT);
 }
 
+// [[Rcpp::export]]
+int digitalRead(int pin) {
+    digitalRead(pin);
+}
+
+
 
 
 
