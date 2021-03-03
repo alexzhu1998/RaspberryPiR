@@ -70,12 +70,12 @@ void setUp() {
 }
 
 // [[Rcpp::export]]
-void pinMode(ledpin,OUTPUT) {
-    pinMode(ledpin,OUTPUT);
+void MyPinMode(int pin, int mode) {
+    pinMode(pin,mode);
 }
 
 // [[Rcpp::export]]
-int digitalRead(int pin) {
+int MyDigitalRead(int pin) {
     digitalRead(pin);
 }
 
