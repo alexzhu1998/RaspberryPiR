@@ -1,5 +1,5 @@
 #include <wiringPi.h>
-#include <stdio.h>
+// #include <stdio.h>
 #include <Rcpp.h>
 using namespace Rcpp;
 
