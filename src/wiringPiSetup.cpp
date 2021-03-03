@@ -69,15 +69,15 @@ void setUp() {
     wiringPiSetup();
 }
 
-// [[Rcpp::export]]
-void MyPinMode(int pin, int mode) {
-    pinMode(pin,mode);
-}
-
-// [[Rcpp::export]]
-int MyDigitalRead(int pin) {
-    digitalRead(pin);
-}
+// // [[Rcpp::export]]
+// void MyPinMode(int pin, int mode) {
+//     pinMode(pin,mode);
+// }
+//
+// // [[Rcpp::export]]
+// int MyDigitalRead(int pin) {
+//     return digitalRead(pin);
+// }
 
 
 
