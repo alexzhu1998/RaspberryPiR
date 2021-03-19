@@ -1,6 +1,6 @@
 # rinternals <- file.path(R.home("include"), "Rinternals.h")
 # file.show(rinternals)
-dyn.load("RaspberryPiR/src/fibonacci_main.so")
+dyn.load("fibonacci_main.so")
 
 x = 1:3
 ret_val = .Call("helloA1")
