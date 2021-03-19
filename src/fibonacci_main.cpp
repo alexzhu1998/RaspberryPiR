@@ -21,7 +21,7 @@ extern "C" {
 extern "C" {
   void blink(char const **greeting) {
     *greeting = "Hello World!";
-    // wiringPiSetup();
+    wiringPiSetup();
 
   }
 }
