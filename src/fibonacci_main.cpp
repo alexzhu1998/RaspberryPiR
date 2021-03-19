@@ -64,9 +64,9 @@ extern "C" {
 }
 
 extern "C" {
-    void setPin(char const **e, char const *type) {
-        int ledPin = conversion(*e);
-        if (ledPin == -1) return
+    void setPin(char const **e, char const **type) {
+        int ledPin = conversion(e);
+        if (ledPin == -1) return;
         if (strcmp(*type,"OUTPUT")) {
             pinMode(ledPin,OUTPUT);
         } else if (strcmp(type,"INPUT")) {
@@ -79,9 +79,9 @@ extern "C" {
 }
 extern "C" {
     void destroy(char const **e) {
-        int ledPin = conversion(*e);
+        int ledPin = conversion(e);
         if (ledPin == -1) return;
-        digitalWrite(*e, LOW);
+        digitalWrite(ledPin, LOW);
     }
 }
 
