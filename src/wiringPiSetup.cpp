@@ -1,7 +1,10 @@
+extern "C" {
 #include <wiringPi.h>
-// #include <stdio.h>
-#include <Rcpp.h>
-using namespace Rcpp;
+}
+#include <stdio.h>
+
+
+// #include <Rcpp.h>
 
 // TODO:
 // Set up for wiring Pi wrappers from the documentations
@@ -64,25 +67,19 @@ register additional analog modules to enable this function for devices such as
 the Gertboard.
 */
 
-// [[Rcpp::export]]
-void setUp() {
+
+void MySetUp() {
     wiringPiSetup();
 }
 
-// // [[Rcpp::export]]
-// void MyPinMode(int pin, int mode) {
-//     pinMode(pin,mode);
-// }
+void MyPinMode(int pin, int mode) {
+    pinMode(pin,mode);
+}
 //
-// // [[Rcpp::export]]
+
 // int MyDigitalRead(int pin) {
 //     return digitalRead(pin);
 // }
 
 
 
-
-
-/*** R
-setUp()
-*/
