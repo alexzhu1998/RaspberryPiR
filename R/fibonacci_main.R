@@ -20,7 +20,20 @@ wiringPiSetup <- function() {
     return(1)
 }
 
-destroy <- function(extension) {
-    res <- .C("destroy",e=extension)
+
+"switchOn takes integer 0 or 1"
+output <- function(extension, switchOn) {
+    res <- .C("output",e=extension, on=as.integer(switchOn))
 }
 # source(paste0(getwd(),"/RaspberryPiR/R/fibonacci_main.R"))
+
+
+# wiringPiSetup()
+# ledPin = "GPIO17"
+# setPin("GPIO17","OUTPUT")
+# while (1) {
+#     output(ledPin,1)
+#     Sys.sleep(1)
+#     output(ledPin,0)
+#     Sys.sleep(1)
+# }

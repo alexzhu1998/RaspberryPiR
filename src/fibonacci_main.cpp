@@ -53,7 +53,7 @@ extern "C"{
 
 extern "C" {
     int conversion (char const **e) {
-        if (strcmp(*e,"GPIO17")) {
+        if (strcmp(*e,"GPIO17") == 0) {
             return 0;
         } else {
             printf("Extension Not Valid\n");
@@ -67,9 +67,9 @@ extern "C" {
     void setPin(char const **e, char const **type) {
         int ledPin = conversion(e);
         if (ledPin == -1) return;
-        if (strcmp(*type,"OUTPUT")) {
+        if (strcmp(*type,"OUTPUT") == 0) {
             pinMode(ledPin,OUTPUT);
-        } else if (strcmp(*type,"INPUT")) {
+        } else if (strcmp(*type,"INPUT") == 0) {
             pinMode(ledPin,INPUT);
         } else {
             printf("Type not valid!\n");
@@ -78,10 +78,23 @@ extern "C" {
     }
 }
 extern "C" {
-    void destroy(char const **e) {
+    void (char const **e, char const **level) {
         int ledPin = conversion(e);
         if (ledPin == -1) return;
-        digitalWrite(ledPin, LOW);
+        digitalWrite(ledPin,HIGH);
+    }
+}
+
+extern "C" {
+    void output(char const **e, int on) {
+        int ledPin = conversion(e);
+        if (ledPin == -1) return;
+        if (on == 1) {
+            digitalWrite(ledPin, HIGH);
+        } else {
+            digitalWrite(ledPin, LOW);
+        }
+
     }
 }
 
