@@ -77,13 +77,6 @@ extern "C" {
 
     }
 }
-extern "C" {
-    void (char const **e, char const **level) {
-        int ledPin = conversion(e);
-        if (ledPin == -1) return;
-        digitalWrite(ledPin,HIGH);
-    }
-}
 
 extern "C" {
     void output(char const **e, int on) {
