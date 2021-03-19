@@ -69,7 +69,7 @@ extern "C" {
         if (ledPin == -1) return;
         if (strcmp(*type,"OUTPUT")) {
             pinMode(ledPin,OUTPUT);
-        } else if (strcmp(type,"INPUT")) {
+        } else if (strcmp(*type,"INPUT")) {
             pinMode(ledPin,INPUT);
         } else {
             printf("Type not valid!\n");
