@@ -10,7 +10,7 @@ extern "C" {
 #include <Rdefines.h>
 #include <vector>
 
-#define ledPin 0
+// #define ledPin 0
 // int fibonacci_main(int x) {
 //   Fibonacci fib;
 //   return fib.getFibonacciNumber(x);
@@ -31,7 +31,7 @@ extern "C" {
     void blink (int num) {
         printf("Program is starting ... \n");
         wiringPiSetup();
-
+        int ledPin = 0;
         pinMode(ledPin,OUTPUT);
         // printf("Using pin %d\n", ledPin);
         while(1) {
@@ -53,19 +53,21 @@ extern "C"{
 
 extern "C" {
     int conversion (char const **e) {
-        if (strcmp(e,"GPIO17")) {
+        if (strcmp(*e,"GPIO17")) {
             return 0;
         } else {
             printf("Extension Not Valid\n");
             return -1;
         }
+        return -1;
     }
 }
 
 extern "C" {
-    void setPin(char const **e, char const **type) {
-        int ledPin = conversion(e);
-        if (strcmp(type,"OUTPUT")) {
+    void setPin(char const **e, char const *type) {
+        int ledPin = conversion(*e);
+        if (ledPin == -1) return
+        if (strcmp(*type,"OUTPUT")) {
             pinMode(ledPin,OUTPUT);
         } else if (strcmp(type,"INPUT")) {
             pinMode(ledPin,INPUT);
@@ -77,7 +79,9 @@ extern "C" {
 }
 extern "C" {
     void destroy(char const **e) {
-        digitalWrite(e, LOW);
+        int ledPin = conversion(*e);
+        if (ledPin == -1) return;
+        digitalWrite(*e, LOW);
     }
 }
 
