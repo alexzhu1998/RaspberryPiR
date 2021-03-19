@@ -1,7 +1,7 @@
 #include "Fibonacci.h"
-extern "C" {
-#include <wiringPi.h>
-}
+// extern "C" {
+// #include <wiringPi.h>
+// }
 #include <stdio.h>
 #include <R.h>
 #include <Rdefines.h>
@@ -19,9 +19,9 @@ extern "C" {
 // }
 
 extern "C" {
-  void blink(char **greeting) {
+  void blink(char const **greeting) {
     *greeting = "Hello World!";
-    wiringPiSetup();
+    // wiringPiSetup();
 
   }
 }
