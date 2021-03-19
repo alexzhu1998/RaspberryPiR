@@ -1,7 +1,7 @@
 #include "Fibonacci.h"
-// extern "C" {
-// #include <wiringPi.h>
-// }
+extern "C" {
+#include <wiringPi.h>
+}
 #include <stdio.h>
 #include <R.h>
 #include <Rdefines.h>
