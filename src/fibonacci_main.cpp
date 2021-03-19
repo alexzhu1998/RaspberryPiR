@@ -19,10 +19,26 @@ extern "C" {
 // }
 
 extern "C" {
-  void blink(char const **greeting) {
+  void helloWorld(char const **greeting) {
     *greeting = "Hello World!";
+  }
+}
+
+extern "C" {
+  void blink (int num) {
+    printf("Program is starting ... \n");
     wiringPiSetup();
 
+    pinMode(ledPin,OUTPUT);
+    printf("Using pin %d\n", %ledPin);
+    while(1) {
+      digitalWrite(ledPin, HIGH);
+      printf("Led turned on >>>\n");
+      delay(num);
+      digitalWrite(ledPin, LOW);
+      printf("Led turned off <<<\n");
+      delay(num);
+    }
   }
 }
 

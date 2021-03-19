@@ -4,8 +4,9 @@
 dyn.load(paste0(getwd(),"/../src/","fibonacci_main.so"))
 
 wiringPiSetup <- function() {
-  result <- .C("blink", greeting="")
-  return(result$greeting)
+  res <- .C("helloWorld", greeting="")
+  result <- .C("blink", num=1000)
+  return(res$greeting)
 }
 
 
