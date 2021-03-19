@@ -3,6 +3,9 @@ extern "C" {
 #include <wiringPi.h>
 }
 #include <stdio.h>
+extern "C" {
+#include <string.h>
+}
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
@@ -19,27 +22,63 @@ extern "C" {
 // }
 
 extern "C" {
-  void helloWorld(char const **greeting) {
-    *greeting = "Hello World!";
-  }
+    void helloWorld(char const **greeting) {
+        *greeting = "Hello World!";
+    }
 }
 
 extern "C" {
-  void blink (int num) {
-    printf("Program is starting ... \n");
-    wiringPiSetup();
+    void blink (int num) {
+        printf("Program is starting ... \n");
+        wiringPiSetup();
 
-    pinMode(ledPin,OUTPUT);
-    // printf("Using pin %d\n", ledPin);
-    while(1) {
-      digitalWrite(ledPin, HIGH);
-      printf("Led turned on >>>\n");
-      delay(num);
-      digitalWrite(ledPin, LOW);
-      printf("Led turned off <<<\n");
-      delay(num);
+        pinMode(ledPin,OUTPUT);
+        // printf("Using pin %d\n", ledPin);
+        while(1) {
+            digitalWrite(ledPin, HIGH);
+            printf("Led turned on >>>\n");
+            delay(num);
+            digitalWrite(ledPin, LOW);
+            printf("Led turned off <<<\n");
+            delay(num);
+        }
     }
-  }
+}
+
+extern "C"{
+    void setup(void) {
+        wiringPiSetup();
+    }
+}
+
+extern "C" {
+    int conversion (char const **e) {
+        if (strcmp(e,"GPIO17")) {
+            return 0;
+        } else {
+            printf("Extension Not Valid\n");
+            return -1;
+        }
+    }
+}
+
+extern "C" {
+    void setPin(char const **e, char const **type) {
+        int ledPin = conversion(e);
+        if (strcmp(type,"OUTPUT")) {
+            pinMode(ledPin,OUTPUT);
+        } else if (strcmp(type,"INPUT")) {
+            pinMode(ledPin,INPUT);
+        } else {
+            printf("Type not valid!\n");
+        }
+
+    }
+}
+extern "C" {
+    void destroy(char const **e) {
+        digitalWrite(e, LOW);
+    }
 }
 
 // extern "C" {
