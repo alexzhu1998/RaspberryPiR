@@ -1,5 +1,5 @@
 
-source("fibonacci_main.R")
+source("base_functions.R")
 wiringPiSetup()
 ledPin = "GPIO17"
 setPin(ledPin,"OUTPUT")
