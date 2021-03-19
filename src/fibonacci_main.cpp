@@ -82,10 +82,10 @@ extern "C" {
 }
 
 extern "C" {
-    void output(char const **e, int on) {
+    void output(char const **e, int *on) {
         int ledPin = conversion(e);
         if (ledPin == -1) return;
-        if (on == 1) {
+        if (*on == 1) {
             printf("Turn LedPin On\n");
             digitalWrite(ledPin, HIGH);
         } else {
