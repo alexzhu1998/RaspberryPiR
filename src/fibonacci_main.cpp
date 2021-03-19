@@ -30,7 +30,7 @@ extern "C" {
     wiringPiSetup();
 
     pinMode(ledPin,OUTPUT);
-    printf("Using pin %d\n", %ledPin);
+    printf("Using pin %d\n", ledPin);
     while(1) {
       digitalWrite(ledPin, HIGH);
       printf("Led turned on >>>\n");
