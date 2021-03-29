@@ -3,8 +3,8 @@
 
 dyn.load(paste0(getwd(),"/src/","DHTtempsensor_functions.so"))
 
-DHTInitiate <- function(d) {
-    res <- .C("DHTLoop", delays=d)
+DHTInitiate <- function(delays= 1000) {
+    res <- .C("DHTLoop", d=delays)
     return(1)
 }
 

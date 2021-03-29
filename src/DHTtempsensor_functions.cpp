@@ -155,7 +155,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-int DHTLoop(int delays) {
+int DHTLoop(int d) {
     DHT dht;
     int chk;
     int counts = 0;
@@ -174,7 +174,7 @@ int DHTLoop(int delays) {
             delay(100);
         }
         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(delays);
+        delay(d);
     }
 
     return 1;
