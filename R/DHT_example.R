@@ -1,4 +1,4 @@
-source("DHT_setup.R")
+source("R/DHT_setup.R")
 
 DHT()
 
