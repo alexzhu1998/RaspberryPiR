@@ -160,6 +160,8 @@ int main(void) {
     int chk;
     int counts = 0;
 
+    printf("Program is starting ...\n");
+
     while (!pending_interrupt()) {
         counts++;
         printf("Measurement counts : %d \n", counts);

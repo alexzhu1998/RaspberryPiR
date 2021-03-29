@@ -12,8 +12,6 @@ extern "C" {
 #include <vector>
 
 
-
-
 #define DHTLIB_OK               0
 #define DHTLIB_ERROR_CHECKSUM   -1
 #define DHTLIB_ERROR_TIMEOUT    -2
