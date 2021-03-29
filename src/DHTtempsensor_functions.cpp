@@ -10,7 +10,7 @@ extern "C" {
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
-#include <Rcpp.h>
+// #include <Rcpp.h>
 
 #define DHTLIB_OK               0
 #define DHTLIB_ERROR_CHECKSUM   -1
@@ -155,7 +155,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-int main(void) {
+int main(int delays) {
     DHT dht;
     int chk;
     int counts = 0;
@@ -174,7 +174,7 @@ int main(void) {
             delay(100);
         }
         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(1000);
+        delay(delays);
     }
 
     return 1;
