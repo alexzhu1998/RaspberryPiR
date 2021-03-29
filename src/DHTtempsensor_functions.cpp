@@ -10,7 +10,7 @@ extern "C" {
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
-
+#include <Rcpp.h>
 
 #define DHTLIB_OK               0
 #define DHTLIB_ERROR_CHECKSUM   -1
@@ -174,7 +174,7 @@ int main(void) {
             delay(100);
         }
         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(2000);
+        delay(1000);
     }
 
     return 1;
