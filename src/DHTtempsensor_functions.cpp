@@ -1,6 +1,7 @@
 // #include "Fibonacci.h"
 extern "C" {
 #include <wiringPi.h>
+#include <stdint.h>
 }
 #include <stdio.h>
 extern "C" {
