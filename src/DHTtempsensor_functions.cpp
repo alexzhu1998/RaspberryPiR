@@ -156,7 +156,7 @@ int pending_interrupt() {
 
 int main(void) {
     DHT dht;
-    int chks;
+    int chk;
     int counts = 0;
 
     while (!pending_interrupt()) {
