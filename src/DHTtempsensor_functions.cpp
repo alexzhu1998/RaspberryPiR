@@ -29,7 +29,7 @@ public:
     int readDHT11Once(int pin);     //read DHT11
     int readDHT11(int pin);     //read DHT11
 private:
-    uint8_t bits[5];    //Buffer to receiver data
+    u_int8_t bits[5];    //Buffer to receiver data
     int readSensor(int pin,int wakeupDelay);    //
 
 };
@@ -119,7 +119,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
 //return：DHTLIB_OK   DHTLIB_ERROR_CHECKSUM  DHTLIB_ERROR_TIMEOUT
 int DHT::readDHT11Once(int pin){
     int rv ;
-    uint8_t sum;
+    u_int8_t sum;
     rv = readSensor(pin,DHTLIB_DHT11_WAKEUP);
     if(rv != DHTLIB_OK){
         humidity = DHTLIB_INVALID_VALUE;
