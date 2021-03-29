@@ -23,6 +23,7 @@ extern "C" {
 #define DHTLIB_TIMEOUT          100
 #define DHT11_Pin  0
 
+#define DELAY 1000
 class DHT{
 public:
     DHT();
@@ -155,7 +156,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-int DHTLoop(int d) {
+int main() {
     DHT dht;
     int chk;
     int counts = 0;
@@ -174,7 +175,7 @@ int DHTLoop(int d) {
             delay(100);
         }
         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(d);
+        delay(DELAY);
     }
 
     return 1;
