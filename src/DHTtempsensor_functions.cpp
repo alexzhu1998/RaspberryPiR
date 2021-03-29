@@ -155,7 +155,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-int main(int delays) {
+int DHTLoop(int delays) {
     DHT dht;
     int chk;
     int counts = 0;
