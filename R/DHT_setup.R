@@ -1,12 +1,11 @@
 # rinternals <- file.path(R.home("include"), "Rinternals.h")
 # file.show(rinternals)
 
-dyn.load(paste0(getwd(),"/../src/","DHT.so"))
+dyn.load(paste0(getwd(),"/../src/","DHTtempsensor_functions.so"))
 
-DHT <- function() {
+DHTInitiate <- function() {
     res <- .C("main")
     return(1)
 }
-
 
 
