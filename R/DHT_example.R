@@ -5,10 +5,10 @@ source("R/DHT_setup.R")
 count = 0
 store = c()
 while (count < 10) {
-  # print(paste0("Current Counter",count))
+  print(paste0("Current Counter",count))
   res <- DHTCFunction()
   store = c(store,res)
-  # print(paste0("Temperature",res))
+  print(paste0("Temperature",res))
   count = count+ 1
 }
 

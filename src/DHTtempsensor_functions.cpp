@@ -180,7 +180,7 @@ int myDHT(double* out) {
         printf("DHT11,OK! \n");
     }
     delay(100);
-    out[0] = dht.humidity;
+    out[0] = dht.temperature;
     return 1;
 }
 }
