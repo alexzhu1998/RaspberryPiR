@@ -172,7 +172,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-void myDHT(double* out) {
+int myDHT(double* out) {
     DHT dht;
     int chk;
     chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
@@ -181,32 +181,33 @@ void myDHT(double* out) {
     }
     delay(100);
     out[0] = dht.humidity;
-}
-
-int main(double* out) {
-    DHT dht;
-    int chk;
-    int counts = 0;
-
-    printf("Program is starting ...\n");
-
-    while (!pending_interrupt()) {
-        counts++;
-        printf("Measurement counts : %d \n", counts);
-        for (int i = 0; i < 15; i++){
-            chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-            if(chk == DHTLIB_OK){
-                printf("DHT11,OK! \n");
-                break;
-            }
-            delay(100);
-        }
-        out[0] = dht.humidity;
-        printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(DELAY);
-    }
-
     return 1;
 }
+
+// int main(double* out) {
+//     DHT dht;
+//     int chk;
+//     int counts = 0;
+//
+//     printf("Program is starting ...\n");
+//
+//     while (!pending_interrupt()) {
+//         counts++;
+//         printf("Measurement counts : %d \n", counts);
+//         for (int i = 0; i < 15; i++){
+//             chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+//             if(chk == DHTLIB_OK){
+//                 printf("DHT11,OK! \n");
+//                 break;
+//             }
+//             delay(100);
+//         }
+//         out[0] = dht.humidity;
+//         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
+//         delay(DELAY);
+//     }
+//
+//     return 1;
+// }
 
 
