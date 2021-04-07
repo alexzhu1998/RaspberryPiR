@@ -197,3 +197,13 @@ int main(double* out) {
 
     return 1;
 }
+
+void myDHT(double* out) {
+    chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+    if(chk == DHTLIB_OK){
+        printf("DHT11,OK! \n");
+        break;
+    }
+    delay(100);
+    out[0] = dht.humidity;
+}

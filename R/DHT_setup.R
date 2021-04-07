@@ -8,6 +8,11 @@ DHTInitiate <- function() {
     return(res$out)
 }
 
+DHTCFunction <- function() {
+    res <- .C("myDHT", out = 0)
+    return(res$out)
+}
+
 # app <- new(DHT)
 # app$humidity
 # app$temperature
