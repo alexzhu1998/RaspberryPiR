@@ -1,6 +1,6 @@
 source("R/DHT_setup.R")
 
-DHTInitiate()
-
+res <- DHTInitiate()
+print(res)
 
 
