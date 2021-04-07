@@ -3,9 +3,9 @@
 
 dyn.load(paste0(getwd(),"/src/","DHTtempsensor_functions.so"))
 
-DHTInitiate <- function() {
-    res <- .C("main")
-    return(1)
-}
+# DHTInitiate <- function() {
+#     res <- .C("main")
+#     return(1)
+# }
 
-
+app <- new(DHT)

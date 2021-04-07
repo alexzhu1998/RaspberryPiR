@@ -160,6 +160,8 @@ RCPP_MODULE(foo) {
     .method("readDHT11",&DHT::readDHT11)
     .method("readDHT11Once",&DHT::readDHT11Once)
     .method("readSensor",&DHT::readSensor)
+    .property("humidity", &DHT::humidity)
+    .property("temperature", &DHT::temperature)
 }
 
 // void check_interrupt_fn(void *dummy) {
