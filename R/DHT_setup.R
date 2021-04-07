@@ -3,10 +3,10 @@
 # sourceCpp(paste0(getwd(),"/src/","DHTtempsensor_functions.cpp"))
 dyn.load(paste0(getwd(),"/src/","DHTtempsensor_functions.so"))
 
-DHTInitiate <- function() {
-    res <- .C("main",out = 0)
-    return(res$out)
-}
+# DHTInitiate <- function() {
+#     res <- .C("main",out = 0)
+#     return(res$out)
+# }
 
 DHTCFunction <- function() {
     res <- .C("myDHT", out = 0)
