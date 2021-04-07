@@ -10,7 +10,7 @@ extern "C" {
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
-#include <Rcpp.h>
+// #include <Rcpp.h>
 
 
 using namespace Rcpp;
