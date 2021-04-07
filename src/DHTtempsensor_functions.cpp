@@ -10,7 +10,10 @@ extern "C" {
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
-// #include <Rcpp.h>
+#include <Rcpp.h>
+
+
+using namespace Rcpp;
 
 #define DHTLIB_OK               0
 #define DHTLIB_ERROR_CHECKSUM   -1
@@ -24,6 +27,9 @@ extern "C" {
 #define DHT11_Pin  0
 
 #define DELAY 1000
+
+
+
 class DHT{
 public:
     DHT();
@@ -148,35 +154,43 @@ int DHT::readDHT11(int pin){
     return chk;
 }
 
-void check_interrupt_fn(void *dummy) {
-    R_CheckUserInterrupt();
+RCPP_MODULE(foo) {
+    class_<DHT>("DHT")
+    .constructor()
+    .method("readDHT11",&DHT::readDHT11)
+    .method("readDHT11Once",&DHT::readDHT11Once)
+    .method("readSensor",&DHT::readSensor)
 }
 
-int pending_interrupt() {
-    return !(R_ToplevelExec(check_interrupt_fn, NULL));
-}
-
-int main() {
-    DHT dht;
-    int chk;
-    int counts = 0;
-
-    printf("Program is starting ...\n");
-
-    while (!pending_interrupt()) {
-        counts++;
-        printf("Measurement counts : %d \n", counts);
-        for (int i = 0; i < 15; i++){
-            chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-            if(chk == DHTLIB_OK){
-                printf("DHT11,OK! \n");
-                break;
-            }
-            delay(100);
-        }
-        printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
-        delay(DELAY);
-    }
-
-    return 1;
-}
+// void check_interrupt_fn(void *dummy) {
+//     R_CheckUserInterrupt();
+// }
+//
+// int pending_interrupt() {
+//     return !(R_ToplevelExec(check_interrupt_fn, NULL));
+// }
+//
+// int main() {
+//     DHT dht;
+//     int chk;
+//     int counts = 0;
+//
+//     printf("Program is starting ...\n");
+//
+//     while (!pending_interrupt()) {
+//         counts++;
+//         printf("Measurement counts : %d \n", counts);
+//         for (int i = 0; i < 15; i++){
+//             chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+//             if(chk == DHTLIB_OK){
+//                 printf("DHT11,OK! \n");
+//                 break;
+//             }
+//             delay(100);
+//         }
+//         printf("Humidity is %.2f %%, \t Temperature is %.2f *C\n\n",dht.humidity, dht.temperature);
+//         delay(DELAY);
+//     }
+//
+//     return 1;
+// }
