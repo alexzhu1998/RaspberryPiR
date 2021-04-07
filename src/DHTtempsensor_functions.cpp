@@ -171,7 +171,7 @@ void check_interrupt_fn(void *dummy) {
 int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
-
+extern "C" {
 int myDHT(double* out) {
     DHT dht;
     int chk;
@@ -183,7 +183,7 @@ int myDHT(double* out) {
     out[0] = dht.humidity;
     return 1;
 }
-
+}
 // int main(double* out) {
 //     DHT dht;
 //     int chk;
