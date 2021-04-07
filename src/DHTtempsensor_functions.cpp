@@ -13,7 +13,7 @@ extern "C" {
 // #include <Rcpp.h>
 
 
-using namespace Rcpp;
+// using namespace Rcpp;
 
 #define DHTLIB_OK               0
 #define DHTLIB_ERROR_CHECKSUM   -1
