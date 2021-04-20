@@ -153,7 +153,7 @@ int DHT::readDHT11(int pin, int* readDelay){
         if(chk == DHTLIB_OK){
             return DHTLIB_OK;
         }
-        print("%d",*readDelay);
+        printf("%d",*readDelay);
         delay(100);
     }
     return chk;
