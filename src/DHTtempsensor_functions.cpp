@@ -186,7 +186,7 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     int chk;
     unsigned int readDelay = *rD;
     clock_t start,end;
-    // printf("readDelay value: %u\n",readDelay);
+    printf("readDelay value: %u\n",readDelay);
     start = clock();
     chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     end = clock();
