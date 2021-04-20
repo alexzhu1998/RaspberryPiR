@@ -144,14 +144,14 @@ int DHT::readDHT11Once(int pin){
     return DHTLIB_OK;
 }
 
-int DHT::readDHT11(int pin, int readDelay){
+int DHT::readDHT11(int pin, int* readDelay){
     int chk = DHTLIB_INVALID_VALUE;
     for (int i = 0; i < 15; i++){
         chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
         if(chk == DHTLIB_OK){
             return DHTLIB_OK;
         }
-        delay((unsigned) readDelay);
+        delay((unsigned) &readDelay);
     }
     return chk;
 }
@@ -181,7 +181,7 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, int* readDela
     DHT dht;
     int chk;
     printf("%d",readDelay);
-    chk = dht.readDHT11(DHT11_Pin,&readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+    chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     delay((unsigned) &readDelay);
     tempOut[0] = dht.temperature;
