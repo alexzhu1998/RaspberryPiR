@@ -52,7 +52,7 @@ DHT::DHT(){
     wiringPiSetup();
 }
 
-int DHT::readSensor(int pin,int wakeupDelay, int readDelay){
+int DHT::readSensor(int pin,int wakeupDelay,unsigned int readDelay){
     int mask = 0x80;
     int idx = 0;
     int i;
