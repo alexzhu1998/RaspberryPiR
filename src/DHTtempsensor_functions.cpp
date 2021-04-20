@@ -10,7 +10,6 @@ extern "C" {
 #include <stdio.h>
 #include <R.h>
 #include <Rdefines.h>
-#include <vector>
 // #include <Rcpp.h>
 
 
@@ -23,8 +22,6 @@ extern "C" {
 
 #define DHTLIB_DHT11_WAKEUP     20
 #define DHTLIB_DHT_WAKEUP       1
-
-
 
 #define DHTLIB_TIMEOUT          100
 #define DHT11_Pin  0
@@ -185,13 +182,13 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     DHT dht;
     int chk;
     unsigned int readDelay = *rD;
-    clock_t start,end;
+    // clock_t start,end;
     printf("readDelay value: %u\n",readDelay);
-    start = clock();
+    // start = clock();
     chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-    end = clock();
-    samplingTime[0] = ((double) (end-start))/CLOCKS_PER_SEC;
-    std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<< std::endl;
+    // end = clock();
+    // samplingTime[0] = ((double) (end-start))/CLOCKS_PER_SEC;
+    // std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<< std::endl;
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     tempOut[0] = dht.temperature;
     humidOut[0] = dht.humidity;

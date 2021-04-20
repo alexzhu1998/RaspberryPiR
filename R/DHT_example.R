@@ -4,13 +4,14 @@ source("R/DHT_setup.R")
 # print(res)
 temp = c()
 humid = c()
-for (count in 1:3) {
+sampTime = 0
+rD = 100
+for (count in 1:10) {
     print(paste("Current Counter",count))
-    # print("Call DHT function")
-    res <- DHTCFunction()
-    # print("res received")
-    # temp = c(temp,res$tempOut)
-    # humid = c(humid,res$humidOut)
+    start = Sys.time()
+    res <- DHTCFunction(sampTime,rD)
+    end = Sys.time()
+    print(end-start)
     print(paste("Temperature",res$tempOut))
     print(paste("Humidity",res$humidOut))
 
