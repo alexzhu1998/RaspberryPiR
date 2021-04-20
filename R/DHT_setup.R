@@ -8,9 +8,9 @@
 #     return(res$out)
 # }
 
-DHTCFunction <- function() {
+DHTCFunction <- function(sampTime = 0, readDelay = 100) {
     dyn.load(paste0(getwd(),"/src/","DHTtempsensor_functions.so"))
-    res <- .C("myDHT", tempOut = 0, humidOut = 0, samplingTime = 0, readDelay = 100)
+    res <- .C("myDHT", tempOut = 0, humidOut = 0, samplingTime = sampTime, readDelay = readDelay)
     return(res)
 }
 

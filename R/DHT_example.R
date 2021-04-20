@@ -2,7 +2,6 @@ source("R/DHT_setup.R")
 
 # res <- DHTInitiate()
 # print(res)
-count = 0
 temp = c()
 humid = c()
 for (count in 1:10) {
