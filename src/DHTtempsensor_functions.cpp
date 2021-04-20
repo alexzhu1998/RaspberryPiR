@@ -180,10 +180,11 @@ int pending_interrupt() {
 
 
 extern "C" {
-int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* readDelay) {
+int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     DHT dht;
     int chk;
-    printf("readDelay value: %lf\n",*readDelay);
+    unsigned int readDelay = rD;
+    printf("readDelay value: %u\n",readDelay);
     // while (!pending_interrupt()) {
     chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     // }
