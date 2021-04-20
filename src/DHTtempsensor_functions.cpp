@@ -63,7 +63,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     delay(STARTUP_DELAY);
     // Start signal
     digitalWrite(pin,LOW);
-    delay(wakeupDelay);
+    delay(100);
     digitalWrite(pin,HIGH);
     // delayMicroseconds(40);
     pinMode(pin,INPUT);
@@ -183,7 +183,7 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, int* readDela
     printf("%d\n",*readDelay);
     chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
-    // delay((unsigned) &readDelay);
+    delay(100);
     tempOut[0] = dht.temperature;
     humidOut[0] = dht.humidity;
     return 1;
