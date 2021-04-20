@@ -180,7 +180,7 @@ int pending_interrupt() {
 
 
 extern "C" {
-int myDHT(double* tempOut, double* humidOut, double* samplingTime, int readDelay) {
+int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* readDelay) {
     DHT dht;
     int chk;
     printf("readDelay value: %d\n",readDelay);
