@@ -61,7 +61,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     // Clear sda
     pinMode(pin,OUTPUT);
     digitalWrite(pin,HIGH);
-    delay(500);
+    delay(STARTUP_DELAY);
     // Start signal
     digitalWrite(pin,LOW);
     delay(wakeupDelay);
@@ -69,7 +69,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     // delayMicroseconds(40);
     pinMode(pin,INPUT);
 
-    printf("C++_Initialisation_Complete\n");
+    // printf("C++_Initialisation_Complete\n");
     int32_t loopCnt = DHTLIB_TIMEOUT;
     t = micros();
     // Waiting echo
@@ -153,6 +153,7 @@ int DHT::readDHT11(int pin, int* readDelay){
         if(chk == DHTLIB_OK){
             return DHTLIB_OK;
         }
+        print("%d",*readDelay);
         delay(100);
     }
     return chk;
