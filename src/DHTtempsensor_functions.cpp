@@ -2,12 +2,11 @@
 extern "C" {
 #include <wiringPi.h>
 #include <stdint.h>
-#include <chrono>
-}
-#include <stdio.h>
-extern "C" {
 #include <string.h>
+#include <time.h>
 }
+#include <chrono>
+#include <stdio.h>
 #include <R.h>
 #include <Rdefines.h>
 #include <vector>
@@ -185,17 +184,18 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     DHT dht;
     int chk;
     unsigned int readDelay = *rD;
+    clock_t start,end;
     // printf("readDelay value: %u\n",readDelay);
-    auto start = std::chrono::high_resolution_clock::now();
+    start = clock();
     chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<microseconds>(stop-start);
-    std::cout <<"Time taken by function:" << duration.count() << " microseconds"<<std::endl;
+    end = clock();
+    samplingTime[0] = ((double) (end-start))/CLOCKS_PER_SEC;
+    std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<<std::endl;
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     delay(readDelay);
     tempOut[0] = dht.temperature;
     humidOut[0] = dht.humidity;
-    samplingTime[0] = duration.count();
+
     return 1;
 }
 }
