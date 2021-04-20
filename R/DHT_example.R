@@ -6,14 +6,17 @@ temp = c()
 humid = c()
 for (count in 1:10) {
     print(paste("Current Counter",count))
+    print("Call DHT function")
     res <- DHTCFunction()
-    temp = c(temp,res$tempOut)
-    humid = c(humid,res$humidOut)
+    print("res received")
+    # temp = c(temp,res$tempOut)
+    # humid = c(humid,res$humidOut)
     print(paste("Temperature",res$tempOut))
     print(paste("Humidity",res$humidOut))
+
 }
 
-print(store)
+# print(store)
 
 
 
