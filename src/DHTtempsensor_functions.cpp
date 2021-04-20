@@ -5,6 +5,7 @@ extern "C" {
 #include <string.h>
 #include <time.h>
 }
+#include <iostream>
 #include <chrono>
 #include <stdio.h>
 #include <R.h>
@@ -190,7 +191,7 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     end = clock();
     samplingTime[0] = ((double) (end-start))/CLOCKS_PER_SEC;
-    std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<<std::endl;
+    std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<< std::endl;
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     delay(readDelay);
     tempOut[0] = dht.temperature;
