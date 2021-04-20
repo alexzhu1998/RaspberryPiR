@@ -39,11 +39,11 @@ class DHT{
 public:
     DHT();
     double humidity,temperature;    //use to store temperature and humidity data read
-    int readDHT11Once(int pin);     //read DHT11
+    int readDHT11Once(int pin, unsigned int readDelay);     //read DHT11
     int readDHT11(int pin, unsigned int readDelay);     //read DHT11
 private:
     u_int8_t bits[5];    //Buffer to receiver data
-    int readSensor(int pin,int wakeupDelay);    //
+    int readSensor(int pin,int wakeupDelay, unsigned int readDelay);    //
 
 };
 
@@ -52,7 +52,7 @@ DHT::DHT(){
     wiringPiSetup();
 }
 
-int DHT::readSensor(int pin,int wakeupDelay){
+int DHT::readSensor(int pin,int wakeupDelay, int readDelay){
     int mask = 0x80;
     int idx = 0;
     int i;
@@ -63,7 +63,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     // Clear sda
     pinMode(pin,OUTPUT);
     digitalWrite(pin,HIGH);
-    delay(STARTUP_DELAY);
+    delay(readDelay);
     // Start signal
     digitalWrite(pin,LOW);
     delay(wakeupDelay);
@@ -131,10 +131,10 @@ int DHT::readSensor(int pin,int wakeupDelay){
 }
 //Function：Read DHT sensor, analyze the data of temperature and humidity
 //return：DHTLIB_OK   DHTLIB_ERROR_CHECKSUM  DHTLIB_ERROR_TIMEOUT
-int DHT::readDHT11Once(int pin){
+int DHT::readDHT11Once(int pin, unsigned int readDelay){
     int rv ;
     u_int8_t sum;
-    rv = readSensor(pin,DHTLIB_DHT11_WAKEUP);
+    rv = readSensor(pin,DHTLIB_DHT11_WAKEUP, readDelay);
     if(rv != DHTLIB_OK){
         humidity = DHTLIB_INVALID_VALUE;
         temperature = DHTLIB_INVALID_VALUE;
@@ -143,15 +143,14 @@ int DHT::readDHT11Once(int pin){
     humidity = bits[0];
     temperature = bits[2] + bits[3] * 0.1;
     sum = bits[0] + bits[1] + bits[2] + bits[3];
-    if(bits[4] != sum)
-        return DHTLIB_ERROR_CHECKSUM;
+    if(bits[4] != sum) return DHTLIB_ERROR_CHECKSUM;
     return DHTLIB_OK;
 }
 
 int DHT::readDHT11(int pin, unsigned int readDelay){
     int chk = DHTLIB_INVALID_VALUE;
     for (int i = 0; i < 15; i++){
-        chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+        chk = readDHT11Once(pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
         if(chk == DHTLIB_OK){
             return DHTLIB_OK;
         }
@@ -194,7 +193,6 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     samplingTime[0] = ((double) (end-start))/CLOCKS_PER_SEC;
     std::cout <<"Time taken by function:" << samplingTime[0] << " microseconds"<< std::endl;
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
-    delay(readDelay);
     tempOut[0] = dht.temperature;
     humidOut[0] = dht.humidity;
 
