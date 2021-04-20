@@ -38,7 +38,7 @@ public:
     DHT();
     double humidity,temperature;    //use to store temperature and humidity data read
     int readDHT11Once(int pin);     //read DHT11
-    int readDHT11(int pin, int* readDelay);     //read DHT11
+    int readDHT11(int pin);     //read DHT11
 private:
     u_int8_t bits[5];    //Buffer to receiver data
     int readSensor(int pin,int wakeupDelay);    //
@@ -146,14 +146,14 @@ int DHT::readDHT11Once(int pin){
     return DHTLIB_OK;
 }
 
-int DHT::readDHT11(int pin, int* readDelay){
+int DHT::readDHT11(int pin){
     int chk = DHTLIB_INVALID_VALUE;
     for (int i = 0; i < 15; i++){
         chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
         if(chk == DHTLIB_OK){
             return DHTLIB_OK;
         }
-        printf("%d",*readDelay);
+        // printf("%d",*readDelay);
         delay(100);
     }
     return chk;
@@ -180,12 +180,12 @@ int pending_interrupt() {
 
 
 extern "C" {
-int myDHT(double* tempOut, double* humidOut, double* samplingTime, int* readDelay) {
+int myDHT(double* tempOut, double* humidOut, double* samplingTime, int readDelay) {
     DHT dht;
     int chk;
-    printf("%d\n",*readDelay);
+    printf("readDelay value: %d\n",readDelay);
     // while (!pending_interrupt()) {
-    chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+    chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     // }
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     delay(100);
