@@ -37,7 +37,7 @@ public:
     DHT();
     double humidity,temperature;    //use to store temperature and humidity data read
     int readDHT11Once(int pin);     //read DHT11
-    int readDHT11(int pin);     //read DHT11
+    int readDHT11(int pin, int readDelay);     //read DHT11
 private:
     u_int8_t bits[5];    //Buffer to receiver data
     int readSensor(int pin,int wakeupDelay);    //
