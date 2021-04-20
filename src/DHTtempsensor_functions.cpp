@@ -69,6 +69,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     // delayMicroseconds(40);
     pinMode(pin,INPUT);
 
+    printf("C++_Initialisation_Complete\n");
     int32_t loopCnt = DHTLIB_TIMEOUT;
     t = micros();
     // Waiting echo
@@ -182,9 +183,9 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, int* readDela
     DHT dht;
     int chk;
     printf("%d\n",*readDelay);
-    while (!pending_interrupt()) {
-        chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-    }
+    // while (!pending_interrupt()) {
+    chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+    // }
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
     delay(100);
     tempOut[0] = dht.temperature;

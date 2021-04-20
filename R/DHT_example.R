@@ -4,7 +4,7 @@ source("R/DHT_setup.R")
 # print(res)
 temp = c()
 humid = c()
-for (count in 1:10) {
+for (count in 1:3) {
     print(paste("Current Counter",count))
     print("Call DHT function")
     res <- DHTCFunction()
