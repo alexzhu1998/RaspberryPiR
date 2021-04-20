@@ -189,7 +189,7 @@ int myDHT(double* tempOut, double* humidOut, double* samplingTime, double* rD) {
     chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
     // }
     if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
-    delay(100);
+    delay(20);
     tempOut[0] = dht.temperature;
     humidOut[0] = dht.humidity;
     return 1;
