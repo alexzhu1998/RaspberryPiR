@@ -63,7 +63,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     delay(STARTUP_DELAY);
     // Start signal
     digitalWrite(pin,LOW);
-    delay(100);
+    delay(wakeupDelay);
     digitalWrite(pin,HIGH);
     // delayMicroseconds(40);
     pinMode(pin,INPUT);
