@@ -31,6 +31,7 @@ extern "C" {
 
 #define DELAY 1000
 #define STARTUP_DELAY 500
+#define FIXED_ERROR_DELAY 100
 
 // DHT11 has a sampling rate of 1Hz according to https://learn.adafruit.com/dht?view=all
 
@@ -155,7 +156,7 @@ int DHT::readDHT11(int pin, unsigned int readDelay){
             return DHTLIB_OK;
         }
         // printf("%d",*readDelay);
-        delay(readDelay);
+        delay(FIXED_ERROR_DELAY);
     }
     return chk;
 }
