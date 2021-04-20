@@ -22,13 +22,15 @@ extern "C" {
 
 #define DHTLIB_DHT11_WAKEUP     20
 #define DHTLIB_DHT_WAKEUP       1
+#define STARTUP_DELAY           500
+
 
 #define DHTLIB_TIMEOUT          100
 #define DHT11_Pin  0
 
 #define DELAY 1000
 
-
+// DHT11 has a sampling rate of 1Hz according to https://learn.adafruit.com/dht?view=all
 
 class DHT{
 public:
@@ -50,7 +52,7 @@ DHT::DHT(){
 int DHT::readSensor(int pin,int wakeupDelay){
     int mask = 0x80;
     int idx = 0;
-    int i ;
+    int i;
     int32_t t;
     for (i=0;i<5;i++){
         bits[i] = 0;
@@ -58,7 +60,7 @@ int DHT::readSensor(int pin,int wakeupDelay){
     // Clear sda
     pinMode(pin,OUTPUT);
     digitalWrite(pin,HIGH);
-    delay(500);
+    delay(STARTUP_DELAY);
     // Start signal
     digitalWrite(pin,LOW);
     delay(wakeupDelay);
@@ -171,16 +173,18 @@ void check_interrupt_fn(void *dummy) {
 int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
+
+
+
 extern "C" {
-int myDHT(double* out) {
+int myDHT(double* tempOut, double* humidOut, double* samplingTime, int* readDelay) {
     DHT dht;
     int chk;
-    chk = dht.readDHT11(DHT11_Pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
-    if(chk == DHTLIB_OK){
-        printf("DHT11,OK! \n");
-    }
-    delay(100);
-    out[0] = dht.temperature;
+    chk = dht.readDHT11(DHT11_Pin,readDelay);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+    if(chk == DHTLIB_OK) printf("DHT11,OK! \n");
+    delay(readDelay);
+    tempOut[0] = dht.temperature;
+    humidOut[0] = dht.humidity;
     return 1;
 }
 }
