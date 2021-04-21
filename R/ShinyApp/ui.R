@@ -1,18 +1,24 @@
 library(shiny)
-# runExample("01_hello")
+library(leaflet)
 
-# Define UI for app that draws a histogram ----
-ui <- fluidPage(
+shinyUI(fluidPage(
 
-  # App title ----
-  titlePanel("Hello Shiny!"),
+    tags$h2("Email and Text Message Allerts Based on Streaming Sensor Data",style="text-align:center;color:blue"),
+    br(),
+    br(),
+    fluidRow(
+        column(width=5,
+               leafletOutput("myleaflet",height = "500px")
+        ),
+        column(width=7,
+               plotOutput("timeseries_all",height = "500px"),
+               column(width=6, offset=5,
+                      br(),
+                      br(),
+                      textOutput("Too_High")
+               ),
+               column(width=6, offset=5,
+                      textOutput("Failed_Sensors")
+               )
 
-  # Main panel for displaying outputs ----
-  mainPanel(
-
-    # Output: Histogram ----
-    plotOutput(outputId = "distPlot")
-
-  )
-
-)
+        ))))
