@@ -1,10 +1,9 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-source("../../R/DHT_setup.R")
+source("R/DHT_setup.R")
 
 longitude = c(-110)
 latitude = c(30)
 
-curDir = paste0(getwd(),"../data/")
+curDir = paste0("R/data/")
 sensorID = c("DHT11")
 sampTime = 0
 readDelay = 100

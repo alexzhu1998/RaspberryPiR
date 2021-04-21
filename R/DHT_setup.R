@@ -10,7 +10,7 @@
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 DHTCFunction <- function(sampTime = 0, rD = 50) {
-    dyn.load(paste0("../src/","DHTtempsensor_functions.so"))
+    dyn.load(paste0("src/","DHTtempsensor_functions.so"))
     res <- .C("myDHT", tempOut = 0, humidOut = 0, samplingTime = sampTime, rD = rD)
     return(res)
 }
