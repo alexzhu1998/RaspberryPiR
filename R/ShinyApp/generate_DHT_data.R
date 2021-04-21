@@ -3,7 +3,7 @@ source("R/DHT_setup.R")
 longitude = c(-110)
 latitude = c(30)
 
-curDir = paste0("R/data/")
+curDir = "R/data/"
 sensorID = c("DHT11")
 sampTime = 0
 readDelay = 100
