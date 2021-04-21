@@ -1,3 +1,3 @@
 library(rsconnect)
 # rsconnect::deployApp("R/ShinyApp/")
-RunApp("R/ShinyApp/")
+shiny::runApp("R/ShinyApp/")
