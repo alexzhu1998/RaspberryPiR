@@ -20,7 +20,7 @@ for (count in 1:NIter) {
   # humid = c(humid,res$humidOut)
   time = c(time,end)
   dat = data.frame(time=as.numeric(end),
-                   sensor=sensorID,
+                   sensorID=sensorID,
                    longitude=longitude,
                    latitude=latitude,
                    temperature = as.numeric(res$tempOut))
