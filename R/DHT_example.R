@@ -4,6 +4,7 @@ source("R/DHT_setup.R")
 # print(res)
 temp = c()
 humid = c()
+time = c()
 sampTime = 0
 rD = 100
 for (count in 1:10) {
@@ -14,8 +15,14 @@ for (count in 1:10) {
     print(end-start)
     print(paste("Temperature",res$tempOut))
     print(paste("Humidity",res$humidOut))
-
+    temp = c(temp,res$tempOut)
+    humid = c(humid,res$humidOut)
+    time = c(time,end)
+    plot(time,res$tempOut, type ='l', main = 'Realtime Data from Raspberry Pi')
 }
+
+
+
 
 # print(store)
 

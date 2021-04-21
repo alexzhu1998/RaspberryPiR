@@ -108,9 +108,9 @@ int DHT::readSensor(int pin,int wakeupDelay,unsigned int readDelay){
         t = micros();
         loopCnt = DHTLIB_TIMEOUT;
         while(digitalRead(pin)==HIGH){
-            if((micros() - t) > loopCnt){
+            if((micros() - t) > loopCnt)
                 return DHTLIB_ERROR_TIMEOUT;
-            }
+
         }
         if((micros() - t ) > 60){
             bits[idx] |= mask;
