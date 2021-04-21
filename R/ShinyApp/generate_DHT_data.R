@@ -1,3 +1,4 @@
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("../../R/DHT_setup.R")
 
 longitude = c(-110)
