@@ -1,0 +1,11 @@
+name: teststreamshiny
+title:
+username:
+account: alexzhu1998
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4004752
+bundleId: 4498516
+url: https://alexzhu1998.shinyapps.io/teststreamshiny/
+when: 1618979796.16345
+lastSyncTime: 1618979796.16347
