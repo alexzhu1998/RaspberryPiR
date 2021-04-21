@@ -58,22 +58,22 @@ shinyServer(function(input, output,session) {
             )
     })
 
-    # output$timeseries_all = renderPlot({
-    #     dat=alldata()
-    #     end=max(min(nrow(dat),1),4)
-    #     start=1#end-100
-    #
-    #     if(nrow(dat)>=1){
-    #         dat[start:end,]%>%ggplot(aes(x=timestamp,y=temperature))+
-    #             geom_line(aes(color=sensorID))+ylim(26, 34)+
-    #             geom_hline(yintercept = 33,linetype="dotted",color="darkblue")+
-    #             labs(x="",y="Temperature",color="Sensor IDs")+
-    #             theme(axis.title.x = element_blank(),
-    #                   axis.title.y = element_text(colour="blue",size=14),
-    #                   axis.text = element_text(colour="darkred",size=12),
-    #                   plot.title = element_blank())
-    #     }
-    # })
+    output$timeseries_all = renderPlot({
+        dat=alldata()
+        end=max(min(nrow(dat),1),4)
+        start=1#end-100
+        browser()
+        if(end>=1){
+            dat[start:end,]%>%ggplot(aes(x=timestamp,y=temperature))+
+                geom_line(aes(color=sensorID))+ylim(26, 34)+
+                geom_hline(yintercept = 33,linetype="dotted",color="darkblue")+
+                labs(x="",y="Temperature",color="Sensor IDs")+
+                theme(axis.title.x = element_blank(),
+                      axis.title.y = element_text(colour="blue",size=14),
+                      axis.text = element_text(colour="darkred",size=12),
+                      plot.title = element_blank())
+        }
+    })
 
 
 
