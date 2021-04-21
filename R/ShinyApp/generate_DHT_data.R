@@ -1,4 +1,4 @@
-source("../R/DHT_setup.R")
+source("../../R/DHT_setup.R")
 
 longitude = c(-110)
 latitude = c(30)
