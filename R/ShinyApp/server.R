@@ -60,7 +60,7 @@ shinyServer(function(input, output,session) {
 
     output$timeseries_all = renderPlot({
         dat=alldata()
-        end=nrow(dat)
+        end=max(min(nrow(dat),1),4)
         start=1#end-100
 
         if(nrow(dat)>=1){
