@@ -59,10 +59,11 @@ shinyServer(function(input, output,session) {
     })
 
     output$timeseries_all = renderPlot({
+        browser()
         dat=alldata()
         end=max(min(nrow(dat),1),4)
         start=1#end-100
-        browser()
+
         if(end>=1){
             dat[start:end,]%>%ggplot(aes(x=timestamp,y=temperature))+
                 geom_line(aes(color=sensorID))+ylim(26, 34)+
