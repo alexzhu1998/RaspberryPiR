@@ -2,7 +2,7 @@ library(dplyr)
 library(data.table)
 library(ggplot2)
 # setwd('/Users/codebreaker/Desktop/RaspberryPiR2/testStreamShiny/data')
-dataDirectory = "data"
+dataDirectory = "R/data"
 filenames <- list.files(path = dataDirectory,pattern="*.csv", full.names=TRUE)
 
 data_at_start <- rbindlist(lapply(filenames, fread))
