@@ -18,7 +18,7 @@ for (count in 1:10) {
     temp = c(temp,res$tempOut)
     humid = c(humid,res$humidOut)
     time = c(time,end)
-    plot(time,res$tempOut, type ='l', main = 'Realtime Data from Raspberry Pi')
+    # plot(time,res$tempOut, type ='l', main = 'Realtime Data from Raspberry Pi')
 }
 
 

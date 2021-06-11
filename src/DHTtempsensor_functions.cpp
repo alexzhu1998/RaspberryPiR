@@ -1,11 +1,10 @@
 // #include "Fibonacci.h"
 extern "C" {
 #include <wiringPi.h>
+}
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
-}
-#include <iostream>
 #include <chrono>
 #include <stdio.h>
 #include <R.h>
@@ -168,7 +167,7 @@ int DHT::readDHT11(int pin, unsigned int readDelay){
 // }
 
 void check_interrupt_fn(void *dummy) {
-    R_CheckUserInterrupt();
+    R_CheckUserInterrupt(); 
 }
 
 int pending_interrupt() {
