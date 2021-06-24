@@ -1,0 +1,92 @@
+* using log directory ‘/home/pi/Honours/Tester/src/Tester.Rcheck’
+* using R version 3.5.2 (2018-12-20)
+* using platform: arm-unknown-linux-gnueabihf (32-bit)
+* using session charset: UTF-8
+* checking for file ‘Tester/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘Tester’ version ‘1.0’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... WARNING
+Subdirectory ‘Tester/src’ contains apparent object files/libraries
+  Tester.so
+Object files/libraries should not be included in a source package.
+
+In addition to the above warning(s), found the following notes:
+
+Found the following apparent object files/libraries:
+  src/DHTLib/DHT11.o
+Object files/libraries should not be included in a source package.
+* checking if there is a namespace ... OK
+* checking for executable files ... WARNING
+Found the following executable file:
+  src/Tester.so
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘Tester’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./src/Tester.Rcheck
+Most likely, these were included erroneously.
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+rcpp_hello_world: no visible binding for global variable
+  ‘_Tester_rcpp_hello_world’
+testingDHT: no visible binding for global variable ‘_Tester_testingDHT’
+writer: no visible binding for global variable ‘_Tester_writer’
+Undefined global functions or variables:
+  _Tester_rcpp_hello_world _Tester_testingDHT _Tester_writer
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘testingDHT’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... NOTE
+Found the following Makefile(s) without a final LF:
+  src/Makevars
+Some ‘make’ programs ignore lines not ending in LF.
+* checking compilation flags in Makevars ... WARNING
+Non-portable flags in variable 'PKG_CPPFLAGS':
+  -std=c++11
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking compiled code ... OK
+* checking examples ... OK
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without hyperrefs or index ... ERROR
+Re-running with no redirection of stdout/stderr.
+* DONE
+Status: 1 ERROR, 6 WARNINGs, 3 NOTEs

@@ -1,0 +1,32 @@
+# # set by configure
+# WIRINGPI_CFLAGS = @WIRINGPI_CFLAGS@
+# WIRINGPI_LIBS 	= @WIRINGPI_LIBS@
+
+
+SRC_DIR = DHTLib shmem
+# standard arguments for R
+PKG_CPPFLAGS = -I/usr/lib -std=c++11 $(patsubst %,-I"%",$(SRC_DIR))
+PKG_LIBS = -L"/usr/lib/" -lwiringPi
+
+
+
+# if you dont add these two lines, then makevars will compile whatever thats in src/ but not in subdirectory, 
+# if you added this line, then makevars will compile ONLY these cpp files.
+# SOURCES_CPP = DHTLib/DHT11.cpp shmem/shared_memory.cpp
+
+
+OBJECTS = $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(foreach dir,$(SRC_DIR),$(patsubst $(dir)/%.cpp, $(dir)/%.o, $(wildcard $(dir)/*.cpp)))
+
+# Origianl NAMESPACE
+# useDynLib(Tester, .registration=TRUE)
+# exportPattern("^[[:alpha:]]+")
+# importFrom(Rcpp, evalCpp)
+
+# R CMD SHLIB -o simpledht11.so shmem/simpleDHT11main.cpp shmem/simpleDHT11func.cpp -lwiringPi
+# R CMD SHLIB -o write.so shmem/writeshmem.cpp shmem/shared_memory.cpp shmem/simpleDHT11func.cpp -lwiringPi
+# R CMD SHLIB -o read.so shmem/readshmem.cpp shmem/shared_memory.cpp
+# R CMD SHLIB -o free.so shmem/freeshmem.cpp shmem/shared_memory.cpp
+
+# R CMD check
+# Need to configure NAMESPACE manually
+# Need Rcpp::compileAttributes('~/Honours/RaspberryPiR') before R CMD INSTALL
