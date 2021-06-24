@@ -1,0 +1,71 @@
+# CC = g++
+PKG_LIBS = -L"/usr/lib/" -lwiringPi 
+# PKG_CPPFLAGS helps reference dynamic libraries i think?
+PKG_CPPFLAGS = -DNDEBUG -I/home -I/usr/share/R/include -I/usr/share/R/include/R_ext -I"/usr/local/lib/R/site-library/Rcpp/include"
+PKG_LDFLAGS = /var
+# Command to trigger this make file is R CMD SHLIB
+# all:  
+# 	R CMD SHLIB -o simpledht11.so simpleDHT11main.cpp simpleDHT11func.cpp -lwiringPi
+# FC = R CMD SHLIB
+# all: 
+# 	write.o read.o free.o
+# # R CMD SHLIB -o simpledht11.so shmem/simpleDHT11main.cpp shmem/simpleDHT11func.cpp -lwiringPi
+
+.PHONY: all mylibs
+
+all: $(SHLIB)
+$(SHLIB): mylibs
+
+mylibs: 
+	(cd shmem; $(MAKE))
+
+MAKE: 
+	make dht
+
+# write.so: 
+# 	shmem/writeshmem.cpp shmem/shared_memory.cpp shmem/simpleDHT11func.cpp 
+
+# read.o: 
+# 	$(FC) -o read.so shmem/readshmem.cpp shmem/shared_memory.cpp
+
+# free.o: 
+# 	$(FC) -o free.so shmem/freeshmem.cpp shmem/shared_memory.cpp
+
+
+# SOURCES_CPP = shmem/freeshmem.cpp shmem/shared_memory.cpp shmem/writeshmem.cpp shmem/simpleDHT11main.cpp shmem/simpleDHT11func.cpp  shmem/readshmem.cpp
+# OBJECTS=$(SOURCES_CPP:.cpp=.o) #$(SOURCES_C:.c=.o)
+
+
+
+
+
+
+########## Old makefile
+# CC=gcc
+# CFLAGS=-lwiringPi
+# DEPS = shared_memory.h
+
+# all: write read free
+
+# write: shmem/writeshmem.o shmem/shared_memory.o shmem/simpleDHT11func.o 
+# 	$(CC) -o write shmem/writeshmem.o shmem/shared_memory.o shmem/simpleDHT11func.o $(CFLAGS)
+
+# read: shmem/readshmem.o shmem/shared_memory.o
+# 	$(CC) -o read shmem/readshmem.o shmem/shared_memory.o $(CFLAGS)
+
+# free: shmem/freeshmem.o shmem/shared_memory.o
+# 	$(CC) -o free shmem/freeshmem.o shmem/shared_memory.o $(CFLAGS)
+
+# dht: shmem/simpleDHT11main.o shmem/simpleDHT11func.o 
+# 	$(CC) -o simple shmem/simpleDHT11main.o shmem/simpleDHT11func.o $(CFLAGS)
+
+# time: shmem/time.o
+# 	$(CC) -o time shmem/time.o
+
+# clean:
+# 	rm *.o read write free simple 
+
+# R CMD SHLIB -o simpledht11.so shmem/simpleDHT11main.cpp shmem/simpleDHT11func.cpp -lwiringPi
+# R CMD SHLIB -o write.so shmem/writeshmem.cpp shmem/shared_memory.cpp shmem/simpleDHT11func.cpp -lwiringPi
+# R CMD SHLIB -o read.so shmem/readshmem.cpp shmem/shared_memory.cpp
+# R CMD SHLIB -o free.so shmem/freeshmem.cpp shmem/shared_memory.cpp
