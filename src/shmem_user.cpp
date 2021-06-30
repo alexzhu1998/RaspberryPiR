@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "DHTLib/DHT11.h"
 #include <time.h> //for time
+#include <unistd.h>
 #include "shmem/shared_memory.h"
 #include <R.h>
 #include <Rdefines.h>
@@ -24,9 +25,11 @@ int pending_interrupt() {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector writeMemory() {
+Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector w = 0) {
     DHT dht;
     int chk;
+    bool nohup = nh[0];// Not implemented yet
+    int wait = w[0];
     Rcpp::NumericVector x = Rcpp::NumericVector::create(0,0);
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
     my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1);
@@ -37,7 +40,7 @@ Rcpp::NumericVector writeMemory() {
             i = 0;
             status->complete = true;
         }
-
+        sleep(wait);
         chk = dht.readDHT11(DHT11_Pin);
         if (chk == DHTLIB_OK) {
             Rcpp::Rcout << "DHT11, OK!" << std::endl;
@@ -69,18 +72,46 @@ Rcpp::NumericVector writeMemory() {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector readMemory() {
-    Rcpp::NumericVector x;
+Rcpp::List readMemory(Rcpp::IntegerVector read_block = 1) {
+    Rcpp::StringVector datetime;
+    Rcpp::NumericVector temp;
+    Rcpp::NumericVector hum;
+    int n = read_block[0];
+    if(n > NUM_BLOCKS) {
+        Rcpp::stop("size of reading blocks is greater than memory capacity.");
+    }
+    
     my_object* status = attach_memory_block(BLOCK_SIZE,NUM_BLOCKS+1);
+    int cur = status->cur_id;
     my_object* block;
-    block = attach_memory_block(BLOCK_SIZE,status->cur_id);
-    Rcpp::Rcout << "Reading ";
-    Rcpp::Rcout << status->cur_id << ": ";
-    Rcpp::Rcout << block->datetime << " ";
-    Rcpp::Rcout << "Temp = " << block->temp << ", ";
-    Rcpp::Rcout << "Hum = " << block->hum << std::endl;
-    x = Rcpp::NumericVector::create(block->hum,block->temp);
-    return x;
+    
+    for (int i =0 ; i < n;++i) {
+        if (cur-i < 0) {
+            if (status->complete) {
+                cur = NUM_BLOCKS+i-1;
+            } else {
+                Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
+                break;
+            }
+            
+        }
+        block = attach_memory_block(BLOCK_SIZE,cur-i);
+        Rcpp::Rcout << "Reading ";
+        Rcpp::Rcout << cur -i << std::endl;
+        // Rcpp::Rcout << block->datetime << " ";
+        // Rcpp::Rcout << "Temp = " << block->temp << ", ";
+        // Rcpp::Rcout << "Hum = " << block->hum << std::endl;
+
+        datetime.push_back(block->datetime);
+        temp.push_back(block->temp);
+        hum.push_back(block->hum);
+    }
+    Rcpp::List L = Rcpp::List::create(
+                        Rcpp::Named("datetime") = datetime,
+                        Rcpp::Named("temperature") = temp,
+                        Rcpp::Named("humidity") = hum
+                    );
+    return L;
 }
 
 // [[Rcpp::export]]

@@ -26,7 +26,7 @@ bool free_memory_block(int id);
 // all of the programs will share these values
 
 // change this to variable
-#define BLOCK_SIZE 100
+#define BLOCK_SIZE 50
 #define NUM_BLOCKS 100
 #define FILENAME "shared_memory.h"
 

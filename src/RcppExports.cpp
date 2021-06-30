@@ -5,33 +5,26 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _RaspberryPiR_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
 // writeMemory
-Rcpp::NumericVector writeMemory();
-RcppExport SEXP _RaspberryPiR_writeMemory() {
+Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
+RcppExport SEXP _RaspberryPiR_writeMemory(SEXP nhSEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(writeMemory());
+    Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(writeMemory(nh, w));
     return rcpp_result_gen;
 END_RCPP
 }
 // readMemory
-Rcpp::NumericVector readMemory();
-RcppExport SEXP _RaspberryPiR_readMemory() {
+Rcpp::List readMemory(Rcpp::IntegerVector read_block);
+RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(readMemory());
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
+    rcpp_result_gen = Rcpp::wrap(readMemory(read_block));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -54,13 +47,92 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LL_wiringPiSetup
+void LL_wiringPiSetup();
+RcppExport SEXP _RaspberryPiR_LL_wiringPiSetup() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    LL_wiringPiSetup();
+    return R_NilValue;
+END_RCPP
+}
+// LL_pinMode
+void LL_pinMode(Rcpp::IntegerVector pin, Rcpp::StringVector mode);
+RcppExport SEXP _RaspberryPiR_LL_pinMode(SEXP pinSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type mode(modeSEXP);
+    LL_pinMode(pin, mode);
+    return R_NilValue;
+END_RCPP
+}
+// LL_digitalWrite
+void LL_digitalWrite(Rcpp::IntegerVector pin, Rcpp::LogicalVector mode);
+RcppExport SEXP _RaspberryPiR_LL_digitalWrite(SEXP pinSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type mode(modeSEXP);
+    LL_digitalWrite(pin, mode);
+    return R_NilValue;
+END_RCPP
+}
+// LL_digitalRead
+Rcpp::IntegerVector LL_digitalRead(Rcpp::IntegerVector pin);
+RcppExport SEXP _RaspberryPiR_LL_digitalRead(SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(LL_digitalRead(pin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LL_pullUpDnControl
+void LL_pullUpDnControl(Rcpp::IntegerVector pin, Rcpp::StringVector pud);
+RcppExport SEXP _RaspberryPiR_LL_pullUpDnControl(SEXP pinSEXP, SEXP pudSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type pud(pudSEXP);
+    LL_pullUpDnControl(pin, pud);
+    return R_NilValue;
+END_RCPP
+}
+// LL_millis
+Rcpp::NumericVector LL_millis();
+RcppExport SEXP _RaspberryPiR_LL_millis() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(LL_millis());
+    return rcpp_result_gen;
+END_RCPP
+}
+// LL_micros
+Rcpp::NumericVector LL_micros();
+RcppExport SEXP _RaspberryPiR_LL_micros() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(LL_micros());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RaspberryPiR_rcpp_hello_world", (DL_FUNC) &_RaspberryPiR_rcpp_hello_world, 0},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 0},
-    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 0},
+    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 2},
+    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 1},
     {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 0},
+    {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
+    {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
+    {"_RaspberryPiR_LL_digitalWrite", (DL_FUNC) &_RaspberryPiR_LL_digitalWrite, 2},
+    {"_RaspberryPiR_LL_digitalRead", (DL_FUNC) &_RaspberryPiR_LL_digitalRead, 1},
+    {"_RaspberryPiR_LL_pullUpDnControl", (DL_FUNC) &_RaspberryPiR_LL_pullUpDnControl, 2},
+    {"_RaspberryPiR_LL_millis", (DL_FUNC) &_RaspberryPiR_LL_millis, 0},
+    {"_RaspberryPiR_LL_micros", (DL_FUNC) &_RaspberryPiR_LL_micros, 0},
     {NULL, NULL, 0}
 };
 
