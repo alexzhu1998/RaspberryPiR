@@ -96,8 +96,8 @@ Rcpp::List readMemory(Rcpp::IntegerVector read_block = 1) {
             
         }
         block = attach_memory_block(BLOCK_SIZE,cur-i);
-        Rcpp::Rcout << "Reading ";
-        Rcpp::Rcout << cur -i << std::endl;
+        // Rcpp::Rcout << "Reading ";
+        // Rcpp::Rcout << cur -i << std::endl;
         // Rcpp::Rcout << block->datetime << " ";
         // Rcpp::Rcout << "Temp = " << block->temp << ", ";
         // Rcpp::Rcout << "Hum = " << block->hum << std::endl;
@@ -119,7 +119,7 @@ void freeMemory() {
     Rcpp::NumericVector x;
     Rcpp::Rcout << "Freeing" << std::endl;
     my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1);
-    for (int i = 0; i <= NUM_BLOCKS; ++i) {
+    for (int i = 0; i < NUM_BLOCKS; ++i) {
         if (free_memory_block(i)) {    
             Rcpp::Rcout <<"Free block: " << i << std::endl;
         } else {
