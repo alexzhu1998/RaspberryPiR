@@ -5,16 +5,24 @@
 
 using namespace Rcpp;
 
+// freeMemory
+void freeMemory();
+RcppExport SEXP _RaspberryPiR_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    freeMemory();
+    return R_NilValue;
+END_RCPP
+}
 // writeMemory
-Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
+void writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
 RcppExport SEXP _RaspberryPiR_writeMemory(SEXP nhSEXP, SEXP wSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    rcpp_result_gen = Rcpp::wrap(writeMemory(nh, w));
-    return rcpp_result_gen;
+    writeMemory(nh, w);
+    return R_NilValue;
 END_RCPP
 }
 // readMemory
@@ -26,15 +34,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
     rcpp_result_gen = Rcpp::wrap(readMemory(read_block));
     return rcpp_result_gen;
-END_RCPP
-}
-// freeMemory
-void freeMemory();
-RcppExport SEXP _RaspberryPiR_freeMemory() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    freeMemory();
-    return R_NilValue;
 END_RCPP
 }
 // testingDHT
@@ -122,9 +121,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
     {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 2},
     {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 1},
-    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 0},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},

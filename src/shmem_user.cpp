@@ -25,12 +25,31 @@ int pending_interrupt() {
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector w = 0) {
+void freeMemory() {
+    Rcpp::NumericVector x;
+    Rcpp::Rcout << "Freeing" << std::endl;
+    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1);
+    for (int i = 0; i < NUM_BLOCKS; ++i) {
+        if (free_memory_block(i)) {    
+            Rcpp::Rcout <<"Free block: " << i << std::endl;
+        } else {
+            Rcpp::Rcout <<"Could not free block: " << i << std::endl;
+        }
+    }
+    
+    if (free_memory_block(NUM_BLOCKS+1)) {    
+        Rcpp::Rcout <<"Free block: pointer"  << std::endl;
+    } else {
+        Rcpp::Rcout <<"Could not free block: pointer" << std::endl;
+    }
+}
+
+// [[Rcpp::export]]
+void writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector w = 0) {
     DHT dht;
     int chk;
     bool nohup = nh[0];// Not implemented yet
     int wait = w[0];
-    Rcpp::NumericVector x = Rcpp::NumericVector::create(0,0);
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
     my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1);
     my_object* block;
@@ -44,7 +63,6 @@ Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector 
         chk = dht.readDHT11(DHT11_Pin);
         if (chk == DHTLIB_OK) {
             Rcpp::Rcout << "DHT11, OK!" << std::endl;
-            x = Rcpp::NumericVector::create(dht.humidity,dht.temperature);
             
             block = attach_memory_block(BLOCK_SIZE,i);
             assign_time(block->datetime);
@@ -67,8 +85,7 @@ Rcpp::NumericVector writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector 
 
     detach_memory_block(status);
     Rcpp::Rcout << "End Writing" << std::endl;
-
-    return x;
+    freeMemory();
 }
 
 // [[Rcpp::export]]
@@ -114,22 +131,3 @@ Rcpp::List readMemory(Rcpp::IntegerVector read_block = 1) {
     return L;
 }
 
-// [[Rcpp::export]]
-void freeMemory() {
-    Rcpp::NumericVector x;
-    Rcpp::Rcout << "Freeing" << std::endl;
-    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1);
-    for (int i = 0; i < NUM_BLOCKS; ++i) {
-        if (free_memory_block(i)) {    
-            Rcpp::Rcout <<"Free block: " << i << std::endl;
-        } else {
-            Rcpp::Rcout <<"Could not free block: " << i << std::endl;
-        }
-    }
-    
-    if (free_memory_block(NUM_BLOCKS+1)) {    
-        Rcpp::Rcout <<"Free block: pointer"  << std::endl;
-    } else {
-        Rcpp::Rcout <<"Could not free block: pointer" << std::endl;
-    }
-}
