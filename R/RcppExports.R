@@ -5,16 +5,16 @@ freeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_freeMemory`))
 }
 
-writeMemory <- function(nh = 0L, w = 0L) {
-    invisible(.Call(`_RaspberryPiR_writeMemory`, nh, w))
+writeMemory <- function(sensor = "DHT11", pin = 0L, nh = 0L, w = 1000L) {
+    invisible(.Call(`_RaspberryPiR_writeMemory`, sensor, pin, nh, w))
 }
 
-readMemory <- function(read_block = 1L) {
-    .Call(`_RaspberryPiR_readMemory`, read_block)
+readMemory <- function(read_block = 1L, sensor = "DHT11") {
+    .Call(`_RaspberryPiR_readMemory`, read_block, sensor)
 }
 
-testingDHT <- function() {
-    .Call(`_RaspberryPiR_testingDHT`)
+testingDHT <- function(pin = 0L) {
+    invisible(.Call(`_RaspberryPiR_testingDHT`, pin))
 }
 
 LL_wiringPiSetup <- function() {

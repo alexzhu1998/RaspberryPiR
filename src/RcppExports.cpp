@@ -15,35 +15,38 @@ BEGIN_RCPP
 END_RCPP
 }
 // writeMemory
-void writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
-RcppExport SEXP _RaspberryPiR_writeMemory(SEXP nhSEXP, SEXP wSEXP) {
+void writeMemory(Rcpp::StringVector sensor, Rcpp::NumericVector pin, Rcpp::LogicalVector nh, Rcpp::NumericVector w);
+RcppExport SEXP _RaspberryPiR_writeMemory(SEXP sensorSEXP, SEXP pinSEXP, SEXP nhSEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
     Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    writeMemory(nh, w);
+    writeMemory(sensor, pin, nh, w);
     return R_NilValue;
 END_RCPP
 }
 // readMemory
-Rcpp::List readMemory(Rcpp::IntegerVector read_block);
-RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP) {
+Rcpp::List readMemory(Rcpp::IntegerVector read_block, Rcpp::StringVector sensor);
+RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP, SEXP sensorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
-    rcpp_result_gen = Rcpp::wrap(readMemory(read_block));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    rcpp_result_gen = Rcpp::wrap(readMemory(read_block, sensor));
     return rcpp_result_gen;
 END_RCPP
 }
 // testingDHT
-Rcpp::NumericVector testingDHT();
-RcppExport SEXP _RaspberryPiR_testingDHT() {
+void testingDHT(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_testingDHT(SEXP pinSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(testingDHT());
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    testingDHT(pin);
+    return R_NilValue;
 END_RCPP
 }
 // LL_wiringPiSetup
@@ -122,9 +125,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 2},
-    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 1},
-    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 0},
+    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 4},
+    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},
+    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
     {"_RaspberryPiR_LL_digitalWrite", (DL_FUNC) &_RaspberryPiR_LL_digitalWrite, 2},
