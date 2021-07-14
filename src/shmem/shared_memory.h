@@ -11,11 +11,11 @@
 #define BLOCK_SIZE 50
 #define NUM_BLOCKS 100
 
-struct my_object {
 
+template <typename T, typename U> struct my_object {
     // char * datetime;
-    double data1; // 4
-    double data2;
+    T data1; // 4
+    U data2;
     time_t raw_time; //4
     // char datetime[30];
     int cur_id; // 4
@@ -24,10 +24,11 @@ struct my_object {
 
 
 // attach a shared memory block, associated with filename, create if doesnt exist
+template <typename T, typename U>
+void attach_memory_block(my_object<T,U>* object, int size,int id,int random_key);
 
-my_object* attach_memory_block(int size,int id,int random_key);
-
-bool detach_memory_block(my_object* block);
+template <typename T, typename U>
+bool detach_memory_block(my_object<T,U>* block);
 
 bool free_memory_block(int id, int random_key);
 

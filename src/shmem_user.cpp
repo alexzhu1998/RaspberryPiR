@@ -1,8 +1,8 @@
 #include <Rcpp.h>
-#include "DHTLib/DHT11.h"
+#include "DHT11.h"
 #include <time.h> //for time
 #include <unistd.h>
-#include "shmem/shared_memory.h"
+#include "shared_memory.h"
 #include <R.h>
 #include <Rdefines.h>
 #include <R_ext/Utils.h>
@@ -45,7 +45,8 @@ int pending_interrupt() {
 void freeMemory() {
     Rcpp::NumericVector x;
     Rcpp::Rcout << "Freeing" << std::endl;
-    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
+    my_object<double,double>*  status;
+    attach_memory_block(status, BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     for (int i = 0; i < NUM_BLOCKS; ++i) {
         if (free_memory_block(i,KEY_1)) {    
             Rcpp::Rcout <<"Free block: " << i << std::endl;
@@ -59,9 +60,11 @@ void freeMemory() {
     } else {
         Rcpp::Rcout <<"Could not free block: pointer" << std::endl;
     }
+    if (!detach_memory_block(status)) Rcpp::stop("Memory can't be detached");
 }
 
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object* block,int &index, int key) {
+template <typename T, typename U>
+void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T,U>* block,int &index, int key) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -72,7 +75,7 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object* block,int &index
     if (chk == SENSOR_OK) {
         Rcpp::Rcout << "DHT11, OK!" << std::endl;
         
-        block = attach_memory_block(BLOCK_SIZE,index, key);
+        attach_memory_block(block,BLOCK_SIZE,index, key);
         // assign_time(block->datetime);
         
         block->raw_time = get_raw_time();
@@ -85,7 +88,7 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object* block,int &index
             Rcpp::Rcout << "Time to charge is " << block->data1 << " s"<< std::endl;
         }
 
-        detach_memory_block(block);
+        if (!detach_memory_block(block)) Rcpp::stop("Memory can't be detached");
     } else if (chk == DHTLIB_ERROR_CHECKSUM){
         Rcpp::Rcout << "DHT11,NOT OK! ERROR CHECKSUM" << std::endl;
     } else if (chk == SENSOR_ERROR_TIMEOUT) {
@@ -116,11 +119,12 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     int sens = WarningHelperIdentifySensor(sensor);
     
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
-    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
+    my_object<double,double>* status;
+    attach_memory_block(status, BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     
     TimeVar start;
     DHT dht;
-    my_object* data_block;
+    my_object<double,double>* data_block;
     int i = 0;
     for (;!pending_interrupt();++i) {
         if (i == NUM_BLOCKS) {
@@ -139,15 +143,16 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
 
     
     
-    detach_memory_block(status);
+    if (!detach_memory_block(status)) Rcpp::stop("Memory can't be detached");
     Rcpp::Rcout << "End Writing" << std::endl;
     freeMemory();
 }
 
 Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
-    my_object* status = attach_memory_block(BLOCK_SIZE,NUM_BLOCKS+1,key);
+    my_object<double,double>* status;
+    attach_memory_block(status,BLOCK_SIZE,NUM_BLOCKS+1,key);
     int cur = status->cur_id;
-    my_object* data_block;
+    my_object<double,double>* data_block;
     char time_string[DATE_STRING_SIZE];
     Rcpp::StringVector datetime;
     if (sensor == 0) {
@@ -162,7 +167,7 @@ Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
                     break;
                 }
             }
-            data_block = attach_memory_block(BLOCK_SIZE,cur-i,key);
+            attach_memory_block(data_block,BLOCK_SIZE,cur-i,key);
             convert_to_string(time_string,data_block->raw_time);
             datetime.push_back(time_string);
             temp.push_back(data_block->data1);
@@ -184,7 +189,7 @@ Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
                     break;
                 }
             }
-            data_block = attach_memory_block(BLOCK_SIZE,cur-i,key);
+            attach_memory_block(data_block,BLOCK_SIZE,cur-i,key);
             convert_to_string(time_string,data_block->raw_time);
             datetime.push_back(time_string);
             time_to_c.push_back(data_block->data1);

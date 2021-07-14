@@ -4,6 +4,7 @@
 #include <sys/shm.h>
 #include <R.h>
 
+
 #include "shared_memory.h"
 
 static int get_shared_block(int size, int id, int random_key) {
@@ -14,19 +15,20 @@ static int get_shared_block(int size, int id, int random_key) {
     return shmget(key,size,IPC_CREAT |0666);
 }
 
-my_object* attach_memory_block(int size, int id,int random_key) {
+template <typename T, typename U>
+void attach_memory_block(my_object<T,U>* object, int size,int id,int random_key) {
     int shared_block_id = get_shared_block(size,id, random_key);
-    my_object* result;
+    
 
     if (shared_block_id == IPC_RESULT_ERROR) error("IPC_RESULT_ERROR: ");
 
-    result = (my_object*)shmat(shared_block_id, NULL,0);
-    if (result == (void *) IPC_RESULT_ERROR) error("shmat: ");
-    
-    return result;
+    object = (my_object<T,U> *)shmat(shared_block_id, NULL,0);
+    if (object == (void *) IPC_RESULT_ERROR) error("shmat: ");
+    return;
 }
 
-bool detach_memory_block(my_object* block) {
+template <typename T, typename U>
+bool detach_memory_block(my_object<T,U>* block) {
     return (shmdt(block) != IPC_RESULT_ERROR);
 }
 
