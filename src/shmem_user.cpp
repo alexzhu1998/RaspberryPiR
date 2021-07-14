@@ -9,6 +9,11 @@
 #include <vector>
 #include <chrono> // for measuring real execution time
 #include <thread> // for sleep
+#include <stdlib.h>
+#include <sys/types.h> //key_t
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <R.h>
 
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
@@ -19,6 +24,40 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 
 #define KEY_1 9876
 #define DATE_STRING_SIZE 30
+
+
+// attach a shared memory block, associated with filename, create if doesnt exist
+static int get_shared_block(int size, int id, int random_key) {
+    
+    key_t key = random_key%KEY_RANGE+id;
+    if (key == IPC_RESULT_ERROR) return IPC_RESULT_ERROR;
+
+    return shmget(key,size,IPC_CREAT |0666);
+}
+
+template <typename T>
+void attach_memory_block(my_object<T>* object, int size,int id,int random_key) {
+    int shared_block_id = get_shared_block(size,id, random_key);
+
+    if (shared_block_id == IPC_RESULT_ERROR) perror("IPC_RESULT_ERROR: ");
+
+    object = (my_object<T> *)shmat(shared_block_id, NULL,0);
+    if (object == (void *) IPC_RESULT_ERROR) perror("shmat: ");
+    return;
+}
+
+template <typename T>
+bool detach_memory_block(my_object<T>* block) {
+    return (shmdt(block) != IPC_RESULT_ERROR);
+}
+
+
+bool free_memory_block(int id,int random_key) {
+    int shared_block_id = get_shared_block(NULL_MEMORY,id,random_key);
+
+    if (shared_block_id == IPC_RESULT_ERROR) return NULL;
+    return (shmctl(shared_block_id, IPC_RMID, NULL) != IPC_RESULT_ERROR);
+}
 
 time_t get_raw_time() {
     time_t rawtime;
@@ -45,7 +84,7 @@ int pending_interrupt() {
 void freeMemory() {
     Rcpp::NumericVector x;
     Rcpp::Rcout << "Freeing" << std::endl;
-    my_object<double,double>*  status;
+    my_object<double>*  status;
     attach_memory_block(status, BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     for (int i = 0; i < NUM_BLOCKS; ++i) {
         if (free_memory_block(i,KEY_1)) {    
@@ -63,8 +102,8 @@ void freeMemory() {
     if (!detach_memory_block(status)) Rcpp::stop("Memory can't be detached");
 }
 
-template <typename T, typename U>
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T,U>* block,int &index, int key) {
+template <typename T>
+void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T>* block,int &index, int key) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -80,11 +119,11 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T,U>* block,int &
         
         block->raw_time = get_raw_time();
         if (sensor == 0) {
-            block->data1 = dht.temperature;
+            block->data1 = (T) dht.temperature;
             block->data2 = dht.humidity;
             Rcpp::Rcout << "Humidity is " << block->data2  << "%," << "\t Temperature is " << block->data1  << "*C" << std::endl;
         } else if (sensor == 1) {
-            block->data1 = dht.PhoR_time_to_charge;
+            block->data1 = (T) dht.PhoR_time_to_charge;
             Rcpp::Rcout << "Time to charge is " << block->data1 << " s"<< std::endl;
         }
 
@@ -119,12 +158,12 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     int sens = WarningHelperIdentifySensor(sensor);
     
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
-    my_object<double,double>* status;
+    my_object<double>* status;
     attach_memory_block(status, BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     
     TimeVar start;
     DHT dht;
-    my_object<double,double>* data_block;
+    my_object<double>* data_block;
     int i = 0;
     for (;!pending_interrupt();++i) {
         if (i == NUM_BLOCKS) {
@@ -149,10 +188,10 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
 }
 
 Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
-    my_object<double,double>* status;
+    my_object<double>* status;
     attach_memory_block(status,BLOCK_SIZE,NUM_BLOCKS+1,key);
     int cur = status->cur_id;
-    my_object<double,double>* data_block;
+    my_object<double>* data_block;
     char time_string[DATE_STRING_SIZE];
     Rcpp::StringVector datetime;
     if (sensor == 0) {

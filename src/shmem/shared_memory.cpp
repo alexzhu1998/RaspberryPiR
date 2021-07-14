@@ -7,6 +7,7 @@
 
 #include "shared_memory.h"
 
+// attach a shared memory block, associated with filename, create if doesnt exist
 static int get_shared_block(int size, int id, int random_key) {
     
     key_t key = random_key%KEY_RANGE+id;
@@ -15,20 +16,19 @@ static int get_shared_block(int size, int id, int random_key) {
     return shmget(key,size,IPC_CREAT |0666);
 }
 
-template <typename T, typename U>
-void attach_memory_block(my_object<T,U>* object, int size,int id,int random_key) {
+template <typename T>
+void attach_memory_block(my_object<T>* object, int size,int id,int random_key) {
     int shared_block_id = get_shared_block(size,id, random_key);
-    
 
-    if (shared_block_id == IPC_RESULT_ERROR) error("IPC_RESULT_ERROR: ");
+    if (shared_block_id == IPC_RESULT_ERROR) perror("IPC_RESULT_ERROR: ");
 
-    object = (my_object<T,U> *)shmat(shared_block_id, NULL,0);
-    if (object == (void *) IPC_RESULT_ERROR) error("shmat: ");
+    object = (my_object<T> *)shmat(shared_block_id, NULL,0);
+    if (object == (void *) IPC_RESULT_ERROR) perror("shmat: ");
     return;
 }
 
-template <typename T, typename U>
-bool detach_memory_block(my_object<T,U>* block) {
+template <typename T>
+bool detach_memory_block(my_object<T>* block) {
     return (shmdt(block) != IPC_RESULT_ERROR);
 }
 

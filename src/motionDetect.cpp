@@ -1,11 +1,12 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <Rcpp.h>
 #include <unistd.h>
 #include <raspicam/raspicam.h>
-#include "imageLib-raspicam/imageLib.h"
+#include "imageLibRaspicam/imageLib.h"
 #include "shmem/shared_memory.h"
-#include <Rcpp.h>
+
 
 #define KEY_2 3456
 
