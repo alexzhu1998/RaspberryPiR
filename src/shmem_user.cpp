@@ -65,8 +65,8 @@ void freeMemory() {
     if (!detach_memory_block(status)) Rcpp::stop("Memory can't be detached");
 }
 
-template <typename T>
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T>* block,int &index, int key) {
+
+void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double>* block,int &index, int key) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -82,11 +82,11 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<T>* block,int &in
         
         block->raw_time = get_raw_time();
         if (sensor == 0) {
-            block->data1 = (T) dht.temperature;
+            block->data1 = (double) dht.temperature;
             block->data2 = dht.humidity;
             Rcpp::Rcout << "Humidity is " << block->data2  << "%," << "\t Temperature is " << block->data1  << "*C" << std::endl;
         } else if (sensor == 1) {
-            block->data1 = (T)dht.PhoR_time_to_charge;
+            block->data1 = (double) dht.PhoR_time_to_charge;
             Rcpp::Rcout << "Time to charge is " << block->data1 << " s"<< std::endl;
         }
 
