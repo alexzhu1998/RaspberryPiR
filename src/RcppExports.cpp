@@ -5,6 +5,16 @@
 
 using namespace Rcpp;
 
+// simpleCapture
+void simpleCapture(Rcpp::CharacterVector path);
+RcppExport SEXP _RaspberryPiR_simpleCapture(SEXP pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type path(pathSEXP);
+    simpleCapture(path);
+    return R_NilValue;
+END_RCPP
+}
 // freeMemory
 void freeMemory();
 RcppExport SEXP _RaspberryPiR_freeMemory() {
@@ -124,6 +134,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 1},
     {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
     {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 4},
     {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},
