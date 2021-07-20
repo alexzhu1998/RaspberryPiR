@@ -14,7 +14,7 @@ PKG_LIBS = -L"/usr/lib/" -lwiringPi -lraspicam
 # if you added this line, then makevars will compile ONLY these cpp files.
 # SOURCES_CPP = DHTLib/DHT11.cpp shmem/shared_memory.cpp
 
-
+# OBJECTS = $(patsubst %.cpp, %.o, $(wildcard *.cpp)) 
 OBJECTS = $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(foreach dir,$(SRC_DIR),$(patsubst $(dir)/%.cpp, $(dir)/%.o, $(wildcard $(dir)/*.cpp)))
 
 # Origianl NAMESPACE
@@ -30,3 +30,4 @@ OBJECTS = $(patsubst %.cpp, %.o, $(wildcard *.cpp)) $(foreach dir,$(SRC_DIR),$(p
 # R CMD check
 # Need to configure NAMESPACE manually
 # Need Rcpp::compileAttributes('~/Honours/RaspberryPiR') before R CMD INSTALL
+# rm src/*.o src/*.so src/shmem/*.o src/imageLibRaspicam/*.o src/DHTLib/*.o

@@ -4,6 +4,7 @@
 #include <Rcpp.h>
 #include <unistd.h>
 #include <raspicam/raspicam.h>
+#include "shmem/shared_memory.h"
 #include "imageLibRaspicam/imageLib.h"
 
 
@@ -28,5 +29,5 @@ void simpleCapture(Rcpp::CharacterVector path = "/home/pi/Pictures/raspicam_imag
 
 // // [[Rcpp::export]]
 // void writeCameraMemory() {
-    
+//     raspicam::RaspiCam Camera;
 // }

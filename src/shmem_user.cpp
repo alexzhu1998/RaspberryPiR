@@ -45,7 +45,7 @@ int pending_interrupt() {
 void freeMemory() {
     Rcpp::NumericVector x;
     Rcpp::Rcout << "Freeing" << std::endl;
-    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
+    my_object<double>* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     for (int i = 0; i < NUM_BLOCKS; ++i) {
         if (free_memory_block(i,KEY_1)) {    
             Rcpp::Rcout <<"Free block: " << i << std::endl;
@@ -61,7 +61,7 @@ void freeMemory() {
     }
 }
 
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object* block,int &index, int key) {
+void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double>* block,int &index, int key) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -116,11 +116,11 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     int sens = WarningHelperIdentifySensor(sensor);
     
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
-    my_object* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
+    my_object<double>* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
     
     TimeVar start;
     DHT dht;
-    my_object* data_block;
+    my_object<double>* data_block;
     int i = 0;
     for (;!pending_interrupt();++i) {
         if (i == NUM_BLOCKS) {
@@ -145,9 +145,9 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
 }
 
 Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
-    my_object* status = attach_memory_block(BLOCK_SIZE,NUM_BLOCKS+1,key);
+    my_object<double>* status = attach_memory_block(BLOCK_SIZE,NUM_BLOCKS+1,key);
     int cur = status->cur_id;
-    my_object* data_block;
+    my_object<double>* data_block;
     char time_string[DATE_STRING_SIZE];
     Rcpp::StringVector datetime;
     if (sensor == 0) {
