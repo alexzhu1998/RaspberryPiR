@@ -2,7 +2,7 @@
 #include "DHTLib/DHT11.h"
 #include <time.h> //for time
 #include <unistd.h>
-#include "shmem/shared_memory.h"
+#include "shared_memory.h"
 #include <R.h>
 #include <Rdefines.h>
 #include <R_ext/Utils.h>
@@ -61,7 +61,7 @@ void freeMemory() {
     }
 }
 
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double>* block,int &index, int key) {
+void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double,BLOCK_LENGTH>* block,int &index) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -72,20 +72,19 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double>* block,in
     if (chk == SENSOR_OK) {
         Rcpp::Rcout << "DHT11, OK!" << std::endl;
         
-        block = attach_memory_block(BLOCK_SIZE,index, key);
-        // assign_time(block->datetime);
         
-        block->raw_time = get_raw_time();
+        
+        block->raw_time[index] = get_raw_time();
         if (sensor == 0) {
-            block->data1 = dht.temperature;
-            block->data2 = dht.humidity;
-            Rcpp::Rcout << "Humidity is " << block->data2  << "%," << "\t Temperature is " << block->data1  << "*C" << std::endl;
+            block->data1[index] = dht.temperature;
+            block->data2[index] = dht.humidity;
+            Rcpp::Rcout << "Humidity is " << block->data2[index]  << "%," << "\t Temperature is " << block->data1[index]  << "*C" << std::endl;
         } else if (sensor == 1) {
-            block->data1 = dht.PhoR_time_to_charge;
-            Rcpp::Rcout << "Time to charge is " << block->data1 << " s"<< std::endl;
+            block->data1[index] = dht.PhoR_time_to_charge;
+            Rcpp::Rcout << "Time to charge is " << block->data1[index] << " s"<< std::endl;
         }
 
-        detach_memory_block(block);
+        
     } else if (chk == DHTLIB_ERROR_CHECKSUM){
         Rcpp::Rcout << "DHT11,NOT OK! ERROR CHECKSUM" << std::endl;
     } else if (chk == SENSOR_ERROR_TIMEOUT) {
@@ -116,11 +115,38 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     int sens = WarningHelperIdentifySensor(sensor);
     
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
-    my_object<double>* status = attach_memory_block(BLOCK_SIZE, NUM_BLOCKS+1,KEY_1);
+    const char* shmpath;
+    const char* shmpath_pointer;
+    if (sens == 0) {
+        shmpath = "/DHT11";
+        shmpath_pointer = "/DHT11_ptr";
+    } else if (sens == 1) {
+        shmpath = "/PhoR";
+        shmpath_pointer = "/PhoR_ptr";
+    } else {
+        shmpath = NULL;
+        shmpath_pointer = NULL;
+    }
+
+    int fd = shm_open(shmpath,O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+    if (fd == -1){
+        shm_unlink(shmpath);
+        handle_error("open");
+    }
+
+    //// truncate file to precisely length bytes
+    if (ftruncate(fd, sizeof(struct my_object<double,BLOCK_LENGTH>)) == -1)           /* To obtain file size */
+        handle_error("fstat");
+
+    struct my_object<double,BLOCK_LENGTH>* data_block = static_cast<my_object<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
+    if (data == MAP_FAILED) 
+        handle_error("mmap");
     
     TimeVar start;
     DHT dht;
-    my_object<double>* data_block;
+    int fd_ptr = shm_open(shmpath_pointer,O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+    my_object<int,POINTER_LENGTH>* status = static_cast<my_object<int,POINTER_LENGTH>*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
+    
     int i = 0;
     for (;!pending_interrupt();++i) {
         if (i == NUM_BLOCKS) {
@@ -129,25 +155,44 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
         }
         
         start = timeNow();
+        // to fix
         assign_DHT_block(pin[0], sens, dht,data_block,i,KEY_1);
         double elapsed = intervalDuration(timeNow()-start);
         
         millisleep((unsigned int)std::max((interval-elapsed),(double)0));
         Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
-        status->cur_id = i;
+        status->data1[0] = i;
     }
+    
 
-    
-    
-    detach_memory_block(status);
     Rcpp::Rcout << "End Writing" << std::endl;
     freeMemory();
 }
 
 Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
-    my_object<double>* status = attach_memory_block(BLOCK_SIZE,NUM_BLOCKS+1,key);
-    int cur = status->cur_id;
-    my_object<double>* data_block;
+    const char* shmpath;
+    const char* shmpath_pointer;
+    if (sens == 0) {
+        shmpath = "/DHT11";
+        shmpath_pointer = "/DHT11_ptr";
+    } else if (sens == 1) {
+        shmpath = "/PhoR";
+        shmpath_pointer = "/PhoR_ptr";
+    } else {
+        shmpath = NULL;
+        shmpath_pointer = NULL;
+    }
+    int fd = shm_open(shmpath, O_RDWR, S_IRUSR|S_IWUSR);
+    int fd_ptr = shm_open(shmpath_pointer, O_RDWR, S_IRUSR|S_IWUSR);
+
+    struct my_object<int,POINTER_LENGTH>* status = static_cast<my_object<int,POINTER_LENGTH>*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
+    if (status == MAP_FAILED) 
+        handle_error("mmap");
+
+    int cur = status->data1[0];
+    
+    struct my_object<double,BLOCK_LENGTH>* data_block = static_cast<my_object<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data_block), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
+    
     char time_string[DATE_STRING_SIZE];
     Rcpp::StringVector datetime;
     if (sensor == 0) {
@@ -162,11 +207,10 @@ Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
                     break;
                 }
             }
-            data_block = attach_memory_block(BLOCK_SIZE,cur-i,key);
-            convert_to_string(time_string,data_block->raw_time);
+            convert_to_string(time_string,data_block->raw_time[cur-i]);
             datetime.push_back(time_string);
-            temp.push_back(data_block->data1);
-            hum.push_back(data_block->data2);
+            temp.push_back(data_block->data1[cur-i]);
+            hum.push_back(data_block->data2[cur-i]);
         }
         return Rcpp::List::create(
                             Rcpp::Named("datetime") = datetime,
@@ -184,10 +228,10 @@ Rcpp::List retrieve_DHT_block(int sensor, int n, int key) {
                     break;
                 }
             }
-            data_block = attach_memory_block(BLOCK_SIZE,cur-i,key);
-            convert_to_string(time_string,data_block->raw_time);
+            
+            convert_to_string(time_string,data_block->raw_time[cur-i]);
             datetime.push_back(time_string);
-            time_to_c.push_back(data_block->data1);
+            time_to_c.push_back(data_block->data1[cur-i]);
         }
         return Rcpp::List::create(
                             Rcpp::Named("datetime") = datetime,
@@ -207,7 +251,7 @@ Rcpp::List readMemory(Rcpp::IntegerVector read_block = 1, Rcpp::StringVector sen
         Rcpp::stop("size of reading blocks is greater than memory capacity.");
     }
     
-    return retrieve_DHT_block(sens,n,KEY_1);
+    return retrieve_DHT_block(sens,n);
 
 }
 
