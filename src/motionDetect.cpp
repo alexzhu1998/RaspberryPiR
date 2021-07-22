@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <unistd.h>
 #include <raspicam/raspicam.h>
-#include "shmem/shared_memory.h"
+#include "shared_memory.h"
 #include "imageLibRaspicam/imageLib.h"
 
 

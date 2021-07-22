@@ -16,24 +16,24 @@ BEGIN_RCPP
 END_RCPP
 }
 // freeMemory
-void freeMemory();
-RcppExport SEXP _RaspberryPiR_freeMemory() {
+void freeMemory(Rcpp::StringVector sensor);
+RcppExport SEXP _RaspberryPiR_freeMemory(SEXP sensorSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    freeMemory();
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    freeMemory(sensor);
     return R_NilValue;
 END_RCPP
 }
 // writeMemory
-void writeMemory(Rcpp::StringVector sensor, Rcpp::NumericVector pin, Rcpp::LogicalVector nh, Rcpp::NumericVector w);
-RcppExport SEXP _RaspberryPiR_writeMemory(SEXP sensorSEXP, SEXP pinSEXP, SEXP nhSEXP, SEXP wSEXP) {
+void writeMemory(Rcpp::StringVector sensor, Rcpp::NumericVector pin, Rcpp::NumericVector w);
+RcppExport SEXP _RaspberryPiR_writeMemory(SEXP sensorSEXP, SEXP pinSEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    writeMemory(sensor, pin, nh, w);
+    writeMemory(sensor, pin, w);
     return R_NilValue;
 END_RCPP
 }
@@ -135,8 +135,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 1},
-    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 4},
+    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 1},
+    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 3},
     {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
