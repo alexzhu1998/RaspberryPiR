@@ -15,6 +15,36 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// freeMemory_RaspiCam
+void freeMemory_RaspiCam();
+RcppExport SEXP _RaspberryPiR_freeMemory_RaspiCam() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    freeMemory_RaspiCam();
+    return R_NilValue;
+END_RCPP
+}
+// writeMemory_RaspiCam
+void writeMemory_RaspiCam(Rcpp::NumericVector w);
+RcppExport SEXP _RaspberryPiR_writeMemory_RaspiCam(SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
+    writeMemory_RaspiCam(w);
+    return R_NilValue;
+END_RCPP
+}
+// readMemory_RaspiCam
+Rcpp::List readMemory_RaspiCam(Rcpp::IntegerVector read_block);
+RcppExport SEXP _RaspberryPiR_readMemory_RaspiCam(SEXP read_blockSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
+    rcpp_result_gen = Rcpp::wrap(readMemory_RaspiCam(read_block));
+    return rcpp_result_gen;
+END_RCPP
+}
 // freeMemory
 void freeMemory(Rcpp::StringVector sensor);
 RcppExport SEXP _RaspberryPiR_freeMemory(SEXP sensorSEXP) {
@@ -135,6 +165,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 1},
+    {"_RaspberryPiR_freeMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_freeMemory_RaspiCam, 0},
+    {"_RaspberryPiR_writeMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_writeMemory_RaspiCam, 1},
+    {"_RaspberryPiR_readMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_readMemory_RaspiCam, 1},
     {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 1},
     {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 3},
     {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},

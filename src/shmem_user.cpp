@@ -11,15 +11,6 @@
 #include <thread> // for sleep
 
 
-typedef std::chrono::high_resolution_clock::time_point TimeVar;
-
-#define intervalDuration(a) std::chrono::duration_cast<std::chrono::milliseconds>(a).count()
-#define timeNow() std::chrono::high_resolution_clock::now()
-#define millisleep(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
-
-#define KEY_1 9876
-#define DATE_STRING_SIZE 30
-
 time_t get_raw_time() {
     time_t rawtime;
     
@@ -41,9 +32,7 @@ int pending_interrupt() {
     return !(R_ToplevelExec(check_interrupt_fn, NULL));
 }
 
-
-
-void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double,BLOCK_LENGTH>* block,int &index) {
+void assign_DHT_block(int pin, int sensor ,DHT& dht, data_obj<double,BLOCK_LENGTH>* block,int &index) {
     int chk;
     if (sensor == 0) {
         chk = dht.readDHT11(pin);
@@ -75,13 +64,14 @@ void assign_DHT_block(int pin, int sensor ,DHT& dht, my_object<double,BLOCK_LENG
 }
 
 int WarningHelperIdentifySensor(Rcpp::StringVector sensor) {
-    int s = 0;
+    
     std::vector<std::string> sensorMapping = {"DHT11", "PhoR"};
-    for (; s < sensorMapping.size();s++) {
+    for (int s = 0; s < sensorMapping.size();s++) {
         if (sensor[0] == sensorMapping[s]) {
             return s;
         }
     }
+    
     Rcpp::stop("Sensor Not Found, Terminating...");
     return -1;
 }
@@ -91,15 +81,18 @@ void freeMemory(Rcpp::StringVector sensor = "DHT11") {
 
     const char* shmpath;
     const char* shmpath_pointer;
-    if (sens == 0) {
-        shmpath = "/DHT11";
-        shmpath_pointer = "/DHT11_ptr";
-    } else if (sens == 1) {
-        shmpath = "/PhoR";
-        shmpath_pointer = "/PhoR_ptr";
-    } else {
-        shmpath = NULL;
-        shmpath_pointer = NULL;
+    switch(sens) {
+        case 0:
+            shmpath = "/DHT11";
+            shmpath_pointer = "/DHT11_ptr";
+            break;
+        case 1:
+            shmpath = "/PhoR";
+            shmpath_pointer = "/PhoR_ptr";
+            break;
+        default:
+            shmpath = NULL;
+            shmpath_pointer = NULL;
     }
     Rcpp::Rcout <<"Free block" << std::endl;
     shm_unlink(shmpath);
@@ -117,15 +110,18 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     Rcpp::Rcout << "Writer program is starting..." << std::endl;
     const char* shmpath;
     const char* shmpath_pointer;
-    if (sens == 0) {
-        shmpath = "/DHT11";
-        shmpath_pointer = "/DHT11_ptr";
-    } else if (sens == 1) {
-        shmpath = "/PhoR";
-        shmpath_pointer = "/PhoR_ptr";
-    } else {
-        shmpath = NULL;
-        shmpath_pointer = NULL;
+    switch(sens) {
+        case 0:
+            shmpath = "/DHT11";
+            shmpath_pointer = "/DHT11_ptr";
+            break;
+        case 1:
+            shmpath = "/PhoR";
+            shmpath_pointer = "/PhoR_ptr";
+            break;
+        default:
+            shmpath = NULL;
+            shmpath_pointer = NULL;
     }
 
     int fd = shm_open(shmpath,O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
@@ -137,19 +133,19 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
     }
 
     //// truncate file to precisely length bytes
-    if (ftruncate(fd, sizeof(my_object<double,BLOCK_LENGTH>)) == -1)           /* To obtain file size */
+    if (ftruncate(fd, sizeof(data_obj<double,BLOCK_LENGTH>)) == -1)           /* To obtain file size */
         handle_error("fstat");
-    if (ftruncate(fd_ptr, sizeof(pointer_object)) == -1)           /* To obtain file size */
+    if (ftruncate(fd_ptr, sizeof(data_ptr)) == -1)           /* To obtain file size */
         handle_error("fstat");
 
-    my_object<double,BLOCK_LENGTH>* data_block = static_cast<my_object<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data_block), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
+    data_obj<double,BLOCK_LENGTH>* data_block = static_cast<data_obj<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data_block), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
     if (data_block == MAP_FAILED) 
         handle_error("mmap");
     
     TimeVar start;
     DHT dht;
     
-    pointer_object* status = static_cast<pointer_object*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
+    data_ptr* status = static_cast<data_ptr*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
     
     int i = 0;
     for (;!pending_interrupt();++i) {
@@ -176,26 +172,32 @@ void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0
 Rcpp::List retrieve_DHT_block(int sensor, int n) {
     const char* shmpath;
     const char* shmpath_pointer;
-    if (sensor == 0) {
-        shmpath = "/DHT11";
-        shmpath_pointer = "/DHT11_ptr";
-    } else if (sensor == 1) {
-        shmpath = "/PhoR";
-        shmpath_pointer = "/PhoR_ptr";
-    } else {
-        shmpath = NULL;
-        shmpath_pointer = NULL;
+    switch(sensor) {
+        case 0:
+            shmpath = "/DHT11";
+            shmpath_pointer = "/DHT11_ptr";
+            break;
+        case 1:
+            shmpath = "/PhoR";
+            shmpath_pointer = "/PhoR_ptr";
+            break;
+        default:
+            shmpath = NULL;
+            shmpath_pointer = NULL;
     }
     int fd = shm_open(shmpath, O_RDWR, S_IRUSR|S_IWUSR);
     int fd_ptr = shm_open(shmpath_pointer, O_RDWR, S_IRUSR|S_IWUSR);
+    if (fd == -1||fd_ptr == -1){
+        handle_error("fd fd_ptr");
+    }
 
-    pointer_object* status = static_cast<pointer_object*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
+    data_ptr* status = static_cast<data_ptr*>(mmap(NULL,sizeof(*status), PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
     if (status == MAP_FAILED) 
         handle_error("mmap");
 
     int cur = status->index;
     
-    struct my_object<double,BLOCK_LENGTH>* data_block = static_cast<my_object<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data_block), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
+    struct data_obj<double,BLOCK_LENGTH>* data_block = static_cast<data_obj<double,BLOCK_LENGTH>*>(mmap(NULL,sizeof(*data_block), PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
     
     char time_string[DATE_STRING_SIZE];
     Rcpp::StringVector datetime;

@@ -5,6 +5,18 @@ simpleCapture <- function(path = "/home/pi/Pictures/raspicam_image.ppm") {
     invisible(.Call(`_RaspberryPiR_simpleCapture`, path))
 }
 
+freeMemory_RaspiCam <- function() {
+    invisible(.Call(`_RaspberryPiR_freeMemory_RaspiCam`))
+}
+
+writeMemory_RaspiCam <- function(w = 1000L) {
+    invisible(.Call(`_RaspberryPiR_writeMemory_RaspiCam`, w))
+}
+
+readMemory_RaspiCam <- function(read_block = 1L) {
+    .Call(`_RaspberryPiR_readMemory_RaspiCam`, read_block)
+}
+
 freeMemory <- function(sensor = "DHT11") {
     invisible(.Call(`_RaspberryPiR_freeMemory`, sensor))
 }
