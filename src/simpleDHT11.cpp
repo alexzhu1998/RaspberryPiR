@@ -25,7 +25,6 @@ Rcpp::NumericVector testingDHT () {
     } else {
         Rcpp::Rcout << "DHT11,NOT OK! ERROR UNKNOWN" << std::endl;
     }
-
     return y;
 }
 
