@@ -100,6 +100,7 @@ void freeMemory(Rcpp::StringVector sensor = "DHT11") {
     shm_unlink(shmpath_pointer);
 }
 
+
 // [[Rcpp::export]]
 void writeMemory(Rcpp::StringVector sensor = "DHT11",Rcpp::NumericVector pin = 0, Rcpp::NumericVector w = 1000) {
     

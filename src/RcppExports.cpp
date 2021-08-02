@@ -5,6 +5,40 @@
 
 using namespace Rcpp;
 
+// freeMemory
+void freeMemory(Rcpp::StringVector sensor);
+RcppExport SEXP _RaspberryPiR_freeMemory(SEXP sensorSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    freeMemory(sensor);
+    return R_NilValue;
+END_RCPP
+}
+// writeMemory
+void writeMemory(Rcpp::StringVector sensor, Rcpp::NumericVector pin, Rcpp::NumericVector w);
+RcppExport SEXP _RaspberryPiR_writeMemory(SEXP sensorSEXP, SEXP pinSEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
+    writeMemory(sensor, pin, w);
+    return R_NilValue;
+END_RCPP
+}
+// readMemory
+Rcpp::List readMemory(Rcpp::IntegerVector read_block, Rcpp::StringVector sensor);
+RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP, SEXP sensorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
+    rcpp_result_gen = Rcpp::wrap(readMemory(read_block, sensor));
+    return rcpp_result_gen;
+END_RCPP
+}
 // simpleCapture
 void simpleCapture(Rcpp::CharacterVector path);
 RcppExport SEXP _RaspberryPiR_simpleCapture(SEXP pathSEXP) {
@@ -42,40 +76,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
     rcpp_result_gen = Rcpp::wrap(readMemory_RaspiCam(read_block));
-    return rcpp_result_gen;
-END_RCPP
-}
-// freeMemory
-void freeMemory(Rcpp::StringVector sensor);
-RcppExport SEXP _RaspberryPiR_freeMemory(SEXP sensorSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
-    freeMemory(sensor);
-    return R_NilValue;
-END_RCPP
-}
-// writeMemory
-void writeMemory(Rcpp::StringVector sensor, Rcpp::NumericVector pin, Rcpp::NumericVector w);
-RcppExport SEXP _RaspberryPiR_writeMemory(SEXP sensorSEXP, SEXP pinSEXP, SEXP wSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    writeMemory(sensor, pin, w);
-    return R_NilValue;
-END_RCPP
-}
-// readMemory
-Rcpp::List readMemory(Rcpp::IntegerVector read_block, Rcpp::StringVector sensor);
-RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP, SEXP sensorSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sensor(sensorSEXP);
-    rcpp_result_gen = Rcpp::wrap(readMemory(read_block, sensor));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -164,13 +164,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 1},
+    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 3},
+    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 1},
     {"_RaspberryPiR_freeMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_freeMemory_RaspiCam, 0},
     {"_RaspberryPiR_writeMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_writeMemory_RaspiCam, 1},
     {"_RaspberryPiR_readMemory_RaspiCam", (DL_FUNC) &_RaspberryPiR_readMemory_RaspiCam, 1},
-    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 1},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 3},
-    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 2},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
