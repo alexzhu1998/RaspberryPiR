@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "DHTLib/DHT11.h"
+#include "sensors/DHT11.h"
 #include <time.h> //for time
 #include <unistd.h>
 #include "shmem/shared_memory.h"
@@ -46,7 +46,7 @@ void freeMemory() {
 
 // [[Rcpp::export]]
 void writeMemory(Rcpp::LogicalVector nh = 0, Rcpp::NumericVector w = 0) {
-    DHT dht;
+    DHT11 dht;
     int chk;
     bool nohup = nh[0];// Not implemented yet
     int wait = w[0];

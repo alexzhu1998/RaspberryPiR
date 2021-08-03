@@ -2,7 +2,7 @@
 #include <wiringPi.h>
 #include <stdint.h>
 
-#include "DHTLib/DHT11.h"
+#include "sensors/DHT11.h"
 
 
 

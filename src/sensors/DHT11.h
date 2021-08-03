@@ -1,6 +1,7 @@
 #ifndef __SIMPLEDHT11__
 #define __SIMPLEDHT11__
 
+#include "sensors_control.h"
 
 #include <wiringPi.h>
 #include <stdint.h>
@@ -17,9 +18,9 @@
 #define DHT11_Pin  0
 
 
-class DHT {
+class DHT11: public Sensor {
     public:
-        DHT();
+        DHT11();
         double humidity,temperature;
         int readDHT11Once(int pin); 
         int readDHT11(int pin);
