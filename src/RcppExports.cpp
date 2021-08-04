@@ -5,44 +5,38 @@
 
 using namespace Rcpp;
 
-// freeMemory
-void freeMemory();
-RcppExport SEXP _RaspberryPiR_freeMemory() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    freeMemory();
-    return R_NilValue;
-END_RCPP
-}
-// writeMemory
-void writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
-RcppExport SEXP _RaspberryPiR_writeMemory(SEXP nhSEXP, SEXP wSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    writeMemory(nh, w);
-    return R_NilValue;
-END_RCPP
-}
-// readMemory
-Rcpp::List readMemory(Rcpp::IntegerVector read_block);
-RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP) {
+// testingDHT
+Rcpp::List testingDHT(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_testingDHT(SEXP pinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
-    rcpp_result_gen = Rcpp::wrap(readMemory(read_block));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingDHT(pin));
     return rcpp_result_gen;
 END_RCPP
 }
-// testingDHT
-Rcpp::NumericVector testingDHT();
-RcppExport SEXP _RaspberryPiR_testingDHT() {
+// testingPhotoRes
+Rcpp::List testingPhotoRes(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_testingPhotoRes(SEXP pinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(testingDHT());
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingPhotoRes(pin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// simpleCapture
+Rcpp::List simpleCapture(Rcpp::CharacterVector path, Rcpp::NumericVector width, Rcpp::NumericVector height);
+RcppExport SEXP _RaspberryPiR_simpleCapture(SEXP pathSEXP, SEXP widthSEXP, SEXP heightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type width(widthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type height(heightSEXP);
+    rcpp_result_gen = Rcpp::wrap(simpleCapture(path, width, height));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,10 +115,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 2},
-    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 1},
-    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 0},
+    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
+    {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
+    {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
     {"_RaspberryPiR_LL_digitalWrite", (DL_FUNC) &_RaspberryPiR_LL_digitalWrite, 2},

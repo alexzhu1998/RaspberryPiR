@@ -1,14 +1,14 @@
-#include <Rcpp.h>
-#include <wiringPi.h>
-#include <stdint.h>
-
 #include "DHT11.h"
 
 DHT11::DHT11() {
+    timeBetweenAcquisition = 1000;
+}
+
+DHT11_Operator::DHT11_Operator() {
     wiringPiSetup();
 }
 
-int DHT11::readSensor(int pin, int wakeupDelay) {
+int DHT11_Operator::readSensor(int pin, int wakeupDelay) {
     int mask = 0x80;
     int idx = 0;
     int32_t t,loopCnt;
@@ -88,7 +88,7 @@ int DHT11::readSensor(int pin, int wakeupDelay) {
     return DHTLIB_OK;
 }
 
-int DHT11::readDHT11Once(int pin){
+int DHT11_Operator::readDHT11Once(int pin){
     int rv ;
     uint8_t checksum;
     rv = readSensor(pin,DHTLIB_DHT11_WAKEUP);
@@ -104,7 +104,7 @@ int DHT11::readDHT11Once(int pin){
         return DHTLIB_ERROR_CHECKSUM;
     return DHTLIB_OK;
 }
-int DHT11::readDHT11(int pin){
+int DHT11_Operator::readDHT11(int pin){
 	int chk = DHTLIB_INVALID_VALUE;
 	for (int i = 0; i < 15; i++){
 		chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.

@@ -2,8 +2,9 @@
 #define __SIMPLEDHT11__
 
 #include "sensors_control.h"
+#include "shared_memory.h"
 
-#include <wiringPi.h>
+
 #include <stdint.h>
 
 #define DHTLIB_OK               0
@@ -15,18 +16,30 @@
 #define DHTLIB_DHT_WAKEUP       1
 
 #define DHTLIB_TIMEOUT          100
-#define DHT11_Pin  0
+#define DHT11_Pin               0
 
 
-class DHT11: public Sensor {
+class DHT11: public Sensor,SharedMemory {
     public:
         DHT11();
-        double humidity,temperature;
-        int readDHT11Once(int pin); 
-        int readDHT11(int pin);
+        
+        void info();
+        void writeMemory(int pin);
+        Rcpp::List readMemory(int n);
+        void killProcess();
+};
+
+
+class DHT11_Operator: public Sensor {
     private:
         uint8_t bits[5];
         int readSensor(int pin, int wakeupDelay);
+    public:
+        DHT11_Operator();
+        
+        double humidity,temperature;
+        int readDHT11Once(int pin); 
+        int readDHT11(int pin);
 };
 
 #endif // __SIMPLEDHT11__
