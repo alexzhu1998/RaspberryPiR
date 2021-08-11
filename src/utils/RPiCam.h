@@ -15,7 +15,7 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-class RPiCam: public Sensor,SharedMemory {
+class RPiCam: public Sensor {
     public:
         RPiCam();
         void info();

@@ -8,7 +8,7 @@
 
 #define SENSOR_OK               0
 
-class PhotoRes: public Sensor,SharedMemory {
+class PhotoRes: public Sensor {
     public:
         
         void info();

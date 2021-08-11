@@ -1,8 +1,6 @@
 #include "DHT11.h"
 
-DHT11::DHT11() {
-    timeBetweenAcquisition = 1000;
-}
+
 
 DHT11_Operator::DHT11_Operator() {
     wiringPiSetup();
@@ -114,4 +112,67 @@ int DHT11_Operator::readDHT11(int pin){
 		delay(100);
 	}
 	return chk;
+}
+
+void DHT11::writeMemory(int pin) {
+    open_write();
+    map_write(data_obj,ptr_obj);
+    int i = 0;
+    int chk;
+    TimeVar start;
+    DHT11_Operator dht;
+    for (;!pending_interrupt();++i) {
+        if (i == BLOCK_LENGTH) {
+            i = 0;
+            ptr_obj->complete = true;
+        }
+        Rcpp::Rcout <<  "Block No: " << ptr_obj->index << std::endl;
+        start = timeNow();
+        // assigning values
+        chk = dht.readDHT11(pin);
+        data_obj->raw_time[i] = get_raw_time();
+        data_obj->data1[i] = static_cast<double>(dht.temperature);
+        data_obj->data2[i] = static_cast<double>(dht.humidity);
+        double elapsed = intervalDuration(timeNow()-start);
+        Rcpp::Rcout << "Humidity is " << data_obj->data2[i]  << "%," << "\t Temperature is " << data_obj->data1[i]  << "*C" << std::endl;
+        millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
+        Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
+        ptr_obj->index = i;
+        
+    }
+    Rcpp::Rcout << "End Writing" << std::endl;
+
+    Rcpp::Rcout << "Freeing Memory" << std::endl;
+    freeMemory();
+}
+
+Rcpp::List DHT11::readMemory(int n) {
+    init_read(data_obj,ptr_obj);
+    Rcpp::CharacterVector datetime;
+    Rcpp::NumericVector temp;
+    Rcpp::NumericVector hum;
+
+    int cur = ptr_obj->index;
+    
+    Rcpp::Rcout << cur << std::endl;
+    for (int i =0 ; i < n;++i) {
+        if (cur-i < 0) {
+            if (ptr_obj->complete) {
+                cur = BLOCK_LENGTH+i-1;
+            } else {
+                Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
+                break;
+            }
+        }
+        
+        std::string t = to_time_string(data_obj->raw_time[cur-i]);
+        datetime.push_back(t);
+        temp.push_back(static_cast<double>(data_obj->data1[cur-i]));
+        hum.push_back(static_cast<double>(data_obj->data2[cur-i]));
+    }
+    return Rcpp::List::create(
+        Rcpp::Named("datetime") = datetime,
+        Rcpp::Named("temperature") = temp,
+        Rcpp::Named("humidity") = hum
+    ); 
 }

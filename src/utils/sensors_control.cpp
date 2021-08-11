@@ -17,10 +17,14 @@ std::string Sensor::to_time_string(time_t rawtime) {
     return std::string(datetime);
 }
 
-// void Sensor::check_interrupt_fn(void *dummy) {
-//     R_CheckUserInterrupt(); 
-// }
+void Sensor::setTime(int _timeBetweenAcquisition) {
+    timeBetweenAcquisition = _timeBetweenAcquisition;
+}
 
-// int Sensor::pending_interrupt() {
-//     return !(R_ToplevelExec(check_interrupt_fn, NULL));
-// }
+void check_interrupt_fn(void *dummy) {
+    R_CheckUserInterrupt(); 
+}
+
+int pending_interrupt() {
+    return !(R_ToplevelExec(check_interrupt_fn, NULL));
+}

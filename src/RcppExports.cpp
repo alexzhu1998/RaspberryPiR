@@ -5,6 +5,36 @@
 
 using namespace Rcpp;
 
+// DHT11_writeMemory
+void DHT11_writeMemory(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_DHT11_writeMemory(SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    DHT11_writeMemory(pin);
+    return R_NilValue;
+END_RCPP
+}
+// DHT11_readMemory
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_DHT11_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(DHT11_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DHT11_freeMemory
+void DHT11_freeMemory();
+RcppExport SEXP _RaspberryPiR_DHT11_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    DHT11_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
 // testingDHT
 Rcpp::List testingDHT(Rcpp::NumericVector pin);
 RcppExport SEXP _RaspberryPiR_testingDHT(SEXP pinSEXP) {
@@ -115,6 +145,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_DHT11_writeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_writeMemory, 1},
+    {"_RaspberryPiR_DHT11_readMemory", (DL_FUNC) &_RaspberryPiR_DHT11_readMemory, 1},
+    {"_RaspberryPiR_DHT11_freeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},

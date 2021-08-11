@@ -1,4 +1,4 @@
-// #include "utils/sensors/DHT11.h"
+#include "utils/DHT11.h"
 // #include "utils/shared_memory.h"
 
 // #include <Rcpp.h>
@@ -10,23 +10,25 @@
 // #include <Rdefines.h>
 // #include <R_ext/Utils.h>
 
-// void assign_time(char* datetime) {
-//     time_t rawtime;
-//     struct tm * timeinfo;
 
-//     time (&rawtime);
-//     timeinfo = localtime(&rawtime);
-//     strcpy(datetime,asctime(timeinfo));
-// }
+// [[Rcpp::export]]
+void DHT11_writeMemory(Rcpp::NumericVector pin = 0) {
+    // Is it possible to do this without having to pass the parameter every time?
+    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+    sensor.writeMemory(pin[0]);
+}
 
-// void check_interrupt_fn(void *dummy) {
-//     R_CheckUserInterrupt(); 
-// }
+// [[Rcpp::export]]
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
+    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+    return sensor.readMemory(n[0]);
+}
 
-// int pending_interrupt() {
-//     return !(R_ToplevelExec(check_interrupt_fn, NULL));
-// }
-
+// [[Rcpp::export]]
+void DHT11_freeMemory() {
+    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+    sensor.freeMemory();
+}
 
 // void freeMemory() {
 //     Rcpp::NumericVector x;
