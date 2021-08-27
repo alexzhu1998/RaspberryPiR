@@ -166,6 +166,7 @@ Rcpp::List DHT11::readMemory(int n) {
         }
         
         std::string t = to_time_string(data_obj->raw_time[cur-i]);
+        Rcpp::Rcout << data_obj->data1[cur-i] << data_obj->data2[cur-i] << std::endl;
         datetime.push_back(t);
         temp.push_back(static_cast<double>(data_obj->data1[cur-i]));
         hum.push_back(static_cast<double>(data_obj->data2[cur-i]));

@@ -35,6 +35,63 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// RPiCam_writeMemory
+void RPiCam_writeMemory();
+RcppExport SEXP _RaspberryPiR_RPiCam_writeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    RPiCam_writeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// RPiCam_freeMemory
+void RPiCam_freeMemory();
+RcppExport SEXP _RaspberryPiR_RPiCam_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    RPiCam_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// RPiCam_readMemory
+Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_RPiCam_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(RPiCam_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testing_writeMemory
+void testing_writeMemory();
+RcppExport SEXP _RaspberryPiR_testing_writeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    testing_writeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// testing_readMemory
+Rcpp::List testing_readMemory();
+RcppExport SEXP _RaspberryPiR_testing_readMemory() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(testing_readMemory());
+    return rcpp_result_gen;
+END_RCPP
+}
+// testing_freeMemory
+void testing_freeMemory();
+RcppExport SEXP _RaspberryPiR_testing_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    testing_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
 // testingDHT
 Rcpp::List testingDHT(Rcpp::NumericVector pin);
 RcppExport SEXP _RaspberryPiR_testingDHT(SEXP pinSEXP) {
@@ -148,6 +205,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_DHT11_writeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_writeMemory, 1},
     {"_RaspberryPiR_DHT11_readMemory", (DL_FUNC) &_RaspberryPiR_DHT11_readMemory, 1},
     {"_RaspberryPiR_DHT11_freeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_freeMemory, 0},
+    {"_RaspberryPiR_RPiCam_writeMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_writeMemory, 0},
+    {"_RaspberryPiR_RPiCam_freeMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_freeMemory, 0},
+    {"_RaspberryPiR_RPiCam_readMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_readMemory, 1},
+    {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
+    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 0},
+    {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},

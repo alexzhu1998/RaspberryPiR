@@ -1,4 +1,5 @@
 #include "utils/DHT11.h"
+#include "utils/RPiCam.h"
 // #include "utils/shared_memory.h"
 
 // #include <Rcpp.h>
@@ -28,6 +29,76 @@ Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
 void DHT11_freeMemory() {
     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
     sensor.freeMemory();
+}
+
+// [[Rcpp::export]]
+void RPiCam_writeMemory() {
+    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+    sensor.writeMemory();
+}
+
+// [[Rcpp::export]]
+void RPiCam_freeMemory() {
+    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+    sensor.freeMemory();
+}
+
+// [[Rcpp::export]] 
+Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 1) {
+    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+    return sensor.readMemory(n[0]);
+}
+
+
+// [[Rcpp::export]]
+void testing_writeMemory() {
+    SharedMemory sharedmem("/samplepath","/sampleptrpath");
+    // BLOCK_LENGTH 200
+    DataBlock db1(BLOCK_LENGTH,BLOCK_LENGTH,BLOCK_LENGTH,1,1);
+    DataPtr dp1(BLOCK_LENGTH);
+    DataBlock* data_obj = &db1;
+    DataPtr* ptr_obj = &dp1;
+    sharedmem.open_write();
+    sharedmem.map_write(data_obj,ptr_obj);
+    Rcpp::Rcout << sizeof(db1) << std::endl;
+    Rcpp::Rcout << sizeof(DataBlock*) << std::endl;
+    Rcpp::Rcout << sizeof(*data_obj) << std::endl;
+    // data_obj = static_cast<DataBlock*>(mmap(NULL,sizeof(db1), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd,0));
+    // if (data_obj == MAP_FAILED)
+    //     handle_error("mmap data_obj");
+    // if (ftruncate(sharedmem.fd, sizeof(db1)) == -1)           /* To obtain file size */
+    //     handle_error("open_write fd ftruncate");
+    // ptr_obj = static_cast<DataPtr*>(mmap(NULL,sizeof(*ptr_obj), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd_ptr,0));
+    // if (ptr_obj == MAP_FAILED)
+    //     handle_error("mmap");
+    // if (ftruncate(sharedmem.fd_ptr, sizeof(*ptr_obj)) == -1)           /* To obtain file size */
+    //     handle_error("open_write fd_ptr ftruncate");
+
+    // data_obj->data1[0] = 123;
+    // data_obj->data1[1] = 234;
+}
+
+// [[Rcpp::export]]
+Rcpp::List testing_readMemory() {
+    SharedMemory sharedmem("/samplepath","/sampleptrpath");
+    DataBlock db1(BLOCK_LENGTH,BLOCK_LENGTH,BLOCK_LENGTH,1,1);
+    DataPtr dp1(BLOCK_LENGTH);
+    DataBlock* data_obj = &db1;
+    DataPtr* ptr_obj = &dp1;
+
+    sharedmem.init_read(data_obj,ptr_obj);
+    Rcpp::Rcout << data_obj->data1[0] << std::endl;
+    Rcpp::Rcout << data_obj->data1[1] << std::endl;
+
+    return Rcpp::List::create(
+        Rcpp::Named("temperature") = data_obj->data1[0]
+    );
+}
+
+// [[Rcpp::export]]
+void testing_freeMemory() {
+    SharedMemory sharedmem("/samplepath","/sampleptrpath");
+    sharedmem.freeMemory();
 }
 
 // void freeMemory() {

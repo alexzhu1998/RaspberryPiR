@@ -38,7 +38,6 @@ class DHT11_Operator: public Sensor {
 class DHT11: public Sensor, public SharedMemory {
     public:
         
-        
         DHT11(const char* dht11_shmpath,const char* dht11_shmpath_ptr ):SharedMemory(dht11_shmpath,dht11_shmpath_ptr) {
             timeBetweenAcquisition = 1000;
             DataBlock db1(BLOCK_LENGTH,BLOCK_LENGTH,BLOCK_LENGTH,1,1);

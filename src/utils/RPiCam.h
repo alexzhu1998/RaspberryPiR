@@ -15,14 +15,10 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-class RPiCam: public Sensor {
-    public:
-        RPiCam();
-        void info();
-        void writeMemory(int pin);
-        Rcpp::List readMemory(int n);
-        void killProcess();
-};
+#define RPICAM_SHM_PATH          "/shmpath"
+#define RPICAM_SHM_PTR_PATH      "/shmpath_ptr"
+
+#define CAMBLOCKLENGTH 2
 
 
 class RPiCam_Operator: public Sensor {
@@ -32,7 +28,6 @@ class RPiCam_Operator: public Sensor {
         unsigned int h;
         std::string filepath;
         
-
     public:
         RPiCam_Operator(raspicam::RASPICAM_FORMAT f, unsigned int width,unsigned int height,std::string path) {
             fmt = f;
@@ -43,10 +38,29 @@ class RPiCam_Operator: public Sensor {
         unsigned char *data;
         size_t len;
         std::vector<int> v;
+        std::string s; //avoid using std::string, use C-style arrays if you already know the size
         int initiate_camera(raspicam::RaspiCam &Camera);
         int capture(raspicam::RaspiCam &Camera);
+        int capture_string(raspicam::RaspiCam &Camera);
         void saveImage (raspicam::RaspiCam &Camera);
 };
 
+
+class RPiCam: public Sensor, public SharedMemory {
+    public:
+        RPiCam(const char* rpicam_shmpath, const char* rpicam_shmpath_ptr): SharedMemory(rpicam_shmpath,rpicam_shmpath_ptr) {
+            timeBetweenAcquisition = 1000;
+            DataBlock db1(CAMBLOCKLENGTH,1,1,CAMBLOCKLENGTH,WIDTH*HEIGHT);
+            DataPtr dp1(CAMBLOCKLENGTH);
+            data_obj = &db1;
+            ptr_obj = &dp1;
+        }
+        DataBlock* data_obj;
+        DataPtr* ptr_obj;
+        void info();
+        void writeMemory();
+        Rcpp::List readMemory(int n);
+        void killProcess();
+};
 
 #endif //RPI_CAM_H

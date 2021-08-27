@@ -13,6 +13,30 @@ DHT11_freeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_DHT11_freeMemory`))
 }
 
+RPiCam_writeMemory <- function() {
+    invisible(.Call(`_RaspberryPiR_RPiCam_writeMemory`))
+}
+
+RPiCam_freeMemory <- function() {
+    invisible(.Call(`_RaspberryPiR_RPiCam_freeMemory`))
+}
+
+RPiCam_readMemory <- function(n = 1L) {
+    .Call(`_RaspberryPiR_RPiCam_readMemory`, n)
+}
+
+testing_writeMemory <- function() {
+    invisible(.Call(`_RaspberryPiR_testing_writeMemory`))
+}
+
+testing_readMemory <- function() {
+    .Call(`_RaspberryPiR_testing_readMemory`)
+}
+
+testing_freeMemory <- function() {
+    invisible(.Call(`_RaspberryPiR_testing_freeMemory`))
+}
+
 testingDHT <- function(pin = 0L) {
     .Call(`_RaspberryPiR_testingDHT`, pin)
 }

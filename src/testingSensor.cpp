@@ -65,6 +65,7 @@ Rcpp::List simpleCapture(Rcpp::CharacterVector path = "/home/pi/Pictures/raspica
     Rcpp::CharacterVector t = Rcpp::CharacterVector::create(rpicam.to_time_string(rpicam.get_raw_time()));
     
     Rcpp::IntegerVector res (rpicam.v.begin(),rpicam.v.end());
+    Rcpp::Rcout << rpicam.v.size() << std::endl;
     // rpicam.saveImage(Camera);
     
     delete rpicam.data;

@@ -8,7 +8,8 @@
 #include <vector>
 
 
-#define BLOCK_LENGTH 200
+#define BLOCK_LENGTH                200
+
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define intervalDuration(a) std::chrono::duration_cast<std::chrono::milliseconds>(a).count()
@@ -28,7 +29,10 @@ public:
         raw_time = std::vector<time_t>(_n1,0);
         data1 = std::vector<double>(_n2,0);
         data2 = std::vector<double>(_n3,0);
-        cam_data = std::vector<std::string>(_n4,std::string(_image_len,42));
+        cam_data = std::vector<std::string>(_n4,std::string(_image_len,'a'));
+        Rcpp::Rcout << "DataBlock Constructor"  << std::endl;
+        Rcpp::Rcout << sizeof(raw_time) << " " << sizeof(data1) << " " << sizeof(data2)<<" "<< sizeof(cam_data) << std::endl;
+        data1[0] = 15341;
     }
 };
 
@@ -57,7 +61,6 @@ public:
     int fd_ptr;
     // DataBlock* data_obj;
     // DataPtr* ptr_obj;
-    
     void open_write();
     void map_write(DataBlock* data_obj, DataPtr* ptr_obj);
     void init_read(DataBlock* data_obj, DataPtr* ptr_obj);
