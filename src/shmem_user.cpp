@@ -2,67 +2,81 @@
 #include "utils/RPiCam.h"
 // #include "utils/shared_memory.h"
 
-// #include <Rcpp.h>
-
-// #include <time.h> //for time
-// #include <unistd.h>
-
-// #include <R.h>
-// #include <Rdefines.h>
-// #include <R_ext/Utils.h>
 
 
-// [[Rcpp::export]]
-void DHT11_writeMemory(Rcpp::NumericVector pin = 0) {
-    // Is it possible to do this without having to pass the parameter every time?
-    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-    sensor.writeMemory(pin[0]);
-}
 
-// [[Rcpp::export]]
-Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
-    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-    return sensor.readMemory(n[0]);
-}
+// // [[Rcpp::export]]
+// void DHT11_writeMemory(Rcpp::NumericVector pin = 0) {
+//     // Is it possible to do this without having to pass the parameter every time?
+//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+//     sensor.writeMemory(pin[0]);
+// }
 
-// [[Rcpp::export]]
-void DHT11_freeMemory() {
-    DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-    sensor.freeMemory();
-}
+// // [[Rcpp::export]]
+// Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
+//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+//     return sensor.readMemory(n[0]);
+// }
 
-// [[Rcpp::export]]
-void RPiCam_writeMemory() {
-    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-    sensor.writeMemory();
-}
+// // [[Rcpp::export]]
+// void DHT11_freeMemory() {
+//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
+//     sensor.freeMemory();
+// }
 
-// [[Rcpp::export]]
-void RPiCam_freeMemory() {
-    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-    sensor.freeMemory();
-}
+// // [[Rcpp::export]]
+// void RPiCam_writeMemory() {
+//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+//     sensor.writeMemory();
+// }
 
-// [[Rcpp::export]] 
-Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 1) {
-    RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-    return sensor.readMemory(n[0]);
-}
+// // [[Rcpp::export]]
+// void RPiCam_freeMemory() {
+//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+//     sensor.freeMemory();
+// }
+
+// // [[Rcpp::export]] 
+// Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 1) {
+//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+//     return sensor.readMemory(n[0]);
+// }
 
 
 // [[Rcpp::export]]
 void testing_writeMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath");
-    // BLOCK_LENGTH 200
-    DataBlock db1(BLOCK_LENGTH,BLOCK_LENGTH,BLOCK_LENGTH,1,1);
-    DataPtr dp1(BLOCK_LENGTH);
-    DataBlock* data_obj = &db1;
-    DataPtr* ptr_obj = &dp1;
-    sharedmem.open_write();
-    sharedmem.map_write(data_obj,ptr_obj);
-    Rcpp::Rcout << sizeof(db1) << std::endl;
-    Rcpp::Rcout << sizeof(DataBlock*) << std::endl;
-    Rcpp::Rcout << sizeof(*data_obj) << std::endl;
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_WRITE);
+    
+    DataPtr source_data_ptr(2,BLOCK_LENGTH);
+    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+    
+    Rcpp::Rcout << sizeof(source_data_ptr) << std::endl;
+    Rcpp::Rcout << sizeof(DataPtr) << std::endl;
+    sharedmem.map_data_ptr(sizeof(DataPtr),&source_data_ptr);
+    sharedmem.map_data_obj(source_data_ptr.allocated_memory,&source_data_obj);
+    Rcpp::Rcout << sharedmem.data_ptr->allocated_memory << std::endl;
+
+    // DataPtr dp1(BLOCK_LENGTH);
+    // DataPtr* ptr_obj = &dp1;
+    
+    int i = 0;
+    for (;!pending_interrupt();i++) {
+        if (i == sharedmem.data_ptr->num_data_points * sharedmem.data_ptr->block_length) {
+            i = 0;
+            sharedmem.data_ptr->complete = true;
+        }
+        Rcpp::Rcout << "tick ";
+        sharedmem.data_obj->sensor_data[i]= (double)i;
+        Rcpp::Rcout << "tock ";
+        sharedmem.data_ptr->cur_index = i;
+        sleep(1);
+        
+    }
+    // sharedmem.open_write();
+    // sharedmem.map_write();
+    // Rcpp::Rcout << sizeof(db1) << std::endl;
+    // Rcpp::Rcout << sizeof(DataBlock*) << std::endl;
+    // Rcpp::Rcout << sizeof(*data_obj) << std::endl;
     // data_obj = static_cast<DataBlock*>(mmap(NULL,sizeof(db1), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd,0));
     // if (data_obj == MAP_FAILED)
     //     handle_error("mmap data_obj");
@@ -76,28 +90,43 @@ void testing_writeMemory() {
 
     // data_obj->data1[0] = 123;
     // data_obj->data1[1] = 234;
+    sharedmem.freeMemory();
 }
 
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath");
-    DataBlock db1(BLOCK_LENGTH,BLOCK_LENGTH,BLOCK_LENGTH,1,1);
-    DataPtr dp1(BLOCK_LENGTH);
-    DataBlock* data_obj = &db1;
-    DataPtr* ptr_obj = &dp1;
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
+    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+     
+    // DataPtr dp1(BLOCK_LENGTH);
+    
+    sharedmem.retrieve_data_ptr(sizeof(DataPtr));
+    Rcpp::Rcout << "Allocated Memory: "<< sharedmem.data_ptr->allocated_memory << std::endl;
+    
+    sharedmem.retrieve_data_obj(sharedmem.data_ptr->allocated_memory);
+    memcpy(&source_data_obj,sharedmem.data_obj,sharedmem.data_ptr->allocated_memory);
+    Rcpp::Rcout<< source_data_obj.success << std::endl;
+    
+    // for (int i =0; i < std::min(5,sharedmem.data_ptr->cur_index); i++) {
+    //     Rcpp::Rcout << i << "Data points: " <<  sharedmem.data_obj->sensor_data[i] << std::endl;
+    // }
+    
+    
+    // DataBlock* data_obj = &db1;
+    // DataPtr* ptr_obj = &dp1;
 
-    sharedmem.init_read(data_obj,ptr_obj);
-    Rcpp::Rcout << data_obj->data1[0] << std::endl;
-    Rcpp::Rcout << data_obj->data1[1] << std::endl;
+    // sharedmem.init_read();
+    // Rcpp::Rcout << data_obj->data1[0] << std::endl;
+    // Rcpp::Rcout << data_obj->data1[1] << std::endl;
 
     return Rcpp::List::create(
-        Rcpp::Named("temperature") = data_obj->data1[0]
+        Rcpp::Named("temperature") = Rcpp::NumericVector(1)
     );
 }
 
 // [[Rcpp::export]]
 void testing_freeMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath");
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",2);
     sharedmem.freeMemory();
 }
 

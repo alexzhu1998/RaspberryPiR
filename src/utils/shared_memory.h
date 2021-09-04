@@ -10,6 +10,13 @@
 
 #define BLOCK_LENGTH                200
 
+#define REGULAR_SENSOR_TYPE         0
+#define RASPI_CAMERA_TYPE           1
+
+#define SHM_READ                    0
+#define SHM_WRITE                   1
+#define SHM_FREE                    2
+
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define intervalDuration(a) std::chrono::duration_cast<std::chrono::milliseconds>(a).count()
@@ -19,51 +26,87 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define handle_error(msg) \
            do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-class DataBlock {
-public:
-    std::vector<time_t> raw_time;
-    std::vector<double> data1;
-    std::vector<double> data2;
-    std::vector<std::string> cam_data;
-    DataBlock(int _n1,int _n2,int _n3, int _n4, int _image_len) {    
-        raw_time = std::vector<time_t>(_n1,0);
-        data1 = std::vector<double>(_n2,0);
-        data2 = std::vector<double>(_n3,0);
-        cam_data = std::vector<std::string>(_n4,std::string(_image_len,'a'));
-        Rcpp::Rcout << "DataBlock Constructor"  << std::endl;
-        Rcpp::Rcout << sizeof(raw_time) << " " << sizeof(data1) << " " << sizeof(data2)<<" "<< sizeof(cam_data) << std::endl;
-        data1[0] = 15341;
-    }
+// class DataBlock {
+// public:
+//     std::vector<time_t> raw_time;
+//     std::vector<double> data1;
+//     std::vector<double> data2;
+//     std::vector<std::string> cam_data;
+//     DataBlock(int _n1,int _n2,int _n3, int _n4, int _image_len) {    
+//         raw_time = std::vector<time_t>(_n1,0);
+//         data1 = std::vector<double>(_n2,0);
+//         data2 = std::vector<double>(_n3,0);
+//         cam_data = std::vector<std::string>(_n4,std::string(_image_len,'a'));
+//         Rcpp::Rcout << "DataBlock Constructor"  << std::endl;
+//         Rcpp::Rcout << sizeof(raw_time) << " " << sizeof(data1) << " " << sizeof(data2)<<" "<< sizeof(cam_data) << std::endl;
+//         data1[0] = 15341;
+//     }
+// };
+
+
+
+
+// class DataPtr {
+// public:
+//     DataPtr(int _block_length) {
+//         block_length = _block_length;
+//     }
+//     int index = 0;
+//     bool complete = 0;
+//     int block_length;
+// };
+
+
+
+struct DataBlock {
+    time_t* raw_time = NULL;
+    double* sensor_data = NULL;
+    uint8_t* cam_data = NULL;
+    int success = 0;
+    // Regular Sensor/Image constructor
+    DataBlock(int _block_size, int _block_length, int type);
+    
+    // Destructor
+    ~DataBlock();
+    
 };
 
-
-class DataPtr {
-public:
-    DataPtr(int _block_length) {
-        block_length = _block_length;
-    }
-    int index = 0;
+struct DataPtr {
+    int cur_index;
     bool complete = 0;
+    size_t allocated_memory = -1;
     int block_length;
+    int w;
+    int h;
+    int channels;
+    int num_data_points;
+    int image_size;
+
+    DataPtr(int _w, int _h, int _channels,int _block_length);
+    DataPtr(int _num_data_points,int _block_length);
 };
 
 class SharedMemory {
+private:
+    int fd;
+    int fd_ptr;
+    
 public:
     const char* shmpath;
     const char* shmpath_ptr;
-    SharedMemory(const char* _shmpath, const char* _shmpath_ptr) {
-        shmpath = _shmpath;
-        shmpath_ptr = _shmpath_ptr;
-        // data_obj = _data_obj;
-        // ptr_obj = _ptr_obj;
-    }
-    int fd;
-    int fd_ptr;
-    // DataBlock* data_obj;
-    // DataPtr* ptr_obj;
+    SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag);
+    
+    DataPtr* data_ptr;
+    DataBlock* data_obj;
+    
     void open_write();
-    void map_write(DataBlock* data_obj, DataPtr* ptr_obj);
-    void init_read(DataBlock* data_obj, DataPtr* ptr_obj);
+    void open_read();
+    void map_data_obj(size_t mmap_size, DataBlock* source_data_obj);
+    void map_data_ptr(size_t mmap_size, DataPtr* source_data_ptr);
+    void retrieve_data_obj(size_t mmap_size);
+    void retrieve_data_ptr(size_t mmap_size);
+    
+    void init_read();
     void freeMemory();
 };
 

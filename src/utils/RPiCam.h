@@ -48,15 +48,11 @@ class RPiCam_Operator: public Sensor {
 
 class RPiCam: public Sensor, public SharedMemory {
     public:
-        RPiCam(const char* rpicam_shmpath, const char* rpicam_shmpath_ptr): SharedMemory(rpicam_shmpath,rpicam_shmpath_ptr) {
+        RPiCam(const char* rpicam_shmpath, const char* rpicam_shmpath_ptr, int writeFlag): SharedMemory(rpicam_shmpath,rpicam_shmpath_ptr,writeFlag) {
             timeBetweenAcquisition = 1000;
-            DataBlock db1(CAMBLOCKLENGTH,1,1,CAMBLOCKLENGTH,WIDTH*HEIGHT);
-            DataPtr dp1(CAMBLOCKLENGTH);
-            data_obj = &db1;
-            ptr_obj = &dp1;
+            
         }
-        DataBlock* data_obj;
-        DataPtr* ptr_obj;
+        
         void info();
         void writeMemory();
         Rcpp::List readMemory(int n);

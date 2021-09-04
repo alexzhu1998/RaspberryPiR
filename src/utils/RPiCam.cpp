@@ -69,43 +69,43 @@ void RPiCam_Operator::saveImage (raspicam::RaspiCam &Camera) {
     std::cout<<"Image saved at " << filepath.c_str()<<std::endl;
 }
 
-void RPiCam::writeMemory() {
-    open_write();
-    map_write(data_obj,ptr_obj);
-    int i = 0; 
-    int chk;
-    TimeVar start;
-    RPiCam_Operator rpicam = RPiCam_Operator(raspicam::RASPICAM_FORMAT_GRAY,1,1,"/home/pi/Pictures/raspicam_image.ppm");
-    raspicam::RaspiCam Camera;
-    rpicam.initiate_camera(Camera);
+// void RPiCam::writeMemory() {
+//     open_write();
+//     map_write();
+//     int i = 0; 
+//     int chk;
+//     TimeVar start;
+//     RPiCam_Operator rpicam = RPiCam_Operator(raspicam::RASPICAM_FORMAT_GRAY,1,1,"/home/pi/Pictures/raspicam_image.ppm");
+//     raspicam::RaspiCam Camera;
+//     rpicam.initiate_camera(Camera);
 
-    for (;!pending_interrupt();i++) {
-        if (i == CAMBLOCKLENGTH) {
-            i = 0;
-            ptr_obj->complete = true;
-        }
-        Rcpp::Rcout << "Block No: " << i << std::endl;
-        start = timeNow();
-        // assigning values
-        chk = rpicam.capture_string(Camera);
-        data_obj->raw_time[i] = get_raw_time();
-        data_obj->cam_data[i] = rpicam.s;
+//     for (;!pending_interrupt();i++) {
+//         if (i == CAMBLOCKLENGTH) {
+//             i = 0;
+//             ptr_obj->complete = true;
+//         }
+//         Rcpp::Rcout << "Block No: " << i << std::endl;
+//         start = timeNow();
+//         // assigning values
+//         chk = rpicam.capture_string(Camera);
+//         data_obj->raw_time[i] = get_raw_time();
+//         // data_obj->cam_data[i] = rpicam.s;
         
-        double elapsed = intervalDuration(timeNow()-start);
+//         double elapsed = intervalDuration(timeNow()-start);
         
-        Rcpp::Rcout << "Head of image is " << data_obj->cam_data[i].substr(0,50) << std::endl;
-        millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
-        Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
-        ptr_obj->index = i;
-    }
-    Rcpp::Rcout << "End Writing" << std::endl;
-    Rcpp::Rcout << "Freeing Memory" << std::endl;
-    SharedMemory::freeMemory();
-}
+//         Rcpp::Rcout << "Head of image is " << data_obj->cam_data[i].substr(0,50) << std::endl;
+//         millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
+//         Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
+//         ptr_obj->index = i;
+//     }
+//     Rcpp::Rcout << "End Writing" << std::endl;
+//     Rcpp::Rcout << "Freeing Memory" << std::endl;
+//     SharedMemory::freeMemory();
+// }
 
-Rcpp::List RPiCam::readMemory(int n) {
-    init_read(data_obj,ptr_obj);
-    return Rcpp::List::create(
-        Rcpp::Named("x") = Rcpp::NumericVector(1)
-    );
-}
+// Rcpp::List RPiCam::readMemory(int n) {
+//     init_read();
+//     return Rcpp::List::create(
+//         Rcpp::Named("x") = Rcpp::NumericVector(1)
+//     );
+// }
