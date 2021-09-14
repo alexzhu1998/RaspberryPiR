@@ -1,74 +1,118 @@
 #include "utils/DHT11.h"
 #include "utils/RPiCam.h"
+#include "utils/PhotoRes.h"
 // #include "utils/shared_memory.h"
 
 
 
 
-// // [[Rcpp::export]]
-// void DHT11_writeMemory(Rcpp::NumericVector pin = 0) {
-//     // Is it possible to do this without having to pass the parameter every time?
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     sensor.writeMemory(pin[0]);
-// }
+// [[Rcpp::export]]
+void DHT11_writeMemory(Rcpp::NumericVector pin = 0,Rcpp::NumericVector timeDelay = 1000) {
+    // Is it possible to do this without having to pass the parameter every time?
+    DHT11 sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(pin[0]);
+}
 
-// // [[Rcpp::export]]
-// Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     return sensor.readMemory(n[0]);
-// }
+// [[Rcpp::export]]
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
+    DHT11 sensor;
+    return sensor.readMemory(n[0]);
+}
 
-// // [[Rcpp::export]]
-// void DHT11_freeMemory() {
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     sensor.freeMemory();
-// }
+// [[Rcpp::export]]
+void DHT11_freeMemory() {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
 
-// // [[Rcpp::export]]
-// void RPiCam_writeMemory() {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-//     sensor.writeMemory();
-// }
+// [[Rcpp::export]]
+Rcpp::NumericVector DHT11_scanPointer() {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_SCAN,DATA_DHT11);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
 
-// // [[Rcpp::export]]
-// void RPiCam_freeMemory() {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-//     sensor.freeMemory();
-// }
+// [[Rcpp::export]]
+void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::NumericVector timeDelay = 1000) {
+    // Is it possible to do this without having to pass the parameter every time?
+    PhotoRes sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(pin[0]);
+}
 
-// // [[Rcpp::export]] 
-// Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 1) {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-//     return sensor.readMemory(n[0]);
-// }
+// [[Rcpp::export]]
+Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n = 5) {
+    PhotoRes sensor;
+    return sensor.readMemory(n[0]);
+}
 
+// [[Rcpp::export]]
+void PhotoRes_freeMemory() {
+    SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector PhotoRes_scanPointer() {
+    SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_SCAN,DATA_PHOTORES);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
+
+// [[Rcpp::export]]
+void RPiCam_writeMemory(Rcpp::NumericVector timeDelay = 1000) {
+    RPiCam sensor(WIDTH,HEIGHT,CHANNELS);
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory();
+}
+
+// [[Rcpp::export]] 
+Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 5) {
+    RPiCam sensor(WIDTH,HEIGHT,CHANNELS);
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void RPiCam_freeMemory() {
+    SharedMemory sharedmem(RASPICAM_SHM_PATH,RASPICAM_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector RPiCam_scanPointer() {
+    SharedMemory sharedmem(RASPICAM_SHM_PATH,RASPICAM_SHM_PTR_PATH,SHM_SCAN,DATA_RASPICAM);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
 
 // [[Rcpp::export]]
 void testing_writeMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_WRITE);
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_WRITE, DATA_PHOTORES);
     
-    DataPtr source_data_ptr(2,BLOCK_LENGTH);
-    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
     
-    Rcpp::Rcout << sizeof(source_data_ptr) << std::endl;
-    Rcpp::Rcout << sizeof(DataPtr) << std::endl;
-    sharedmem.map_data_ptr(sizeof(DataPtr),&source_data_ptr);
-    sharedmem.map_data_obj(source_data_ptr.allocated_memory,&source_data_obj);
-    Rcpp::Rcout << sharedmem.data_ptr->allocated_memory << std::endl;
-
-    // DataPtr dp1(BLOCK_LENGTH);
-    // DataPtr* ptr_obj = &dp1;
+    // Rcpp::Rcout << sizeof(source_data_ptr) << std::endl;
+    // Rcpp::Rcout << sizeof(DataPtr) << std::endl;
+    // sharedmem.map_DataPtr();
+    // sharedmem.map_DataBlock1();
+    // sharedmem.map_data_obj(source_data_ptr.allocated_memory,&source_data_obj);
     
     int i = 0;
     for (;!pending_interrupt();i++) {
-        if (i == sharedmem.data_ptr->num_data_points * sharedmem.data_ptr->block_length) {
+        if (i == BLOCK_LENGTH) {
             i = 0;
-            sharedmem.data_ptr->complete = true;
+            sharedmem.dp->complete = true;
         }
         Rcpp::Rcout << "tick ";
-        sharedmem.data_obj->sensor_data[i]= (double)i;
+        sharedmem.db1->data[i]= (double)i;
         Rcpp::Rcout << "tock ";
-        sharedmem.data_ptr->cur_index = i;
+        sharedmem.dp->cur_index = i;
         sleep(1);
         
     }
@@ -94,22 +138,17 @@ void testing_writeMemory() {
 }
 
 // [[Rcpp::export]]
-Rcpp::List testing_readMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
-    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+Rcpp::List testing_readMemory(Rcpp::NumericVector x = 5) {
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ,DATA_PHOTORES);
+    // DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
      
     // DataPtr dp1(BLOCK_LENGTH);
+    int n = x[0];
     
-    sharedmem.retrieve_data_ptr(sizeof(DataPtr));
-    Rcpp::Rcout << "Allocated Memory: "<< sharedmem.data_ptr->allocated_memory << std::endl;
     
-    sharedmem.retrieve_data_obj(sharedmem.data_ptr->allocated_memory);
-    memcpy(&source_data_obj,sharedmem.data_obj,sharedmem.data_ptr->allocated_memory);
-    Rcpp::Rcout<< source_data_obj.success << std::endl;
-    
-    // for (int i =0; i < std::min(5,sharedmem.data_ptr->cur_index); i++) {
-    //     Rcpp::Rcout << i << "Data points: " <<  sharedmem.data_obj->sensor_data[i] << std::endl;
-    // }
+    for (int i =0; i < std::min(n,sharedmem.dp->cur_index); i++) {
+        Rcpp::Rcout << i << "Data points: " <<  sharedmem.db1->data[i] << std::endl;
+    }
     
     
     // DataBlock* data_obj = &db1;
@@ -126,7 +165,7 @@ Rcpp::List testing_readMemory() {
 
 // [[Rcpp::export]]
 void testing_freeMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath",2);
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_FREE,DATA_FREE);
     sharedmem.freeMemory();
 }
 

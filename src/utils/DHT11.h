@@ -35,12 +35,11 @@ class DHT11_Operator: public Sensor {
         int readDHT11(int pin);
 };
 
-class DHT11: public Sensor, public SharedMemory {
+class DHT11: public Sensor {
     public:
         
-        DHT11(const char* dht11_shmpath,const char* dht11_shmpath_ptr,int writeFlag):SharedMemory(dht11_shmpath,dht11_shmpath_ptr,writeFlag) {
+        DHT11() {
             timeBetweenAcquisition = 1000;
-            
         }
         
         void info();

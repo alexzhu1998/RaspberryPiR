@@ -8,17 +8,15 @@
 #include <fstream>
 #include <raspicam/raspicam.h>
 
-#define WIDTH 	320
-#define HEIGHT 	240
+
 
 
 #define SUCCESS 1
 #define FAILURE 0
 
-#define RPICAM_SHM_PATH          "/shmpath"
-#define RPICAM_SHM_PTR_PATH      "/shmpath_ptr"
+#define RASPICAM_SHM_PATH          "/shmpath"
+#define RASPICAM_SHM_PTR_PATH      "/shmpath_ptr"
 
-#define CAMBLOCKLENGTH 2
 
 
 class RPiCam_Operator: public Sensor {
@@ -36,23 +34,24 @@ class RPiCam_Operator: public Sensor {
             filepath = path;
         };
         unsigned char *data;
-        size_t len;
+        size_t image_len;
         std::vector<int> v;
         std::string s; //avoid using std::string, use C-style arrays if you already know the size
         int initiate_camera(raspicam::RaspiCam &Camera);
         int capture(raspicam::RaspiCam &Camera);
         int capture_string(raspicam::RaspiCam &Camera);
+        int capture_array(raspicam::RaspiCam &Camera, CameraBlock* cb, int offset);
         void saveImage (raspicam::RaspiCam &Camera);
 };
 
 
-class RPiCam: public Sensor, public SharedMemory {
+class RPiCam: public Sensor{
     public:
-        RPiCam(const char* rpicam_shmpath, const char* rpicam_shmpath_ptr, int writeFlag): SharedMemory(rpicam_shmpath,rpicam_shmpath_ptr,writeFlag) {
+        RPiCam (unsigned int width,unsigned int height,unsigned int channels) {
             timeBetweenAcquisition = 1000;
-            
+            image_len = (size_t)width*height*channels;
         }
-        
+        size_t image_len;
         void info();
         void writeMemory();
         Rcpp::List readMemory(int n);

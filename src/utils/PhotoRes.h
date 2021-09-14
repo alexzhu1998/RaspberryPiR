@@ -6,16 +6,10 @@
 
 
 
-#define SENSOR_OK               0
+#define SENSOR_OK                   0
 
-class PhotoRes: public Sensor {
-    public:
-        
-        void info();
-        void writeMemory(int pin);
-        Rcpp::List readMemory(int n);
-        void killProcess();
-};
+#define PHOTORES_SHM_PATH           "/PHOTORES"
+#define PHOTORES_SHM_PTR_PATH       "/PHOTORES_ptr"
 
 
 class PhotoRes_Operator : public Sensor {
@@ -25,7 +19,16 @@ class PhotoRes_Operator : public Sensor {
         int readPhotoRes(int pin);
 };
 
-
+class PhotoRes: public Sensor {
+    public:
+        PhotoRes(){
+            timeBetweenAcquisition = 1000;
+        }
+        void info();
+        void writeMemory(int pin);
+        Rcpp::List readMemory(int n);
+        void killProcess();
+};
 
 
 #endif // PHOTO_RES_H

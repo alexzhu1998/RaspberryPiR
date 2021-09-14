@@ -115,66 +115,74 @@ int DHT11_Operator::readDHT11(int pin){
 	return chk;
 }
 
-// void DHT11::writeMemory(int pin) {
-//     open_write();
-//     map_write();
-//     int i = 0;
-//     int chk;
-//     TimeVar start;
-//     DHT11_Operator dht;
-//     for (;!pending_interrupt();++i) {
-//         if (i == BLOCK_LENGTH) {
-//             i = 0;
-//             ptr_obj->complete = true;
-//         }
-//         Rcpp::Rcout <<  "Block No: " << ptr_obj->index << std::endl;
-//         start = timeNow();
-//         // assigning values
-//         chk = dht.readDHT11(pin);
-//         data_obj->raw_time[i] = get_raw_time();
-//         data_obj->data1[i] = static_cast<double>(dht.temperature);
-//         data_obj->data2[i] = static_cast<double>(dht.humidity);
-//         double elapsed = intervalDuration(timeNow()-start);
-//         Rcpp::Rcout << "Humidity is " << data_obj->data2[i]  << "%," << "\t Temperature is " << data_obj->data1[i]  << "*C" << std::endl;
-//         millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
-//         Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
-//         ptr_obj->index = i;
-        
-//     }
-//     Rcpp::Rcout << "End Writing" << std::endl;
-
-//     Rcpp::Rcout << "Freeing Memory" << std::endl;
-//     freeMemory();
-// }
-
-// Rcpp::List DHT11::readMemory(int n) {
-//     init_read();
-//     Rcpp::CharacterVector datetime;
-//     Rcpp::NumericVector temp;
-//     Rcpp::NumericVector hum;
-
-//     int cur = ptr_obj->index;
+void DHT11::writeMemory(int pin) {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_WRITE,DATA_DHT11);
+    DataPtr* data_ptr = sharedmem.dp;
+    DataBlock2* data_obj = sharedmem.db2;
     
-//     Rcpp::Rcout << cur << std::endl;
-//     for (int i =0 ; i < n;++i) {
-//         if (cur-i < 0) {
-//             if (ptr_obj->complete) {
-//                 cur = BLOCK_LENGTH+i-1;
-//             } else {
-//                 Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
-//                 break;
-//             }
-//         }
+    int i = 0;
+    int chk;
+    TimeVar start;
+    DHT11_Operator dht;
+    for (;!pending_interrupt();++i) {
+        if (i == data_ptr->block_length) {
+            i = 0;
+            data_ptr->complete = true;
+        }
+        Rcpp::Rcout <<  "Block No: " << i << std::endl;
+        start = timeNow();
+        // assigning values
+        chk = dht.readDHT11(pin);
+        data_obj->raw_time[i] = get_raw_time();
+        data_obj->data1[i] = static_cast<double>(dht.temperature);
+        data_obj->data2[i] = static_cast<double>(dht.humidity);
+        double elapsed = intervalDuration(timeNow()-start);
+        Rcpp::Rcout << "Humidity is " << data_obj->data2[i]  << "%," << "\t Temperature is " << data_obj->data1[i]  << "*C" << std::endl;
+        millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
+        Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
+        data_ptr->cur_index = i;
         
-//         std::string t = to_time_string(data_obj->raw_time[cur-i]);
-//         Rcpp::Rcout << data_obj->data1[cur-i] << data_obj->data2[cur-i] << std::endl;
-//         datetime.push_back(t);
-//         temp.push_back(static_cast<double>(data_obj->data1[cur-i]));
-//         hum.push_back(static_cast<double>(data_obj->data2[cur-i]));
-//     }
-//     return Rcpp::List::create(
-//         Rcpp::Named("datetime") = datetime,
-//         Rcpp::Named("temperature") = temp,
-//         Rcpp::Named("humidity") = hum
-//     ); 
-// }
+    }
+    Rcpp::Rcout << "End Writing" << std::endl;
+
+    Rcpp::Rcout << "Freeing Memory" << std::endl;
+    sharedmem.freeMemory();
+}
+
+Rcpp::List DHT11::readMemory(int n) {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_READ,DATA_DHT11);
+    DataPtr* data_ptr = sharedmem.dp;
+    DataBlock2* data_obj = sharedmem.db2;
+    Rcpp::CharacterVector datetime;
+    Rcpp::NumericVector temp;
+    Rcpp::NumericVector hum;
+
+    int cur = data_ptr->cur_index;
+    int block_length = data_ptr->block_length;
+    
+    // Rcpp::Rcout << cur << std::endl;
+    for (int i =0 ; i < n;++i) {
+        if (cur-i < 0) {
+            if (data_ptr->complete) {
+                cur = block_length+i-1;
+            } else {
+                Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
+                break;
+            }
+        }
+        
+        std::string t = to_time_string(data_obj->raw_time[cur-i]);
+        
+        datetime.push_back(t);
+        temp.push_back(static_cast<double>(data_obj->data1[cur-i]));
+        hum.push_back(static_cast<double>(data_obj->data2[cur-i]));
+    }
+
+    // sharedmem.unmap_DataPtr(data_ptr);
+    // sharedmem.unmap_DataBlock2(data_obj);
+    return Rcpp::List::create(
+        Rcpp::Named("datetime") = datetime,
+        Rcpp::Named("temperature") = temp,
+        Rcpp::Named("humidity") = hum
+    ); 
+}

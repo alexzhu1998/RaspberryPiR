@@ -8,14 +8,26 @@
 #include <vector>
 
 
+
 #define BLOCK_LENGTH                200
+#define CAM_BLOCK_LENGTH            10
+
+#define WIDTH 	                    320
+#define HEIGHT 	                    240
+#define CHANNELS                    1
 
 #define REGULAR_SENSOR_TYPE         0
 #define RASPI_CAMERA_TYPE           1
 
+#define DATA_RASPICAM               0
+#define DATA_PHOTORES               1
+#define DATA_DHT11                  2
+#define DATA_FREE                   -1
+           
 #define SHM_READ                    0
 #define SHM_WRITE                   1
 #define SHM_FREE                    2
+#define SHM_SCAN                    3
 
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
@@ -58,23 +70,30 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 
 
 
-struct DataBlock {
-    time_t* raw_time = NULL;
-    double* sensor_data = NULL;
-    uint8_t* cam_data = NULL;
-    int success = 0;
-    // Regular Sensor/Image constructor
-    DataBlock(int _block_size, int _block_length, int type);
-    
-    // Destructor
-    ~DataBlock();
-    
+
+struct DataBlock1 {
+    time_t raw_time[BLOCK_LENGTH];
+    double data[BLOCK_LENGTH];
+    bool success;
+};
+
+struct DataBlock2 {
+    time_t raw_time[BLOCK_LENGTH];
+    double data1[BLOCK_LENGTH];
+    double data2[BLOCK_LENGTH];
+    bool success;
+};
+
+struct CameraBlock {
+    time_t raw_time[BLOCK_LENGTH];
+    unsigned char data[WIDTH*HEIGHT*CHANNELS*CAM_BLOCK_LENGTH];
+    bool success;
 };
 
 struct DataPtr {
-    int cur_index;
+    int cur_index = 0;
     bool complete = 0;
-    size_t allocated_memory = -1;
+    size_t allocated_memory = 0;
     int block_length;
     int w;
     int h;
@@ -83,31 +102,46 @@ struct DataPtr {
     int image_size;
 
     DataPtr(int _w, int _h, int _channels,int _block_length);
-    DataPtr(int _num_data_points,int _block_length);
+    DataPtr(int _num_data_points,int _block_length, int dataFlag);
 };
 
 class SharedMemory {
 private:
     int fd;
     int fd_ptr;
-    
-public:
     const char* shmpath;
     const char* shmpath_ptr;
-    SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag);
-    
-    DataPtr* data_ptr;
-    DataBlock* data_obj;
-    
+    int dFlag;
+    int wFlag;
     void open_write();
     void open_read();
-    void map_data_obj(size_t mmap_size, DataBlock* source_data_obj);
-    void map_data_ptr(size_t mmap_size, DataPtr* source_data_ptr);
-    void retrieve_data_obj(size_t mmap_size);
-    void retrieve_data_ptr(size_t mmap_size);
+public:
+    SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag, int dataFlag);
+    ~SharedMemory();
+    DataPtr* dp;
+    DataBlock1* db1;
+    DataBlock2* db2;
+    CameraBlock* cb;
     
-    void init_read();
+    void map_DataPtr(DataPtr* source,size_t mmap_size);
+    void map_DataBlock1(DataBlock1* source,size_t mmap_size);
+    void map_DataBlock2(DataBlock2* source,size_t mmap_size);
+    void map_CameraBlock(CameraBlock* source,size_t mmap_size);
+    
+    void unmap_DataPtr(DataPtr* source);
+    void unmap_DataBlock1(DataBlock1* source);
+    void unmap_DataBlock2(DataBlock2* source);
+    void unmap_CameraBlock(CameraBlock* source);
+
+    void retrieve_DataPtr(size_t mmap_size);
+    void retrieve_DataBlock1(size_t mmap_size);
+    void retrieve_DataBlock2(size_t mmap_size);
+    void retrieve_CameraBlock(size_t mmap_size);
+    
+    int retrieve_DataPtrIndex();
+    // void init_read();
     void freeMemory();
+    
 };
 
 #endif
