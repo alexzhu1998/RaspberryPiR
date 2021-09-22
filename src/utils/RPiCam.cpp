@@ -129,11 +129,12 @@ Rcpp::List RPiCam::readMemory(int n) {
     CameraBlock* data_obj = sharedmem.cb;
 
     Rcpp::CharacterVector datetime;
-    Rcpp::CharacterVector image;
+    Rcpp::IntegerMatrix image_list(image_len,n);
     int cur = data_ptr->cur_index;
     int block_length = data_ptr->block_length;
 
     for (int i =0; i < n; ++i) {
+        // Index is cur-i, current column index is i
         if (cur-i < 0) {
             if (data_ptr->complete) {
                 cur = block_length+i-1;
@@ -144,20 +145,74 @@ Rcpp::List RPiCam::readMemory(int n) {
         }
 
         std::string t = to_time_string(data_obj->raw_time[cur-i]);
+        // initiate unsigned char pointer to copy from mmap file
         unsigned char* temp_data = new unsigned char[image_len];
+        // copy from mmap file
         memcpy(temp_data,data_obj->data+ (cur-i)*image_len,image_len);
-        std::string s = std::string(reinterpret_cast<char const*>(temp_data), image_len);
-
+        // convert to unsigned int
+        int* numeric_data = new int[image_len];
+        
+        for (int j = 0; j < image_len;j++) {
+            numeric_data[j] = static_cast<int>(temp_data[j]);
+        }
+        
+        // copy into Rcpp::NumericMatrix 
+        image_list(Rcpp::_ ,i) = Rcpp::clone(Rcpp::IntegerVector(numeric_data, numeric_data + image_len));
         delete[] temp_data;
+        delete[] numeric_data;
+
         datetime.push_back(t);
-        image.push_back(s);
         Rcpp::Rcout << "Index: " << cur - i << " Time: "<< t  << std::endl;
-        Rcpp::Rcout << "Head of image: " <<  s.substr(0,50) << std::endl;
+        Rcpp::Rcout << "Head of image: ";
+        for (int j = 0; j < 50; j++) {
+            Rcpp::Rcout << image_list(j,i) << " ";
+        }
+        Rcpp::Rcout << std::endl;
     }
     // sharedmem.unmap_DataPtr(data_ptr);
     // sharedmem.unmap_CameraBlock(data_obj);
     return Rcpp::List::create(
         Rcpp::Named("datetime") = datetime,
-        Rcpp::Named("image") = image
+        Rcpp::Named("image") = image_list
     );
 }
+
+// Backup output format is unsigned char
+// Rcpp::List RPiCam::readMemory(int n) {
+//     SharedMemory sharedmem(RASPICAM_SHM_PATH,RASPICAM_SHM_PTR_PATH,SHM_READ,DATA_RASPICAM);
+//     DataPtr* data_ptr = sharedmem.dp;
+//     CameraBlock* data_obj = sharedmem.cb;
+
+//     Rcpp::CharacterVector datetime;
+//     Rcpp::CharacterVector image;
+//     int cur = data_ptr->cur_index;
+//     int block_length = data_ptr->block_length;
+
+//     for (int i =0; i < n; ++i) {
+//         if (cur-i < 0) {
+//             if (data_ptr->complete) {
+//                 cur = block_length+i-1;
+//             } else {
+//                 Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
+//                 break;
+//             }
+//         }
+
+//         std::string t = to_time_string(data_obj->raw_time[cur-i]);
+//         unsigned char* temp_data = new unsigned char[image_len];
+//         memcpy(temp_data,data_obj->data+ (cur-i)*image_len,image_len);
+//         std::string s = std::string(reinterpret_cast<char const*>(temp_data), image_len);
+
+//         delete[] temp_data;
+//         datetime.push_back(t);
+//         image.push_back(s);
+//         Rcpp::Rcout << "Index: " << cur - i << " Time: "<< t  << std::endl;
+//         Rcpp::Rcout << "Head of image: " <<  s.substr(0,50) << std::endl;
+//     }
+//     // sharedmem.unmap_DataPtr(data_ptr);
+//     // sharedmem.unmap_CameraBlock(data_obj);
+//     return Rcpp::List::create(
+//         Rcpp::Named("datetime") = datetime,
+//         Rcpp::Named("image") = image
+//     );
+// }

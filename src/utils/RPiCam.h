@@ -14,8 +14,8 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-#define RASPICAM_SHM_PATH          "/shmpath"
-#define RASPICAM_SHM_PTR_PATH      "/shmpath_ptr"
+#define RASPICAM_SHM_PATH          "/raspicam"
+#define RASPICAM_SHM_PTR_PATH      "/raspicam_ptr"
 
 
 

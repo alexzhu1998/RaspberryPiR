@@ -43,12 +43,7 @@ void PhotoRes::writeMemory(int pin) {
         data_obj->data[i] = static_cast<double>(phoR.PhoR_time_to_charge);
         
         double elapsed = intervalDuration(timeNow()-start);
-        if (chk == SENSOR_OK) {
-            Rcpp::Rcout << "Photo Resistor, OK!" << std::endl;
-            Rcpp::Rcout << "Time to charge is " << phoR.PhoR_time_to_charge << " ms"<< std::endl;
-        } else {
-            Rcpp::Rcout << "Photo Resistor, NOT OK! ERROR UNKNOWN" << std::endl;
-        }
+        Rcpp::Rcout << "Time to charge is " << phoR.PhoR_time_to_charge << " ms"<< std::endl; 
         millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
         Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
         data_ptr->cur_index = i;
@@ -71,7 +66,7 @@ Rcpp::List PhotoRes::readMemory(int n) {
     int cur = data_ptr->cur_index;
     int block_length = data_ptr->block_length;
     
-    Rcpp::Rcout << cur << std::endl;
+    
     for (int i =0 ; i < n;++i) {
         if (cur-i < 0) {
             if (data_ptr->complete) {

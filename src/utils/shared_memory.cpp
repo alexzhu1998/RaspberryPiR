@@ -41,14 +41,12 @@ SharedMemory::SharedMemory(const char* _shmpath, const char* _shmpath_ptr, int w
         }
     } else if (writeFlag == SHM_READ){
         open_read();
+        retrieve_DataPtr(sizeof(DataPtr));
         if (dataFlag == DATA_RASPICAM) {
-            retrieve_DataPtr(sizeof(DataPtr));
             retrieve_CameraBlock(sizeof(CameraBlock));
         } else if (dataFlag == 1) {
-            retrieve_DataPtr(sizeof(DataPtr));
             retrieve_DataBlock1(sizeof(DataBlock1));
         } else if (dataFlag == 2) {
-            retrieve_DataPtr(sizeof(DataPtr));
             retrieve_DataBlock2(sizeof(DataBlock2));
         }
     } else if (writeFlag == SHM_SCAN) {
@@ -64,7 +62,7 @@ SharedMemory::~SharedMemory() {
         munmap(dp,sizeof(DataPtr));
         close(fd);
         close(fd_ptr);
-    } else if (wFlag == SHM_WRITE || wFlag == SHM_READ) {
+    } else if (wFlag == SHM_READ) {
         munmap(dp,sizeof(DataPtr));
         if (dFlag == 1) munmap(db1,sizeof(DataBlock1));
         if (dFlag == 2) munmap(db2,sizeof(DataBlock2));
