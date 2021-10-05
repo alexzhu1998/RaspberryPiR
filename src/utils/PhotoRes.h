@@ -6,17 +6,19 @@
 
 
 
-#define SENSOR_OK                   0
+#define PHOR_SENSOR_OK                   0
 
 #define PHOTORES_SHM_PATH           "/PHOTORES"
 #define PHOTORES_SHM_PTR_PATH       "/PHOTORES_ptr"
 
 
 class PhotoRes_Operator : public Sensor {
+    private:
+        int pin;
     public:
-        PhotoRes_Operator();
+        PhotoRes_Operator(int _pin);
         double PhoR_time_to_charge;
-        int readPhotoRes(int pin);
+        int readPhotoRes();
 };
 
 class PhotoRes: public Sensor {

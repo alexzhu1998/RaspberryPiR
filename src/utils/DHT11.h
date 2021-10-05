@@ -26,13 +26,14 @@
 class DHT11_Operator: public Sensor {
     private:
         uint8_t bits[5];
-        int readSensor(int pin, int wakeupDelay);
+        int pin;
+        int readSensor(int wakeupDelay);
     public:
-        DHT11_Operator();
+        DHT11_Operator(int _pin);
         
         double humidity,temperature;
-        int readDHT11Once(int pin); 
-        int readDHT11(int pin);
+        int readDHT11Once(); 
+        int readDHT11();
 };
 
 class DHT11: public Sensor {

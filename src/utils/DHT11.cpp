@@ -2,11 +2,11 @@
 
 
 
-DHT11_Operator::DHT11_Operator() {
+DHT11_Operator::DHT11_Operator(int _pin): pin(_pin) {
     wiringPiSetup();
 }
 
-int DHT11_Operator::readSensor(int pin, int wakeupDelay) {
+int DHT11_Operator::readSensor(int wakeupDelay) {
     int mask = 0x80;
     int idx = 0;
     int32_t t,loopCnt;
@@ -86,10 +86,10 @@ int DHT11_Operator::readSensor(int pin, int wakeupDelay) {
     return DHTLIB_OK;
 }
 
-int DHT11_Operator::readDHT11Once(int pin){
+int DHT11_Operator::readDHT11Once(){
     int rv ;
     uint8_t checksum;
-    rv = readSensor(pin,DHTLIB_DHT11_WAKEUP);
+    rv = readSensor(DHTLIB_DHT11_WAKEUP);
     if(rv != DHTLIB_OK){
         humidity = DHTLIB_INVALID_VALUE;
         temperature = DHTLIB_INVALID_VALUE;
@@ -103,10 +103,10 @@ int DHT11_Operator::readDHT11Once(int pin){
     return DHTLIB_OK;
 }
 
-int DHT11_Operator::readDHT11(int pin){
+int DHT11_Operator::readDHT11(){
 	int chk = DHTLIB_INVALID_VALUE;
 	for (int i = 0; i < 15; i++){
-		chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+		chk = readDHT11Once();	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
 		if(chk == DHTLIB_OK){
 			return DHTLIB_OK;
 		}
@@ -123,7 +123,7 @@ void DHT11::writeMemory(int pin) {
     int i = 0;
     int chk;
     TimeVar start;
-    DHT11_Operator dht;
+    DHT11_Operator dht(pin);
     for (;!pending_interrupt();++i) {
         if (i == data_ptr->block_length) {
             i = 0;
@@ -132,7 +132,7 @@ void DHT11::writeMemory(int pin) {
         Rcpp::Rcout <<  "Block No: " << i << std::endl;
         start = timeNow();
         // assigning values
-        chk = dht.readDHT11(pin);
+        chk = dht.readDHT11();
         data_obj->raw_time[i] = get_raw_time();
         data_obj->data1[i] = static_cast<double>(dht.temperature);
         data_obj->data2[i] = static_cast<double>(dht.humidity);

@@ -1,13 +1,14 @@
 #include "utils/DHT11.h"
 #include "utils/RPiCam.h"
 #include "utils/PhotoRes.h"
+#include "utils/MQ2.h"
 // #include "utils/shared_memory.h"
 
 
 
 
 // [[Rcpp::export]]
-void DHT11_writeMemory(Rcpp::NumericVector pin = 0,Rcpp::NumericVector timeDelay = 1000) {
+void DHT11_writeMemory(Rcpp::NumericVector timeDelay = 1000,Rcpp::NumericVector pin = 0) {
     // Is it possible to do this without having to pass the parameter every time?
     DHT11 sensor;
     sensor.timeBetweenAcquisition = timeDelay[0];
@@ -36,7 +37,7 @@ Rcpp::NumericVector DHT11_scanPointer() {
 }
 
 // [[Rcpp::export]]
-void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::NumericVector timeDelay = 1000) {
+void PhotoRes_writeMemory(Rcpp::NumericVector timeDelay = 1000,Rcpp::NumericVector pin = 7) {
     // Is it possible to do this without having to pass the parameter every time?
     PhotoRes sensor;
     sensor.timeBetweenAcquisition = timeDelay[0];
@@ -58,6 +59,35 @@ void PhotoRes_freeMemory() {
 // [[Rcpp::export]]
 Rcpp::NumericVector PhotoRes_scanPointer() {
     SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_SCAN,DATA_PHOTORES);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
+
+// [[Rcpp::export]]
+void MQ2_writeMemory(Rcpp::NumericVector timeDelay = 1000, Rcpp::NumericVector SPICLK = 14, Rcpp::NumericVector SPIMISO = 13, Rcpp::NumericVector SPIMOSI = 12, Rcpp::NumericVector SPICS = 10, Rcpp::NumericVector mq2_dpin= 25, Rcpp::NumericVector mq2_apin= 0) {
+    // Is it possible to do this without having to pass the parameter every time?
+    MQ2 sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(SPICLK[0], SPIMISO[0], SPIMOSI[0], SPICS[0], mq2_dpin[0], mq2_apin[0]);
+}
+
+// [[Rcpp::export]]
+Rcpp::List MQ2_readMemory(Rcpp::NumericVector n = 1) {
+    MQ2 sensor;
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void MQ2_freeMemory() {
+    SharedMemory sharedmem(MQ2_SHM_PATH,MQ2_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector MQ2_scanPointer() {
+    SharedMemory sharedmem(MQ2_SHM_PATH,MQ2_SHM_PTR_PATH,SHM_SCAN,DATA_MQ2);
     Rcpp::NumericVector x;
     x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
     // Rcpp::Rcout << x << std::endl;

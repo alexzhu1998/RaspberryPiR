@@ -10,7 +10,7 @@
 
 
 #define BLOCK_LENGTH                200
-#define CAM_BLOCK_LENGTH            10
+#define CAM_BLOCK_LENGTH            50
 
 #define WIDTH 	                    320
 #define HEIGHT 	                    240
@@ -19,9 +19,12 @@
 #define REGULAR_SENSOR_TYPE         0
 #define RASPI_CAMERA_TYPE           1
 
+// Represents how many data blocks needed except for RaspiCam
+
 #define DATA_RASPICAM               0
 #define DATA_PHOTORES               1
 #define DATA_DHT11                  2
+#define DATA_MQ2                    2
 #define DATA_FREE                   -1
            
 #define SHM_READ                    0
@@ -85,7 +88,7 @@ struct DataBlock2 {
 };
 
 struct CameraBlock {
-    time_t raw_time[BLOCK_LENGTH];
+    time_t raw_time[CAM_BLOCK_LENGTH];
     unsigned char data[WIDTH*HEIGHT*CHANNELS*CAM_BLOCK_LENGTH];
     bool success;
 };

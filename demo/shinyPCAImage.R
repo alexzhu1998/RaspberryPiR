@@ -21,8 +21,8 @@ server <- function(input, output, session) {
     im_size <- width*height*channels
     i = 10+1
     last_value <- -1
-    q <- 10
-    n0 <- 10
+    q <- 50
+    n0 <- 50
 
     cur_index <- RPiCam_scanPointer()
     im <- matrix(RPiCam_readMemory(n0)$image,n0,im_size,byrow = T)
@@ -31,8 +31,9 @@ server <- function(input, output, session) {
     xbar <- pca$center
     # print(all(xbar!= FALSE))
     # print(xbar[1:50])
-    pca <- list(values = (pca$sdev[1:q])^2, vectors = pca$rotation[,(1:q)])
-
+    pca <- list(values = (pca$sdev[1:n0])^2, vectors = pca$rotation[,(1:n0)])
+    pca$values = rep(1,q)
+    pca$rotation = matrix(xbar,im_size,q)
     
     autoInvalidate <- reactiveTimer(1000)
 
@@ -44,12 +45,12 @@ server <- function(input, output, session) {
     computation <- eventReactive(read(), {
         im2 <- matrix(read(),1,im_size,byrow = T)
         xbar <- updateMean(xbar,im2[1,],i-1)
-        pca <- incRpca(pca$values,pca$vectors,im2[1,],i-1,q=q,center = xbar)
-        x_hat <- tcrossprod(sqrt(pca$values),pca$vectors)
-        x_hat <- scale(x_hat,center= -xbar,scale = F)
+        pca <- incRpca(lambda = pca$values,U = pca$vectors,x = im2[1,],n = i-1,f = 0.5,center = xbar)
+        print("PCA values: ")
+        print(pca$values)
+        x_hat <- tcrossprod(sqrt(pca$values),pca$vectors) #square root eigenvalues squared
+        # x_hat <- scale(x_hat,center= -xbar,scale = F)
         i <- i + 1
-        
-        
         matrix(x_hat,height,width,byrow=T)
     }) 
     
@@ -61,7 +62,7 @@ server <- function(input, output, session) {
     })
     
     output$image1<-renderPlot({
-        image(im_ori(),col=grey(seq(0,1,length=256)))
+        image(im_ori(),col=grey(seq(0,1,length=256))) # use package imageR interpolation default argument
     })
 
     output$image2 <- renderPlot({

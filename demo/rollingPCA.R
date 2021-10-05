@@ -22,7 +22,8 @@ xbar <- pca$center
 # print(xbar[1:50])
 pca <- list(values = pca$sdev[1:q]^2, vectors = pca$rotation[,(1:q)])
 
-
+pca$values = rep(0,q)
+pca$rotation = matrix(0,im_size,q)
 
 while (1) {
     Sys.sleep(0.001)

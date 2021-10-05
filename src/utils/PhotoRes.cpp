@@ -2,11 +2,11 @@
 
 
 
-PhotoRes_Operator::PhotoRes_Operator() {
+PhotoRes_Operator::PhotoRes_Operator(int _pin) : pin(_pin) {
     wiringPiSetup();
 }
 
-int PhotoRes_Operator::readPhotoRes(int pin) {
+int PhotoRes_Operator::readPhotoRes() {
     pinMode(pin,OUTPUT);
     digitalWrite(pin,LOW);
     delay(100);
@@ -18,7 +18,7 @@ int PhotoRes_Operator::readPhotoRes(int pin) {
         diff = clock() - t;
     }
     PhoR_time_to_charge = (double) diff/ CLOCKS_PER_SEC;
-    return SENSOR_OK;
+    return PHOR_SENSOR_OK;
 }
 
 void PhotoRes::writeMemory(int pin) {
@@ -29,7 +29,7 @@ void PhotoRes::writeMemory(int pin) {
     int i = 0;
     int chk;
     TimeVar start;
-    PhotoRes_Operator phoR;
+    PhotoRes_Operator phoR(pin);
     for (;!pending_interrupt();++i) {
         if (i == data_ptr->block_length) {
             i = 0;
@@ -38,7 +38,7 @@ void PhotoRes::writeMemory(int pin) {
         Rcpp::Rcout <<  "Block No: " << data_ptr->cur_index << std::endl;
         start = timeNow();
         // assigning values
-        chk = phoR.readPhotoRes(pin);
+        chk = phoR.readPhotoRes();
         data_obj->raw_time[i] = get_raw_time();
         data_obj->data[i] = static_cast<double>(phoR.PhoR_time_to_charge);
         
