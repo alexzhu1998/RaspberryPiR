@@ -36,7 +36,7 @@ P2_algo <- function (new_dat,q, n,n_p) {
         k <- 4
     } else {
         q[5] = new_dat
-        k <- 5
+        k <- 4
     }
     for (i in ((k+1):5)) {
         n[i] = n[i]+1
@@ -53,8 +53,8 @@ P2_algo <- function (new_dat,q, n,n_p) {
         ) {
             d = sign(d)
             q_prime <- q[i] + (d/(n[i+1]-n[i-1])) * 
-                    ((n[i]-n[i-1]+d)*(q[i+1]-q[i])/(n[i+1]-n[i]) 
-                    + (n[i+1]-n[i]-d)*(q[i]-q[i-1])/(n[i]-n[i-1]))
+                ((n[i]-n[i-1]+d)*(q[i+1]-q[i])/(n[i+1]-n[i]) 
+                 + (n[i+1]-n[i]-d)*(q[i]-q[i-1])/(n[i]-n[i-1]))
             if (!(q[i-1] < q_prime && q_prime < q[i+1])) {
                 q_prime <- q[i] + d*(q[i+d]-q[i])/(n[i+d]-n[i])
             }
@@ -65,7 +65,7 @@ P2_algo <- function (new_dat,q, n,n_p) {
     eval.parent(substitute(q_ord<-q))
     eval.parent(substitute(n_vec<-n))
     eval.parent(substitute(n_prime<-n_p))
-    return (q[2])
+    return (q[3])
 }
 
 while (1) {
