@@ -7,7 +7,7 @@ listActive <- function () {
     print("===========")
 
     print("Active Process: ")
-    ActiveProcess <- system('pgrep -a "R" | grep "R.*write"')
+    ActiveProcess <- system('pgrep -a "R"')
     print("===========")
     
 }

@@ -7,12 +7,23 @@ library(onlinePCA)
 
 
 
-ui <- basicPage(
-    splitLayout(
-        cellWidths = c("50%", "50%"),    
-        plotOutput(outputId = "image1", width = "75%"),
-        plotOutput(outputId = "image2", width = "75%")
+ui <- fluidPage(
+    
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("pc_num", "Principal Component Number:",
+                        min = 5, max = 30,
+                        value = 10)
+        ),
+        mainPanel(
+            splitLayout(
+                cellWidths = c("50%", "50%"),    
+                plotOutput(outputId = "image1", width = "75%"),
+                plotOutput(outputId = "image2", width = "75%")
+            )
+        )
     )
+    
 )
 
 server <- function(input, output, session) {
@@ -23,7 +34,6 @@ server <- function(input, output, session) {
     
     last_value <- -1
     # q <- 2
-    max_pc <- 10
     n0_U <- 320
     n0_V <- 240
     min_UV<- min(n0_U,n0_V)
@@ -60,7 +70,7 @@ server <- function(input, output, session) {
 
     read<- eventReactive (curPointer(),{
         x <- RPiCam_readMemory(1)$image
-    })
+    }) 
     im_ori <- reactive(matrix(read(),height,width,byrow = T))
 
     computation <- eventReactive(read(), {
@@ -74,9 +84,9 @@ server <- function(input, output, session) {
         print(pca_V$values[1:10])
         # print(pca_U$values[1:10])
         # print(i)
-        US <- im2 %*% pca_V$vectors[,1:max_pc]
+        US <- im2 %*% pca_V$vectors[,1:input$pc_num]
 
-        V <- pca_V$vectors[,1:max_pc]
+        V <- pca_V$vectors[,1:input$pc_num]
         x_hat <- tcrossprod(US,V)
         
         
@@ -95,7 +105,6 @@ server <- function(input, output, session) {
     output$image1<-renderPlot({
         image(im_ori(),col=grey.colors(256)) # use package imageR interpolation default argument
     })
-
     output$image2 <- renderPlot({
         image(computation(),col=grey.colors(256))
     })

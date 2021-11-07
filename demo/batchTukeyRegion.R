@@ -26,16 +26,16 @@ server <- function(input, output, session) {
     DHT11_curPointer <- eventReactive(autoInvalidate(),{
         DHT11_scanPointer()
     })
-    MQ2_curPointer <- eventReactive(autoInvalidate(),{
-        MQ2_scanPointer()
-    })
+    # MQ2_curPointer <- eventReactive(autoInvalidate(),{
+    #     MQ2_scanPointer()
+    # })
 
     autoInvalidate <- reactiveTimer(2000)
 
-    read_bivariate<- eventReactive((DHT11_curPointer()& MQ2_curPointer()),{
+    read_bivariate<- eventReactive((DHT11_curPointer()),{
         x <- DHT11_readMemory(N)
-        y <- MQ2_readMemory(N)
-        m <- matrix(c(x$temperature,y$time_to_charge),nrow = N, ncol = 2)+ MASS::mvrnorm(N,rep(0,p),s*diag(p))
+        # y <- MQ2_readMemory(N)
+        m <- matrix(c(x$temperature,x$humidity),nrow = N, ncol = 2)+ MASS::mvrnorm(N,rep(0,p),s*diag(p))
 
         # colnames(m) <- c("Temperature", "Smoke Level")
         TukeyRegion(m,
@@ -61,6 +61,9 @@ server <- function(input, output, session) {
     output$image1<-renderPlot({
         plot(read_bivariate(), colorFacets = "red", colorRidges = "red",
      colorPoints = "blue", alpha = 0.35)
+        a <- DHT11_readMemory(1)
+        abline(h = a$humidity,lty = 2)
+        abline(v = a$temperature,lty = 2)
         # mat <- read_DHT11()
         # mat <- read_MQ2()
         # plot(mat[,1],mat[,2])
