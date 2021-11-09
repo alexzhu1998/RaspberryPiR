@@ -5,44 +5,257 @@
 
 using namespace Rcpp;
 
-// freeMemory
-void freeMemory();
-RcppExport SEXP _RaspberryPiR_freeMemory() {
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
+// DHT11_writeMemory
+void DHT11_writeMemory(Rcpp::NumericVector timeDelay, Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_DHT11_writeMemory(SEXP timeDelaySEXP, SEXP pinSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    freeMemory();
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type timeDelay(timeDelaySEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    DHT11_writeMemory(timeDelay, pin);
     return R_NilValue;
 END_RCPP
 }
-// writeMemory
-void writeMemory(Rcpp::LogicalVector nh, Rcpp::NumericVector w);
-RcppExport SEXP _RaspberryPiR_writeMemory(SEXP nhSEXP, SEXP wSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector >::type nh(nhSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type w(wSEXP);
-    writeMemory(nh, w);
-    return R_NilValue;
-END_RCPP
-}
-// readMemory
-Rcpp::List readMemory(Rcpp::IntegerVector read_block);
-RcppExport SEXP _RaspberryPiR_readMemory(SEXP read_blockSEXP) {
+// DHT11_readMemory
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_DHT11_readMemory(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type read_block(read_blockSEXP);
-    rcpp_result_gen = Rcpp::wrap(readMemory(read_block));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(DHT11_readMemory(n));
     return rcpp_result_gen;
 END_RCPP
 }
-// testingDHT
-Rcpp::NumericVector testingDHT();
-RcppExport SEXP _RaspberryPiR_testingDHT() {
+// DHT11_freeMemory
+void DHT11_freeMemory();
+RcppExport SEXP _RaspberryPiR_DHT11_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    DHT11_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// DHT11_scanPointer
+Rcpp::NumericVector DHT11_scanPointer();
+RcppExport SEXP _RaspberryPiR_DHT11_scanPointer() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(testingDHT());
+    rcpp_result_gen = Rcpp::wrap(DHT11_scanPointer());
+    return rcpp_result_gen;
+END_RCPP
+}
+// PhotoRes_writeMemory
+void PhotoRes_writeMemory(Rcpp::NumericVector timeDelay, Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_PhotoRes_writeMemory(SEXP timeDelaySEXP, SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type timeDelay(timeDelaySEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    PhotoRes_writeMemory(timeDelay, pin);
+    return R_NilValue;
+END_RCPP
+}
+// PhotoRes_readMemory
+Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_PhotoRes_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(PhotoRes_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// PhotoRes_freeMemory
+void PhotoRes_freeMemory();
+RcppExport SEXP _RaspberryPiR_PhotoRes_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    PhotoRes_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// PhotoRes_scanPointer
+Rcpp::NumericVector PhotoRes_scanPointer();
+RcppExport SEXP _RaspberryPiR_PhotoRes_scanPointer() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(PhotoRes_scanPointer());
+    return rcpp_result_gen;
+END_RCPP
+}
+// MQ2_writeMemory
+void MQ2_writeMemory(Rcpp::NumericVector timeDelay, Rcpp::NumericVector SPICLK, Rcpp::NumericVector SPIMISO, Rcpp::NumericVector SPIMOSI, Rcpp::NumericVector SPICS, Rcpp::NumericVector mq2_dpin, Rcpp::NumericVector mq2_apin);
+RcppExport SEXP _RaspberryPiR_MQ2_writeMemory(SEXP timeDelaySEXP, SEXP SPICLKSEXP, SEXP SPIMISOSEXP, SEXP SPIMOSISEXP, SEXP SPICSSEXP, SEXP mq2_dpinSEXP, SEXP mq2_apinSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type timeDelay(timeDelaySEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICLK(SPICLKSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMISO(SPIMISOSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMOSI(SPIMOSISEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICS(SPICSSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_dpin(mq2_dpinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_apin(mq2_apinSEXP);
+    MQ2_writeMemory(timeDelay, SPICLK, SPIMISO, SPIMOSI, SPICS, mq2_dpin, mq2_apin);
+    return R_NilValue;
+END_RCPP
+}
+// MQ2_readMemory
+Rcpp::List MQ2_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_MQ2_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(MQ2_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MQ2_freeMemory
+void MQ2_freeMemory();
+RcppExport SEXP _RaspberryPiR_MQ2_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    MQ2_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// MQ2_scanPointer
+Rcpp::NumericVector MQ2_scanPointer();
+RcppExport SEXP _RaspberryPiR_MQ2_scanPointer() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(MQ2_scanPointer());
+    return rcpp_result_gen;
+END_RCPP
+}
+// RPiCam_writeMemory
+void RPiCam_writeMemory(Rcpp::NumericVector timeDelay);
+RcppExport SEXP _RaspberryPiR_RPiCam_writeMemory(SEXP timeDelaySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type timeDelay(timeDelaySEXP);
+    RPiCam_writeMemory(timeDelay);
+    return R_NilValue;
+END_RCPP
+}
+// RPiCam_readMemory
+Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_RPiCam_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(RPiCam_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// RPiCam_freeMemory
+void RPiCam_freeMemory();
+RcppExport SEXP _RaspberryPiR_RPiCam_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    RPiCam_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// RPiCam_scanPointer
+Rcpp::NumericVector RPiCam_scanPointer();
+RcppExport SEXP _RaspberryPiR_RPiCam_scanPointer() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(RPiCam_scanPointer());
+    return rcpp_result_gen;
+END_RCPP
+}
+// testing_writeMemory
+void testing_writeMemory();
+RcppExport SEXP _RaspberryPiR_testing_writeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    testing_writeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// testing_readMemory
+Rcpp::List testing_readMemory(Rcpp::NumericVector x);
+RcppExport SEXP _RaspberryPiR_testing_readMemory(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(testing_readMemory(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testing_freeMemory
+void testing_freeMemory();
+RcppExport SEXP _RaspberryPiR_testing_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    testing_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// testingDHT
+Rcpp::List testingDHT(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_testingDHT(SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingDHT(pin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testingPhotoRes
+Rcpp::List testingPhotoRes(Rcpp::NumericVector pin);
+RcppExport SEXP _RaspberryPiR_testingPhotoRes(SEXP pinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingPhotoRes(pin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testingMQ2
+Rcpp::List testingMQ2(Rcpp::NumericVector pin, Rcpp::NumericVector SPICLK, Rcpp::NumericVector SPIMISO, Rcpp::NumericVector SPIMOSI, Rcpp::NumericVector SPICS, Rcpp::NumericVector mq2_dpin, Rcpp::NumericVector mq2_apin);
+RcppExport SEXP _RaspberryPiR_testingMQ2(SEXP pinSEXP, SEXP SPICLKSEXP, SEXP SPIMISOSEXP, SEXP SPIMOSISEXP, SEXP SPICSSEXP, SEXP mq2_dpinSEXP, SEXP mq2_apinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICLK(SPICLKSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMISO(SPIMISOSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMOSI(SPIMOSISEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICS(SPICSSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_dpin(mq2_dpinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_apin(mq2_apinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingMQ2(pin, SPICLK, SPIMISO, SPIMOSI, SPICS, mq2_dpin, mq2_apin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// simpleCapture
+Rcpp::List simpleCapture(Rcpp::CharacterVector path, Rcpp::NumericVector width, Rcpp::NumericVector height);
+RcppExport SEXP _RaspberryPiR_simpleCapture(SEXP pathSEXP, SEXP widthSEXP, SEXP heightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type width(widthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type height(heightSEXP);
+    rcpp_result_gen = Rcpp::wrap(simpleCapture(path, width, height));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,10 +334,29 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_RaspberryPiR_freeMemory", (DL_FUNC) &_RaspberryPiR_freeMemory, 0},
-    {"_RaspberryPiR_writeMemory", (DL_FUNC) &_RaspberryPiR_writeMemory, 2},
-    {"_RaspberryPiR_readMemory", (DL_FUNC) &_RaspberryPiR_readMemory, 1},
-    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 0},
+    {"_RaspberryPiR_DHT11_writeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_writeMemory, 2},
+    {"_RaspberryPiR_DHT11_readMemory", (DL_FUNC) &_RaspberryPiR_DHT11_readMemory, 1},
+    {"_RaspberryPiR_DHT11_freeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_freeMemory, 0},
+    {"_RaspberryPiR_DHT11_scanPointer", (DL_FUNC) &_RaspberryPiR_DHT11_scanPointer, 0},
+    {"_RaspberryPiR_PhotoRes_writeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_writeMemory, 2},
+    {"_RaspberryPiR_PhotoRes_readMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_readMemory, 1},
+    {"_RaspberryPiR_PhotoRes_freeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_freeMemory, 0},
+    {"_RaspberryPiR_PhotoRes_scanPointer", (DL_FUNC) &_RaspberryPiR_PhotoRes_scanPointer, 0},
+    {"_RaspberryPiR_MQ2_writeMemory", (DL_FUNC) &_RaspberryPiR_MQ2_writeMemory, 7},
+    {"_RaspberryPiR_MQ2_readMemory", (DL_FUNC) &_RaspberryPiR_MQ2_readMemory, 1},
+    {"_RaspberryPiR_MQ2_freeMemory", (DL_FUNC) &_RaspberryPiR_MQ2_freeMemory, 0},
+    {"_RaspberryPiR_MQ2_scanPointer", (DL_FUNC) &_RaspberryPiR_MQ2_scanPointer, 0},
+    {"_RaspberryPiR_RPiCam_writeMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_writeMemory, 1},
+    {"_RaspberryPiR_RPiCam_readMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_readMemory, 1},
+    {"_RaspberryPiR_RPiCam_freeMemory", (DL_FUNC) &_RaspberryPiR_RPiCam_freeMemory, 0},
+    {"_RaspberryPiR_RPiCam_scanPointer", (DL_FUNC) &_RaspberryPiR_RPiCam_scanPointer, 0},
+    {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
+    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 1},
+    {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},
+    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
+    {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
+    {"_RaspberryPiR_testingMQ2", (DL_FUNC) &_RaspberryPiR_testingMQ2, 7},
+    {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
     {"_RaspberryPiR_LL_digitalWrite", (DL_FUNC) &_RaspberryPiR_LL_digitalWrite, 2},
