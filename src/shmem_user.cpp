@@ -5,11 +5,18 @@
 // #include "utils/shared_memory.h"
 
 
-
+// Each Sensor is wrapped with an R function. There are writeMemory, readMemory, freeMemory and scanPointer. 
+// SENSOR_writeMemory 
+//      timeDelay - Amount of delay in ms for each interval
+//      pin information - Various GPIO Pin Required for each circuit 
+// SENSOR_readMemory 
+//      n which is the number of block memory
+// SENSOR_freeMemory 
+// SENSOR_scanPointer
 
 // [[Rcpp::export]]
 void DHT11_writeMemory(Rcpp::NumericVector timeDelay = 1000,Rcpp::NumericVector pin = 0) {
-    // Is it possible to do this without having to pass the parameter every time?
+    
     DHT11 sensor;
     sensor.timeBetweenAcquisition = timeDelay[0];
     sensor.writeMemory(pin[0]);

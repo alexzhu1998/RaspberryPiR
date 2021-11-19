@@ -1,7 +1,7 @@
 library(shiny)
 library(RaspberryPiR)
-
-
+library(tictoc)
+library(pryr)
 
 ui <- fluidPage(
     
@@ -16,19 +16,38 @@ ui <- fluidPage(
     
 )
 
+SMA_windowed <- function (new_dat, prev_mov_avg, n) {
+    # if (n > window_len) {
+    #     return (prev_mov_avg + (new_dat-pop_dat)/window_len)
+    # }
+    if (prev_mov_avg == -1) return(new_dat)
+    return (prev_mov_avg + (new_dat-prev_mov_avg)/n)
+}
+Len <- seq(50,1000,by = 50) #time keeping
+
 server <- function(input, output, session) {
-       
-    L <- 30
+    time_keep <- rlang::env(
+        j = 1,
+        mean_val = -1,
+        L = Len[1],
+        k = 1,
+        mean_vals = rep(0,length(Len)), #time keeping
+        mem_vals = rep(0,length(Len)) #time keeping
+    ) 
+    
+    
     
     autoInvalidate <- reactiveTimer(2000)
 
     read<- eventReactive (curPointer(),{
-        x <- PhotoRes_readMemory(L)$time_to_charge
+        x <- PhotoRes_readMemory(time_keep$L)$time_to_charge
     }) 
     
 
     computation <- eventReactive(read(), {
+
         dat <- read()
+        tic("Run OBCP Analysis")
         H <- 1/60
         
         mean0 <- 0 # prior mean for mu
@@ -37,7 +56,7 @@ server <- function(input, output, session) {
         
         
         # plot(sim_data)
-        log_R <- matrix(-Inf,nrow = (L+1),ncol = (L+1))
+        log_R <- matrix(-Inf,nrow = (time_keep$L+1),ncol = (time_keep$L+1))
         log_R[1,1] = 0
 
         mean_params <- c(mean0)
@@ -49,8 +68,8 @@ server <- function(input, output, session) {
         new_log_joint <- NULL
 
         # parametric model, uses O(N) space to determine change point
-
-        for (t in seq(L)) {
+        
+        for (t in seq(time_keep$L)) {
             # t <- t+1
             x <- dat[t] # Step 2
 
@@ -82,8 +101,8 @@ server <- function(input, output, session) {
         # print(log_message)
 
         R <- exp(log_R)
-        rownames(R) <- seq(L+1)
-        colnames(R) <- seq(L+1)
+        rownames(R) <- seq(time_keep$L+1)
+        colnames(R) <- seq(time_keep$L+1)
         # image(R,col=gray.colors(256))
         res <- dim(R)[1]
         for (i in seq(res)) {
@@ -91,15 +110,34 @@ server <- function(input, output, session) {
         }
         
         
-        
-        
+        tmp <- toc() #time keeping
+        time_keep$mean_val <- SMA_windowed(unname(tmp$toc-tmp$tic),time_keep$mean_val,time_keep$j)#time keeping
+        time_keep$j <- time_keep$j+1 #time keeping
+        ####### time keeping #######
+        if (time_keep$j == 5) {
+            # Store current Runs
+            print(time_keep$mem_vals[time_keep$k] <- mem_used())
+            time_keep$mean_vals[time_keep$k] <- time_keep$mean_val
+            print(paste("Mean",time_keep$L,time_keep$mean_val)) #time keeping
+            
+            
+            # reset
+            time_keep$mean_val <- -1
+            time_keep$j <- 1
+            time_keep$k <- time_keep$k + 1
+            if (time_keep$k == length(Len)+1) {
+                print("Mean")
+                print(time_keep$mean_vals)
+                print("Memory")
+                print(time_keep$mem_vals)
+                stopApp()
+            }
+            time_keep$L <- Len[time_keep$k]
+        }
+        ####### time keeping #######
         R
     }) 
 
-    computation2 <- eventReactive(read(),{
-        dat <- read()
-        dat
-    })
     
     curPointer <- eventReactive(autoInvalidate(),{
         PhotoRes_scanPointer()
@@ -113,7 +151,7 @@ server <- function(input, output, session) {
     })
     
     output$image2<-renderPlot({
-        plot(computation2(),ylab = "Observed Value")
+        plot(read(),ylab = "Observed Value")
     })
 }
 shinyApp(ui, server)

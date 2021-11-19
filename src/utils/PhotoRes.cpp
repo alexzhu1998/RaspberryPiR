@@ -65,7 +65,7 @@ Rcpp::List PhotoRes::readMemory(int n) {
 
     int cur = data_ptr->cur_index;
     int block_length = data_ptr->block_length;
-    
+    Rcpp::Rcout << block_length << std::endl;
     
     for (int i =0 ; i < n;++i) {
         if (cur-i < 0) {
