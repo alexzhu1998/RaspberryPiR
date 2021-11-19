@@ -20,3 +20,6 @@ R Analysis Code located at demo/:
 - Code for Tukey Region
 - Code for Bayesian Change point Detection
 
+Additional Code for Model Assessments can be found in 
+- Additional_Code_model_assessment.R
+- Additional_Code_Online_PCA.R
