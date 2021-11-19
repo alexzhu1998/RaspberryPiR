@@ -16,6 +16,8 @@ ui <- fluidPage(
     
 )
 
+# Following is the implementation of Bayesian Online Changepoint Detection from the Thesis.
+
 SMA_windowed <- function (new_dat, prev_mov_avg, n) {
     # if (n > window_len) {
     #     return (prev_mov_avg + (new_dat-pop_dat)/window_len)

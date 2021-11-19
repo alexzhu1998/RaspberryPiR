@@ -4,6 +4,8 @@ library(shiny)
 library(MASS)
 # Make sure that DHT11
 
+# Following is the implementation of Tukey Region from the Thesis.
+
 
 ui <- basicPage(
     splitLayout(

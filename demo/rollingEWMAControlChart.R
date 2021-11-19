@@ -1,6 +1,11 @@
 library(RaspberryPiR)
 library(shiny)
 library(ggplot2)
+
+
+# Following is the implementation of EWMA Control Chart from the Thesis.
+
+
 EMA <- function(new_dat, prev_mov_avg, alpha = 0.5) {
     return (prev_mov_avg + (new_dat - prev_mov_avg)*alpha)
 }

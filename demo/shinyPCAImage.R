@@ -4,7 +4,7 @@ library(onlinePCA)
 library(tictoc)
 library(pryr)
 
-
+# Following is the implementation of Online PCA from the Thesis.
 
 
 SMA_windowed <- function (new_dat, prev_mov_avg, n) {
