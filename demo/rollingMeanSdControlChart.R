@@ -1,5 +1,5 @@
 library(RaspberryPiR)
-
+library(shiny)
 # library(datastructures)
 cur_SMA = 0
 cur_s2 = 0
@@ -9,13 +9,15 @@ EMA <- function(new_dat, prev_mov_avg, alpha = 0.5) {
     return (prev_mov_avg + (new_dat - prev_mov_avg)*alpha)
 }
 
+s2_EMA <- function(new_dat, prev_s2_EMA, prev_EMA,cur_EMA, alpha = 0.5) {
+    return((1-alpha)*prev_s2_EMA + alpha*(new_dat-prev_EMA)*(new_dat-cur_EMA))
+}
+
 SMA_windowed <- function (new_dat, prev_mov_avg, n, pop_dat, window_len = W) {
     if (n > window_len) {
         return (prev_mov_avg + (new_dat-pop_dat)/window_len)
     }
     return (prev_mov_avg + (new_dat-prev_mov_avg)/n)
-    
-    
 }
 
 s2_windowed <- function(new_dat,prev_s2,cur_mov_avg,prev_mov_avg, n,pop_dat,window_len = W) {

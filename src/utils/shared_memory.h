@@ -9,7 +9,7 @@
 
 
 
-#define BLOCK_LENGTH                200
+#define BLOCK_LENGTH                1000
 #define CAM_BLOCK_LENGTH            50
 
 #define WIDTH 	                    320

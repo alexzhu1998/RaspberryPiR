@@ -1,15 +1,15 @@
-# library(RaspberryPiR)
-# LL_wiringPiSetup()
-# ledpin = 1
-# LL_pinMode(ledpin,"OUTPUT")
-# while (1) {
-#     LL_digitalWrite(ledpin,1)
-#     print("led turned on >>>")
-#     Sys.sleep(1)
-#     LL_digitalWrite(ledpin,0)
-#     print("led turned off >>>")
-#     Sys.sleep(1)
-# }
+library(RaspberryPiR)
+LL_wiringPiSetup()
+ledpin = 1
+LL_pinMode(ledpin,"OUTPUT")
+while (1) {
+    LL_digitalWrite(ledpin,1)
+    print("led turned on >>>")
+    Sys.sleep(1)
+    LL_digitalWrite(ledpin,0)
+    print("led turned off >>>")
+    Sys.sleep(1)
+}
 
 
 

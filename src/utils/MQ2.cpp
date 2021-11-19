@@ -69,7 +69,7 @@ int MQ2_Operator::readMQ2() {
     } else {
         leak = 1;
     }
-    MQ2_time_to_charge = (double)COlevel/1024*3.3;
+    MQ2_time_to_charge = (((double)COlevel/1024)*3.3);
     delay(500);
     return MQ2_SENSOR_OK;
 }

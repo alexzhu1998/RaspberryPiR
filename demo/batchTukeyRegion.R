@@ -4,11 +4,16 @@ library(shiny)
 library(MASS)
 # Make sure that DHT11
 
+# Following is the implementation of Tukey Region from the Thesis.
+
 
 ui <- basicPage(
     splitLayout(
         cellWidths = c("50%"),    
         plotOutput(outputId = "image1", width = "75%")
+    ),
+    mainPanel(
+        textOutput("selected_var")
     )
 )
 
@@ -38,9 +43,14 @@ server <- function(input, output, session) {
         m <- matrix(c(x$temperature,x$humidity),nrow = N, ncol = 2)+ MASS::mvrnorm(N,rep(0,p),s*diag(p))
 
         # colnames(m) <- c("Temperature", "Smoke Level")
-        TukeyRegion(m,
+        y <- TukeyRegion(m,
             5,"bfs",retFacets = TRUE, retVolume= TRUE,retBarycenter= TRUE
         )
+        return (y)
+        
+    })
+    output$selected_var <- renderText({ 
+        read_bivariate()$volume
     })
     # # Checking if each component is working 
     # read_DHT11 <- eventReactive(DHT11_curPointer(),{

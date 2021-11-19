@@ -1,11 +1,19 @@
 library(shiny)
 library(RaspberryPiR)
 library(onlinePCA)
+library(tictoc)
+library(pryr)
+
+# Following is the implementation of Online PCA from the Thesis.
 
 
-
-
-
+SMA_windowed <- function (new_dat, prev_mov_avg, n) {
+    # if (n > window_len) {
+    #     return (prev_mov_avg + (new_dat-pop_dat)/window_len)
+    # }
+    if (prev_mov_avg == -1) return(new_dat)
+    return (prev_mov_avg + (new_dat-prev_mov_avg)/n)
+}
 
 ui <- fluidPage(
     
@@ -13,7 +21,10 @@ ui <- fluidPage(
         sidebarPanel(
             sliderInput("pc_num", "Principal Component Number:",
                         min = 5, max = 30,
-                        value = 10)
+                        value = 10),
+            sliderInput("ff", "Forgetting Factor:",
+                        min = 0, max = 1,
+                        value = 0.5)
         ),
         mainPanel(
             splitLayout(
@@ -25,20 +36,31 @@ ui <- fluidPage(
     )
     
 )
-
+Len <- rev(seq(10,200,by = 10)) #time keeping
 server <- function(input, output, session) {
+    time_keep <- rlang::env(
+        j = 1,
+        mean_val = -1,
+        L = Len[1],
+        k = 1,
+        recons_val = -1,
+        mean_vals = rep(0,length(Len)), #time keeping
+        mem_vals = rep(0,length(Len)), #time keeping
+        recons_vals = rep(0, length(Len))
+    ) 
+
     width <- 320
     height <- 240
     channels <- 1
     im_size <- width*height*channels
     
     last_value <- -1
-    # q <- 2
-    n0_U <- 320
-    n0_V <- 240
-    min_UV<- min(n0_U,n0_V)
+    q <- 10
+    # n0_U <- 320
+    # n0_V <- 240
+    # min_UV<- min(n0_U,n0_V)
     
-    i <- n0_U
+    i <- 1
 
     cur_index <- RPiCam_scanPointer()
     
@@ -76,22 +98,55 @@ server <- function(input, output, session) {
     computation <- eventReactive(read(), {
         im2 <- matrix(read(),height,width,byrow = T)
         # xbar <- updateMean(xbar,im2[1,],i-1)
-        
-        pca_V <<- incRpca.block(x = im2,lambda = pca_V$values,U =pca_V$vectors,f = 1-(1/(i+1)), byrow = T)
+        tic("Run OnlinePCA")
+        pca_V <<- incRpca.block(x = im2,lambda = pca_V$values,U =pca_V$vectors,f = input$ff, byrow = T)
         # pca_U <<- incRpca.block(x = im2,lambda = pca_U$values,U =pca_U$vectors,f = 1, byrow = F)
         
-        print("PCA values: ")
-        print(pca_V$values[1:10])
+        # print("PCA values: ")
+        # print(pca_V$values[1:10])
         # print(pca_U$values[1:10])
         # print(i)
-        US <- im2 %*% pca_V$vectors[,1:input$pc_num]
+        US <- im2 %*% pca_V$vectors[,1:time_keep$L] #input$pc_num
 
-        V <- pca_V$vectors[,1:input$pc_num]
+        V <- pca_V$vectors[,1:time_keep$L] #input$pc_num
         x_hat <- tcrossprod(US,V)
+        
         
         
         # x_hat <- scale(x_hat,center= -xbar,scale = F)
         i <<- i + 1
+        
+        tmp<-toc()
+        
+        time_keep$recons_val <- SMA_windowed(sqrt(sum((x_hat-im2)^2)),time_keep$recons_val,time_keep$j) #accuracy
+        time_keep$mean_val <- SMA_windowed(unname(tmp$toc-tmp$tic),time_keep$mean_val,time_keep$j)#time keeping
+        time_keep$j <- time_keep$j+1 #time keeping
+        ####### time keeping #######
+        if (time_keep$j == 5) {
+            # Store current Runs
+            print(time_keep$mem_vals[time_keep$k] <- mem_used())
+            time_keep$mean_vals[time_keep$k] <- time_keep$mean_val
+            print(paste("Mean",time_keep$L,time_keep$mean_val)) #time keeping
+            time_keep$recons_vals[time_keep$k] <- time_keep$recons_val
+            print(paste("Reconst Acc:",time_keep$recons_val))
+            
+            # reset
+            time_keep$mean_val <- -1
+            time_keep$recons_val <- -1
+            time_keep$j <- 1
+            time_keep$k <- time_keep$k + 1
+            if (time_keep$k == length(Len)+1) {
+                print("Mean")
+                print(time_keep$mean_vals)
+                print("Memory")
+                print(time_keep$mem_vals)
+                print("Recons")
+                print(time_keep$recons_vals)
+                stopApp()
+            }
+            time_keep$L <- Len[time_keep$k]
+        }
+        # ####### time keeping #######
         x_hat
     }) 
     
