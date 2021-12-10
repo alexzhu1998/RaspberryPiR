@@ -12,3 +12,4 @@ LinkingTo: Rcpp
 URL: https://github.com/alexzhu1998/RaspberryPiR
 BugReports: https://github.com/alexzhu1998/RaspberryPiR/issues
 RoxygenNote: 7.1.1
+Built: R 4.0.3; armv7l-unknown-linux-gnueabihf; 2021-12-08 08:03:23 UTC; unix

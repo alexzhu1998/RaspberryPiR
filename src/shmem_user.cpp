@@ -14,6 +14,11 @@
 // SENSOR_freeMemory 
 // SENSOR_scanPointer
 
+//' Write Temperature (double) and Humidity (double) from DHT11 Sensor into Shared Memory 
+//' 
+//' @param timeDelay Milliseconds of delay between each data sample, will be
+//' ignored if the minimum delay for sensors are greater than the delay between each sample.
+//' @param pin 
 // [[Rcpp::export]]
 void DHT11_writeMemory(Rcpp::NumericVector timeDelay = 1000,Rcpp::NumericVector pin = 0) {
     
