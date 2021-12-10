@@ -5,7 +5,7 @@
 
 SRC_DIR = utils
 # standard arguments for R
-PKG_CPPFLAGS = -I/usr/lib -I/usr/local/include -std=c++11 $(patsubst %,-I"%",$(SRC_DIR))
+PKG_CPPFLAGS = -I/usr/lib -I/usr/local/include $(patsubst %,-I"%",$(SRC_DIR))
 PKG_LIBS = -L"/usr/lib/" -lwiringPi -lraspicam -lrt -lpthread
 
 

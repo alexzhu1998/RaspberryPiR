@@ -43,32 +43,49 @@
 // }
 
 
+/*
+NOTES:
+Isolated the problem to mmap, currently running tests to check if variables can be allocated dy
+Testing if mmap works with the current dynamic memory allocation. The data stored is artificially generated.
+IMPORTANT: Data is not being written into the shared memory space
+
+
+TODO: 
+Fix MMAP Dynamic Memory
+Fix Action Upon Interrupt
+Fix OOP
+Fix Share with User Information  
+*/
+
 // [[Rcpp::export]]
 void testing_writeMemory() {
+    
     SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_WRITE);
     
-    DataPtr source_data_ptr(2,BLOCK_LENGTH);
-    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+    DataPtr source_dp(2,BLOCK_LENGTH);
+    DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
     
-    Rcpp::Rcout << sizeof(source_data_ptr) << std::endl;
+    Rcpp::Rcout << sizeof(source_dp) << std::endl;
     Rcpp::Rcout << sizeof(DataPtr) << std::endl;
-    sharedmem.map_data_ptr(sizeof(DataPtr),&source_data_ptr);
-    sharedmem.map_data_obj(source_data_ptr.allocated_memory,&source_data_obj);
-    Rcpp::Rcout << sharedmem.data_ptr->allocated_memory << std::endl;
+    sharedmem.map_data_ptr(&source_dp);
+    sharedmem.map_data_obj(source_dp.allocated_memory,&source_db);
+    Rcpp::Rcout << sharedmem.dp->allocated_memory << std::endl;
 
     // DataPtr dp1(BLOCK_LENGTH);
     // DataPtr* ptr_obj = &dp1;
     
     int i = 0;
     for (;!pending_interrupt();i++) {
-        if (i == sharedmem.data_ptr->num_data_points * sharedmem.data_ptr->block_length) {
+        if (i == sharedmem.dp->num_data_points * sharedmem.dp->block_length) {
             i = 0;
-            sharedmem.data_ptr->complete = true;
+            sharedmem.dp->complete = true;
         }
-        Rcpp::Rcout << "tick ";
-        sharedmem.data_obj->sensor_data[i]= (double)i;
-        Rcpp::Rcout << "tock ";
-        sharedmem.data_ptr->cur_index = i;
+        
+        sharedmem.db->sensor_data[i]= (double)i*i;
+        
+        sharedmem.dp->cur_index = i;
+        Rcpp::Rcout << sharedmem.dp->cur_index << " " << sharedmem.db->sensor_data[i] << std::endl;
+        
         sleep(1);
         
     }
@@ -76,10 +93,10 @@ void testing_writeMemory() {
     // sharedmem.map_write();
     // Rcpp::Rcout << sizeof(db1) << std::endl;
     // Rcpp::Rcout << sizeof(DataBlock*) << std::endl;
-    // Rcpp::Rcout << sizeof(*data_obj) << std::endl;
-    // data_obj = static_cast<DataBlock*>(mmap(NULL,sizeof(db1), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd,0));
-    // if (data_obj == MAP_FAILED)
-    //     handle_error("mmap data_obj");
+    // Rcpp::Rcout << sizeof(*db) << std::endl;
+    // db = static_cast<DataBlock*>(mmap(NULL,sizeof(db1), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd,0));
+    // if (db == MAP_FAILED)
+    //     handle_error("mmap db");
     // if (ftruncate(sharedmem.fd, sizeof(db1)) == -1)           /* To obtain file size */
     //     handle_error("open_write fd ftruncate");
     // ptr_obj = static_cast<DataPtr*>(mmap(NULL,sizeof(*ptr_obj), PROT_READ | PROT_WRITE,MAP_SHARED,sharedmem.fd_ptr,0));
@@ -88,36 +105,44 @@ void testing_writeMemory() {
     // if (ftruncate(sharedmem.fd_ptr, sizeof(*ptr_obj)) == -1)           /* To obtain file size */
     //     handle_error("open_write fd_ptr ftruncate");
 
-    // data_obj->data1[0] = 123;
-    // data_obj->data1[1] = 234;
+    // db->data1[0] = 123;
+    // db->data1[1] = 234;
     sharedmem.freeMemory();
 }
+
+/*
+Problem comes from here when I try to call from the shared memory block.
+*/
 
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
     SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
-    DataBlock source_data_obj(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+    // DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
      
     // DataPtr dp1(BLOCK_LENGTH);
     
-    sharedmem.retrieve_data_ptr(sizeof(DataPtr));
-    Rcpp::Rcout << "Allocated Memory: "<< sharedmem.data_ptr->allocated_memory << std::endl;
+    sharedmem.retrieve_data_ptr(sizeof(DataPtr)); //retrieve memory from data ptr (which is statically assigned) 
+    Rcpp::Rcout << "Allocated Memory: "<< sharedmem.dp->allocated_memory << std::endl;
     
-    sharedmem.retrieve_data_obj(sharedmem.data_ptr->allocated_memory);
-    memcpy(&source_data_obj,sharedmem.data_obj,sharedmem.data_ptr->allocated_memory);
-    Rcpp::Rcout<< source_data_obj.success << std::endl;
+    sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory); // retrieve memory from data block (which is dynamically assigned)
+
+    Rcpp::Rcout << sharedmem.dp->cur_index << std::endl;
+    Rcpp::Rcout << sharedmem.db->sensor_data[sharedmem.dp->cur_index] << std::endl;
+    Rcpp::Rcout << sharedmem.db->success << std::endl;
+    // memcpy(&source_data_obj,sharedmem.db,sharedmem.dp->allocated_memory);
+    // Rcpp::Rcout<< source_data_obj.success << std::endl;
     
-    // for (int i =0; i < std::min(5,sharedmem.data_ptr->cur_index); i++) {
-    //     Rcpp::Rcout << i << "Data points: " <<  sharedmem.data_obj->sensor_data[i] << std::endl;
+    // for (int i =0; i < std::min(5,sharedmem.dp->cur_index); i++) {
+    //     Rcpp::Rcout << i << "Data points: " <<  sharedmem.db->sensor_data[i] << std::endl;
     // }
     
     
-    // DataBlock* data_obj = &db1;
+    // DataBlock* db = &db1;
     // DataPtr* ptr_obj = &dp1;
 
     // sharedmem.init_read();
-    // Rcpp::Rcout << data_obj->data1[0] << std::endl;
-    // Rcpp::Rcout << data_obj->data1[1] << std::endl;
+    // Rcpp::Rcout << db->data1[0] << std::endl;
+    // Rcpp::Rcout << db->data1[1] << std::endl;
 
     return Rcpp::List::create(
         Rcpp::Named("temperature") = Rcpp::NumericVector(1)

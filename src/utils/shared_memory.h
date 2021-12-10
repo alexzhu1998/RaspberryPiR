@@ -8,7 +8,7 @@
 #include <vector>
 
 
-#define BLOCK_LENGTH                200
+#define BLOCK_LENGTH                50
 
 #define REGULAR_SENSOR_TYPE         0
 #define RASPI_CAMERA_TYPE           1
@@ -64,7 +64,7 @@ struct DataBlock {
     uint8_t* cam_data = NULL;
     int success = 0;
     // Regular Sensor/Image constructor
-    DataBlock(int _block_size, int _block_length, int type);
+    DataBlock(int _num_data_points, int _block_length, int type);
     
     // Destructor
     ~DataBlock();
@@ -96,13 +96,13 @@ public:
     const char* shmpath_ptr;
     SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag);
     
-    DataPtr* data_ptr;
-    DataBlock* data_obj;
+    DataPtr* dp;
+    DataBlock* db;
     
     void open_write();
     void open_read();
-    void map_data_obj(size_t mmap_size, DataBlock* source_data_obj);
-    void map_data_ptr(size_t mmap_size, DataPtr* source_data_ptr);
+    void map_data_obj(size_t mmap_size, DataBlock* source);
+    void map_data_ptr(DataPtr* source);
     void retrieve_data_obj(size_t mmap_size);
     void retrieve_data_ptr(size_t mmap_size);
     
