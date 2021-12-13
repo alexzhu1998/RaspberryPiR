@@ -63,6 +63,8 @@ struct DataBlock {
     double* sensor_data = NULL;
     uint8_t* cam_data = NULL;
     int success = 0;
+    int num_data_points;
+    int block_length;
     // Regular Sensor/Image constructor
     DataBlock(int _num_data_points, int _block_length, int type);
     

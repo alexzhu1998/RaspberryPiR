@@ -64,12 +64,12 @@ void testing_writeMemory() {
     
     DataPtr source_dp(2,BLOCK_LENGTH);
     DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
+    Rcpp::Rcout << sizeof(source_db) <<" " << sizeof(DataBlock) << std::endl;
+    Rcpp::Rcout << sizeof(source_dp) << " " << sizeof(DataPtr) << std::endl;
     
-    Rcpp::Rcout << sizeof(source_dp) << std::endl;
-    Rcpp::Rcout << sizeof(DataPtr) << std::endl;
     sharedmem.map_data_ptr(&source_dp);
     sharedmem.map_data_obj(source_dp.allocated_memory,&source_db);
-    Rcpp::Rcout << sharedmem.dp->allocated_memory << std::endl;
+    Rcpp::Rcout << "Allocated Write Memory: " << sharedmem.dp->allocated_memory << std::endl;
 
     // DataPtr dp1(BLOCK_LENGTH);
     // DataPtr* ptr_obj = &dp1;
@@ -81,11 +81,11 @@ void testing_writeMemory() {
             sharedmem.dp->complete = true;
         }
         
-        sharedmem.db->sensor_data[i]= (double)i*i;
+        sharedmem.db->sensor_data[i]= (double)(i*i+101);
         
         sharedmem.dp->cur_index = i;
-        Rcpp::Rcout << sharedmem.dp->cur_index << " " << sharedmem.db->sensor_data[i] << std::endl;
-        
+        Rcpp::Rcout << sharedmem.dp->cur_index << " " << sharedmem.db->sensor_data[i] <<" " << sharedmem.db->sensor_data << std::endl;
+        Rcpp::Rcout << (double)(*(sharedmem.db->sensor_data + 5)) << std::endl;
         sleep(1);
         
     }
@@ -107,7 +107,7 @@ void testing_writeMemory() {
 
     // db->data1[0] = 123;
     // db->data1[1] = 234;
-    sharedmem.freeMemory();
+    // sharedmem.freeMemory();
 }
 
 /*
@@ -127,14 +127,17 @@ Rcpp::List testing_readMemory() {
     sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory); // retrieve memory from data block (which is dynamically assigned)
 
     Rcpp::Rcout << sharedmem.dp->cur_index << std::endl;
-    Rcpp::Rcout << sharedmem.db->sensor_data[sharedmem.dp->cur_index] << std::endl;
     Rcpp::Rcout << sharedmem.db->success << std::endl;
+    
+    // Rcpp::Rcout << sharedmem.db->sensor_data[sharedmem.dp->cur_index] << std::endl;
+    
     // memcpy(&source_data_obj,sharedmem.db,sharedmem.dp->allocated_memory);
     // Rcpp::Rcout<< source_data_obj.success << std::endl;
     
-    // for (int i =0; i < std::min(5,sharedmem.dp->cur_index); i++) {
-    //     Rcpp::Rcout << i << "Data points: " <<  sharedmem.db->sensor_data[i] << std::endl;
-    // }
+    for (int i =0; i < 50; i++) {
+        Rcpp::Rcout << i << "Data points: " <<  sharedmem.db->sensor_data[i]<< " " << sharedmem.db->sensor_data << std::endl;
+        Rcpp::Rcout << (double)(*(sharedmem.db->sensor_data + 5)) << std::endl;
+    }
     
     
     // DataBlock* db = &db1;
