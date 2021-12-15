@@ -81,7 +81,7 @@ void testing_writeMemory() {
             sharedmem.dp->complete = true;
         }
         
-        sharedmem.db->sensor_data[i]= (double)(i*i+101);
+        sharedmem.db->sensor_data[i]= (double)(i*i);
         
         sharedmem.dp->cur_index = i;
         Rcpp::Rcout << sharedmem.dp->cur_index << " " << sharedmem.db->sensor_data[i] <<" " << sharedmem.db->sensor_data << std::endl;
@@ -112,19 +112,23 @@ void testing_writeMemory() {
 
 /*
 Problem comes from here when I try to call from the shared memory block.
+Questions for Pavlo: 
+1. Why does the DataBlock need a new for readMemory?
+2. 
 */
 
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
     SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
+    DataBlock* dbRead = new DataBlock(1,BLOCK_LENGTH,REGULAR_SENSOR_TYPE); // no need to delete because this gets overwritten by mmap
     // DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
-     
-    // DataPtr dp1(BLOCK_LENGTH);
     
     sharedmem.retrieve_data_ptr(sizeof(DataPtr)); //retrieve memory from data ptr (which is statically assigned) 
     Rcpp::Rcout << "Allocated Memory: "<< sharedmem.dp->allocated_memory << std::endl;
     
-    sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory); // retrieve memory from data block (which is dynamically assigned)
+    sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory, dbRead); // retrieve memory from data block (which is dynamically assigned)
+    Rcpp::Rcout << "Sensor data offset is " << sharedmem.db->sensor_data_offset << std::endl;
+
 
     Rcpp::Rcout << sharedmem.dp->cur_index << std::endl;
     Rcpp::Rcout << sharedmem.db->success << std::endl;
@@ -135,8 +139,8 @@ Rcpp::List testing_readMemory() {
     // Rcpp::Rcout<< source_data_obj.success << std::endl;
     
     for (int i =0; i < 50; i++) {
-        Rcpp::Rcout << i << "Data points: " <<  sharedmem.db->sensor_data[i]<< " " << sharedmem.db->sensor_data << std::endl;
-        Rcpp::Rcout << (double)(*(sharedmem.db->sensor_data + 5)) << std::endl;
+        Rcpp::Rcout << i << "Data points: " <<  dbRead->sensor_data[i]<< " " << dbRead->sensor_data << std::endl;
+        Rcpp::Rcout << (double)(*(dbRead->sensor_data + 5)) << std::endl;
     }
     
     

@@ -61,6 +61,7 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 struct DataBlock {
     time_t* raw_time = NULL;
     double* sensor_data = NULL;
+    int sensor_data_offset = -1;
     uint8_t* cam_data = NULL;
     int success = 0;
     int num_data_points;
@@ -105,7 +106,7 @@ public:
     void open_read();
     void map_data_obj(size_t mmap_size, DataBlock* source);
     void map_data_ptr(DataPtr* source);
-    void retrieve_data_obj(size_t mmap_size);
+    void retrieve_data_obj(size_t mmap_size, DataBlock* source);
     void retrieve_data_ptr(size_t mmap_size);
     
     void init_read();

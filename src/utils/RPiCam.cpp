@@ -7,14 +7,14 @@ int RPiCam_Operator::initiate_camera(raspicam::RaspiCam &Camera) {
     Camera.setFormat(fmt);
 	Camera.setCaptureSize(w,h);
     //Open camera 
-	std::cout<<"Opening Camera..."<<std::endl;
+	Rcpp::Rcout<<"Opening Camera..."<<std::endl;
     if ( !Camera.open()) {std::cerr<<"Error opening camera"<<std::endl;return FAILURE;}
 
 
     len = Camera.getImageBufferSize();
     
     //wait a while until camera stabilizes
-    std::cout<<"Sleeping for 3 secs"<<std::endl;
+    Rcpp::Rcout<<"Sleeping for 3 secs"<<std::endl;
 	sleep(3);
 
     

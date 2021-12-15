@@ -69,11 +69,11 @@ void SharedMemory::open_read() {
 
 // function for mmap for writing memory for pointer variable
 void SharedMemory::map_data_ptr(DataPtr* source) {
+    if (ftruncate(fd_ptr, sizeof(DataPtr)) == -1)           /* To obtain file size */
+        handle_error("open_write fd_ptr ftruncate");
     dp = static_cast<DataPtr*>(mmap(NULL,sizeof(DataPtr),PROT_READ | PROT_WRITE,MAP_SHARED,fd_ptr,0));
     if (dp == MAP_FAILED)
         handle_error("mmap");
-    if (ftruncate(fd_ptr, sizeof(DataPtr)) == -1)           /* To obtain file size */
-        handle_error("open_write fd_ptr ftruncate");
     memcpy(dp,source,sizeof(DataPtr));
     if (dp->allocated_memory != -1) {
         Rcpp::Rcout << "Pointer Object successfully shared" << std::endl;
@@ -84,17 +84,18 @@ void SharedMemory::map_data_ptr(DataPtr* source) {
 
 // function for mmap for writing memory for data block
 void SharedMemory::map_data_obj(size_t mmap_size, DataBlock* source) {
+    if (ftruncate(fd, mmap_size) == -1)           /* To obtain file size */
+        handle_error("open_write fd ftruncate");
     db = static_cast<DataBlock*>(mmap(NULL,mmap_size,PROT_READ | PROT_WRITE,MAP_SHARED,fd,0));
     if (db == MAP_FAILED)
         handle_error("mmap");
-    if (ftruncate(fd, mmap_size) == -1)           /* To obtain file size */
-        handle_error("open_write fd ftruncate");
-
-    // 
-    memcpy(db,source,mmap_size); // sizeof DataBlock instead of mmap_size
+    memcpy(db,source,sizeof(DataBlock)); // sizeof DataBlock instead of mmap_size
     // OFFSET CAST memory Pointer calculus, void* will be bytes
-    db->raw_time = static_cast<time_t*>(static_cast<void*>(db) + sizeof(DataBlock)); // cast to the next byte of the DataBlock  
-    db->sensor_data = static_cast<double*>(static_cast<void*>(db) + sizeof(DataBlock) + db->block_length*sizeof(time_t));
+    db->sensor_data_offset = sizeof(DataBlock);
+    db->raw_time = (time_t*)((char*)(db) + db->sensor_data_offset); // cast to the next byte of the DataBlock  
+    // db->sensor_data = static_cast<double*>(static_cast<void*>(db) + sizeof(DataBlock) + db->block_length*sizeof(time_t));
+    
+    db->sensor_data = (double*)((char*)(db) + db->sensor_data_offset + sizeof(time_t)* db->block_length);
     // db->cam_data = (uint8_t*)((char*)db + sizeof(DataBlock) + db->block_length*sizeof(time_t) + db->num_data_points*db->block_length*sizeof(double));
     
 
@@ -114,16 +115,20 @@ void SharedMemory::retrieve_data_ptr(size_t mmap_size) {
 }
 
 // function for mmap for reading memory for data block
-void SharedMemory::retrieve_data_obj(size_t mmap_size) {
+void SharedMemory::retrieve_data_obj(size_t mmap_size, DataBlock* source) {
     db = static_cast<DataBlock*>(mmap(NULL,mmap_size, PROT_READ,MAP_SHARED,fd,0));
     if (db == MAP_FAILED)
         handle_error("mmap db");
+    memcpy(source,db,sizeof(DataBlock));
     
-    if (db->success == 1) {
+    source->raw_time = (time_t*)((char*)(db) + db->sensor_data_offset);
+    source->sensor_data = (double*)((char*)(db)+source->sensor_data_offset + sizeof(time_t)* db->block_length);
+    if (source->success == 1) {
         Rcpp::Rcout << "Data Object successfully captured" << std::endl;
     } else {
         handle_error("map_data_obj memcpy error");
     }
+    
     // ptr_obj = static_cast<DataPtr*>(mmap(NULL,sizeof(*ptr_obj), PROT_READ,MAP_SHARED,fd_ptr,0));
     // Rcpp::Rcout <<"init_read ptr_obj->index: " << ptr_obj->index << std::endl;
 
