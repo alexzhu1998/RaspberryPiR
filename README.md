@@ -1,4 +1,5 @@
 # RaspberryPiR
+This package only works for the Raspberry Pi.
 
 This is an R package that can control Raspberry Pi GPIO pins with Shared Memory Functions to write and read streaming data. Streaming analysis code is also provided.
 
