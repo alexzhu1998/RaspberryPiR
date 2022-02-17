@@ -32,11 +32,11 @@ C++ Source Code: located at `src/`
 
 - remaining source code converts writeMemory, readMemory, freeMemory functions into R functions
 
-R Source Code: located at R/
+R Source Code: located at `R/`
 
 - contain some simple Linux command lines to examine the state of memory usage.
 
-R Analysis Code located at demo/:
+R Analysis Code located at `demo/`
 
 - Code for Online Mean and Variance
 
