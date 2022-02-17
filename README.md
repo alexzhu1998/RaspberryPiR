@@ -27,7 +27,7 @@ R Source Code: located at `R/`
 -   contain some simple Linux command lines to examine the state of
     memory usage.
 
-R Analysis Code located at demo/:
+R Analysis Code located at `demo/`:
 
 -   Code for Online Mean and Variance
 
