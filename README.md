@@ -16,13 +16,13 @@ compile/compileEVERYTHING.sh
 
 C++ Source Code: located at `src/`
 
--   utils/ contains utility functions for wiringPi.h library, sys/shm.h
+-   `utils/` contains utility functions for wiringPi.h library, `sys/shm.h`
     library and RaspiCam library
 
 -   remaining source code converts writeMemory, readMemory, freeMemory
     functions into R functions
 
-R Source Code: located at R/
+R Source Code: located at `R/`
 
 -   contain some simple Linux command lines to examine the state of
     memory usage.
