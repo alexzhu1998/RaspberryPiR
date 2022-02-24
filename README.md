@@ -2,6 +2,8 @@
 
 This package only works for the Raspberry Pi. Currently tested on Raspberry Pi 4B+
 
+Link to download Honours Thesis: https://fnavarro.perso.math.cnrs.fr/files/HonoursThesis.pdf
+
 This is an R package that can control Raspberry Pi GPIO pins with Shared
 Memory Functions to write and read streaming data. Streaming analysis
 code is also provided.
