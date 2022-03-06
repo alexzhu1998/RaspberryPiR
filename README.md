@@ -14,6 +14,12 @@ Compile the library using the shell script
 compile/compileEVERYTHING.sh
 ```
 
+Picture of the structure:
+![alt text](https://raw.githubusercontent.com/alexzhu1998/RaspberryPiR/master/pictures/Infrastructure.png)
+
+Picture of the setup:
+![alt text](https://raw.githubusercontent.com/alexzhu1998/RaspberryPiR/master/pictures/PictureOfThePi.jpg)
+
 ## Code that requires compilation
 
 C++ Source Code: located at `src/`
