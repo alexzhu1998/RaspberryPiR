@@ -1,12 +1,13 @@
 Package: RaspberryPiR
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Title: R package for collecting and analysing streaming data on Raspberry Pi
 Version: 1.0
 Date: 2020-12-22
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one
-        or more full sentences.
+Author: Alex Zhu
+Maintainer: Alex Zhu <alexjhzhu@gmail.com>
+Description: An R package designed to control GPIO pins and collect data
+        from sensors compatible with Raspberry Pi. It also supports in memory
+        data stream writing and reading.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.5)
 LinkingTo: Rcpp
