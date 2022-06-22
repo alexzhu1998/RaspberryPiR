@@ -8,7 +8,7 @@ This is an R package that can control Raspberry Pi GPIO pins with Shared
 Memory Functions to write and read streaming data. Streaming analysis
 code is also provided.
 
-Compile the library using the shell script
+Please ensure wiringPi.h is installed. Compile the library using the shell script
 
 ``` bash
 compile/compileEVERYTHING.sh
