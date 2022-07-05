@@ -1,0 +1,15 @@
+Package: RaspberryPiR
+Type: Package
+Title: Raspberry Pi Data Collection
+Version: 1.0
+Date: 2021-12-8
+Author: Alex Zhu
+Maintainer: Alex Zhu <alexjhzhu@gmail.com>
+Description: This package is used to collect and store data from the Raspberry Pi.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.5)
+LinkingTo: Rcpp
+URL: https://github.com/alexzhu1998/RaspberryPiR
+BugReports: https://github.com/alexzhu1998/RaspberryPiR/issues
+RoxygenNote: 7.1.1
+Built: R 4.0.3; armv7l-unknown-linux-gnueabihf; 2022-07-05 13:51:12 UTC; unix

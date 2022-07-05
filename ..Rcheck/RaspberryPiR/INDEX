@@ -1,0 +1,4 @@
+DHT11_writeMemory       Write Data from DHT11 Sensor into Shared Memory
+RaspberryPiR-package    A short title line describing what the package
+                        does
+rcpp_hello_world        Simple function using Rcpp

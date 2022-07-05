@@ -1,0 +1,19 @@
+* installing *source* package ‘RaspberryPiR’ ...
+** using staged installation
+** libs
+g++ -std=gnu++11 -I"/usr/local/lib/R/include" -DNDEBUG -I/usr/lib -I/usr/local/include -I"utils" -I'/home/pi/R/armv7l-unknown-linux-gnueabihf-library/4.0/Rcpp/include' -I/usr/local/include   -fpic  -g -O2  -c shmem_user.cpp -o shmem_user.o
+g++ -std=gnu++11 -I"/usr/local/lib/R/include" -DNDEBUG -I/usr/lib -I/usr/local/include -I"utils" -I'/home/pi/R/armv7l-unknown-linux-gnueabihf-library/4.0/Rcpp/include' -I/usr/local/include   -fpic  -g -O2  -c RcppExports.cpp -o RcppExports.o
+g++ -std=gnu++11 -I"/usr/local/lib/R/include" -DNDEBUG -I/usr/lib -I/usr/local/include -I"utils" -I'/home/pi/R/armv7l-unknown-linux-gnueabihf-library/4.0/Rcpp/include' -I/usr/local/include   -fpic  -g -O2  -c testingSensor.cpp -o testingSensor.o
+g++ -std=gnu++11 -shared -L/usr/local/lib/R/lib -L/usr/local/lib -o RaspberryPiR.so utils/sensors_control.o utils/shared_memory.o utils/RPiCam.o utils/PhotoRes.o utils/DHT11.o utils/MQ2.o wiringPiLib.o shmem_user.o RcppExports.o testingSensor.o -L/usr/lib/ -lwiringPi -lraspicam -lrt -lpthread -L/usr/local/lib/R/lib -lR
+installing to /home/pi/Honours/RaspberryPiR/..Rcheck/00LOCK-RaspberryPiR/00new/RaspberryPiR/libs
+** R
+** demo
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (RaspberryPiR)
