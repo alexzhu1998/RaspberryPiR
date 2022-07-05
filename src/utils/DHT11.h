@@ -25,26 +25,26 @@
 
 class DHT11_Operator: public Sensor {
     private:
+        int pin;
         uint8_t bits[5];
-        int readSensor(int pin, int wakeupDelay);
+        int readSensor(int wakeupDelay);
     public:
-        DHT11_Operator();
+        DHT11_Operator(int _pin);
         
         double humidity,temperature;
-        int readDHT11Once(int pin); 
-        int readDHT11(int pin);
+        int readDHT11Once(); 
+        int readDHT11();
 };
 
-class DHT11: public Sensor, public SharedMemory {
+class DHT11: public Sensor {
     public:
         
-        DHT11(const char* dht11_shmpath,const char* dht11_shmpath_ptr,int writeFlag):SharedMemory(dht11_shmpath,dht11_shmpath_ptr,writeFlag) {
+        DHT11() {
             timeBetweenAcquisition = 1000;
-            
         }
         
         void info();
-        void writeMemory(int pin);
+        void writeMemory(int pin, int len);
         Rcpp::List readMemory(int n);
         void killProcess();
 };

@@ -1,0 +1,135 @@
+* using log directory ‘/home/pi/Honours/RaspberryPiR/..Rcheck’
+* using R version 4.0.3 (2020-10-10)
+* using platform: armv7l-unknown-linux-gnueabihf (32-bit)
+* using session charset: UTF-8
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘RaspberryPiR’ version ‘1.0’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... WARNING
+Subdirectory ‘RaspberryPiR/src’ contains apparent object files/libraries
+  RaspberryPiR.so RcppExports.o shmem_user.o testingSensor.o
+  wiringPiLib.o
+Object files/libraries should not be included in a source package.
+
+In addition to the above warning(s), found the following notes:
+
+Found the following apparent object files/libraries:
+  src/Tester.Rcheck/Tester/libs/Tester.so src/utils/DHT11.o
+  src/utils/PhotoRes.o src/utils/RPiCam.o src/utils/sensors_control.o
+  src/utils/shared_memory.o
+Object files/libraries should not be included in a source package.
+
+Subdirectory ‘src/Tester.Rcheck/Tester’ seems to contain an installed version of the package.
+* checking if there is a namespace ... OK
+* checking for executable files ... WARNING
+Found the following executable files:
+  src/RaspberryPiR.so
+  src/Tester.Rcheck/Tester/libs/Tester.so
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .DS_Store
+  .gitignore
+  R/.DS_Store
+  ..Rcheck
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘RaspberryPiR’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directories with names of check directories:
+  ./..Rcheck
+  ./src/Tester.Rcheck
+Most likely, these were included erroneously.
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘DHT11_freeMemory’ ‘DHT11_readMemory’ ‘DHT11_writeMemory’
+  ‘LL_digitalRead’ ‘LL_digitalWrite’ ‘LL_micros’ ‘LL_millis’
+  ‘LL_pinMode’ ‘LL_pullUpDnControl’ ‘LL_wiringPiSetup’
+  ‘PhotoRes_freeMemory’ ‘PhotoRes_readMemory’ ‘PhotoRes_writeMemory’
+  ‘simpleCapture’ ‘testing_freeMemory’ ‘testing_readMemory’
+  ‘testing_writeMemory’ ‘testingDHT’ ‘testingPhotoRes’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Functions or methods with usage in documentation object 'rcpp_hello_world' but not in code:
+  ‘rcpp_hello_world’
+
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking line endings in shell scripts ... OK
+* checking line endings in C/C++/Fortran sources/headers ... NOTE
+Found the following sources/headers not terminated with a newline:
+  src/testingSensor.cpp
+  src/utils/DHT11.cpp
+  src/utils/DHT11.h
+  src/utils/PhotoRes.cpp
+  src/utils/PhotoRes.h
+  src/utils/RPiCam.cpp
+  src/utils/RPiCam.h
+  src/utils/sensors_control.cpp
+  src/utils/sensors_control.h
+  src/utils/shared_memory.h
+  src/wiringPiLib.cpp
+Some compilers warn on such files.
+* checking line endings in Makefiles ... NOTE
+Found the following Makefile(s) without a final LF:
+  src/Makevars
+Some ‘make’ programs ignore lines not ending in LF.
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... WARNING
+Found the following file(s) containing GNU extensions:
+  src/Makevars
+Portable Makefiles do not use GNU extensions such as +=, :=, $(shell),
+$(wildcard), ifeq ... endif, .NOTPARALLEL See section ‘Writing portable
+packages’ in the ‘Writing R Extensions’ manual.
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking compiled code ... WARNING
+File ‘RaspberryPiR/libs/RaspberryPiR.so’:
+  Found ‘_ZSt4cerr’, possibly from ‘std::cerr’ (C++)
+    Object: ‘utils/RPiCam.o’
+  Found ‘_ZSt4cout’, possibly from ‘std::cout’ (C++)
+    Object: ‘utils/RPiCam.o’
+  Found ‘exit’, possibly from ‘exit’ (C)
+    Object: ‘utils/shared_memory.o’
+
+Compiled code should not call entry points which might terminate R nor
+write to stdout/stderr instead of to the console, nor use Fortran I/O
+nor system RNGs.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
+* checking examples ... OK
+* checking PDF version of manual ... OK
+* DONE
+Status: 7 WARNINGs, 4 NOTEs

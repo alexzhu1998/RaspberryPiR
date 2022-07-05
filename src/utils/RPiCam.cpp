@@ -8,7 +8,7 @@ int RPiCam_Operator::initiate_camera(raspicam::RaspiCam &Camera) {
 	Camera.setCaptureSize(w,h);
     //Open camera 
 	Rcpp::Rcout<<"Opening Camera..."<<std::endl;
-    if ( !Camera.open()) {std::cerr<<"Error opening camera"<<std::endl;return FAILURE;}
+    if ( !Camera.open()) {Rcpp::Rcerr<<"Error opening camera"<<std::endl;return FAILURE;}
 
 
     len = Camera.getImageBufferSize();
@@ -66,10 +66,10 @@ void RPiCam_Operator::saveImage (raspicam::RaspiCam &Camera) {
 
     outFile<<Camera.getWidth() <<" "<<Camera.getHeight() <<" 255\n";
     outFile.write ( ( char* ) data, Camera.getImageBufferSize() );
-    std::cout<<"Image saved at " << filepath.c_str()<<std::endl;
+    Rcpp::Rcout<<"Image saved at " << filepath.c_str()<<std::endl;
 }
 
-// void RPiCam::writeMemory() {
+// void RPiCam::writeMemory(int len) {
 //     open_write();
 //     map_write();
 //     int i = 0; 

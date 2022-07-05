@@ -95,10 +95,10 @@ private:
     int fd_ptr;
     
 public:
+    SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag);
     const char* shmpath;
     const char* shmpath_ptr;
-    SharedMemory(const char* _shmpath, const char* _shmpath_ptr,int writeFlag);
-    
+
     DataPtr* dp;
     DataBlock* db;
     

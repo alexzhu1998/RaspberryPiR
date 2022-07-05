@@ -1,44 +1,67 @@
 #include "utils/DHT11.h"
+#include "utils/PhotoRes.h"
 #include "utils/RPiCam.h"
 // #include "utils/shared_memory.h"
 
 
 
 
-// // [[Rcpp::export]]
-// void DHT11_writeMemory(Rcpp::NumericVector pin = 0) {
-//     // Is it possible to do this without having to pass the parameter every time?
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     sensor.writeMemory(pin[0]);
-// }
+// [[Rcpp::export]]
+void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
+    // Is it possible to do this without having to pass the parameter every time?
+    DHT11 sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(pin[0], length[0]);
+}
+
+// [[Rcpp::export]]
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
+    DHT11 sensor;
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void DHT11_freeMemory() {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
+    // Is it possible to do this without having to pass the parameter every time?
+    PhotoRes sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(pin[0], length[0]);
+}
+
+// [[Rcpp::export]]
+Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n = 1) {
+    PhotoRes sensor;
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void PhotoRes_freeMemory() {
+    SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_FREE);
+    sharedmem.freeMemory();
+}
+
 
 // // [[Rcpp::export]]
-// Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     return sensor.readMemory(n[0]);
-// }
-
-// // [[Rcpp::export]]
-// void DHT11_freeMemory() {
-//     DHT11 sensor(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH);
-//     sensor.freeMemory();
-// }
-
-// // [[Rcpp::export]]
-// void RPiCam_writeMemory() {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
-//     sensor.writeMemory();
+// void RPiCam_writeMemory(Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
+//     RPiCam sensor;
+//     sensor.writeMemory(length[0]);
 // }
 
 // // [[Rcpp::export]]
 // void RPiCam_freeMemory() {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+//     RPiCam sensor;
 //     sensor.freeMemory();
 // }
 
 // // [[Rcpp::export]] 
 // Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 1) {
-//     RPiCam sensor(RPICAM_SHM_PATH,RPICAM_SHM_PTR_PATH);
+//     RPiCam sensor;
 //     return sensor.readMemory(n[0]);
 // }
 
@@ -64,7 +87,7 @@ void testing_writeMemory() {
     
     DataPtr source_dp(2,BLOCK_LENGTH);
     DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
-    Rcpp::Rcout << sizeof(source_db) <<" " << sizeof(DataBlock) << std::endl;
+    Rcpp::Rcout << sizeof(source_db) << " " << sizeof(DataBlock) << std::endl;
     Rcpp::Rcout << sizeof(source_dp) << " " << sizeof(DataPtr) << std::endl;
     
     sharedmem.map_data_ptr(&source_dp);
@@ -120,10 +143,11 @@ Questions for Pavlo:
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
     SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
-    DataBlock* dbRead = new DataBlock(1,BLOCK_LENGTH,REGULAR_SENSOR_TYPE); // no need to delete because this gets overwritten by mmap
+    DataBlock* dbRead = new DataBlock(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE); // no need to delete because this gets overwritten by mmap
     // DataBlock source_db(2,BLOCK_LENGTH,REGULAR_SENSOR_TYPE);
     
     sharedmem.retrieve_data_ptr(sizeof(DataPtr)); //retrieve memory from data ptr (which is statically assigned) 
+    Rcpp::Rcout << "Block Length: " << sharedmem.dp->block_length << "Number of Data Pts: " << sharedmem.dp->num_data_points << std::endl;
     Rcpp::Rcout << "Allocated Memory: "<< sharedmem.dp->allocated_memory << std::endl;
     
     sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory, dbRead); // retrieve memory from data block (which is dynamically assigned)
@@ -139,6 +163,7 @@ Rcpp::List testing_readMemory() {
     // Rcpp::Rcout<< source_data_obj.success << std::endl;
     
     for (int i =0; i < 50; i++) {
+        
         Rcpp::Rcout << i << "Data points: " <<  dbRead->sensor_data[i]<< " " << dbRead->sensor_data << std::endl;
         Rcpp::Rcout << (double)(*(dbRead->sensor_data + 5)) << std::endl;
     }

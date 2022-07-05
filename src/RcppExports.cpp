@@ -10,6 +10,70 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// DHT11_writeMemory
+void DHT11_writeMemory(Rcpp::NumericVector pin, Rcpp::IntegerVector length, Rcpp::IntegerVector timeDelay);
+RcppExport SEXP _RaspberryPiR_DHT11_writeMemory(SEXP pinSEXP, SEXP lengthSEXP, SEXP timeDelaySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type length(lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type timeDelay(timeDelaySEXP);
+    DHT11_writeMemory(pin, length, timeDelay);
+    return R_NilValue;
+END_RCPP
+}
+// DHT11_readMemory
+Rcpp::List DHT11_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_DHT11_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(DHT11_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DHT11_freeMemory
+void DHT11_freeMemory();
+RcppExport SEXP _RaspberryPiR_DHT11_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    DHT11_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
+// PhotoRes_writeMemory
+void PhotoRes_writeMemory(Rcpp::NumericVector pin, Rcpp::IntegerVector length, Rcpp::IntegerVector timeDelay);
+RcppExport SEXP _RaspberryPiR_PhotoRes_writeMemory(SEXP pinSEXP, SEXP lengthSEXP, SEXP timeDelaySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type length(lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type timeDelay(timeDelaySEXP);
+    PhotoRes_writeMemory(pin, length, timeDelay);
+    return R_NilValue;
+END_RCPP
+}
+// PhotoRes_readMemory
+Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n);
+RcppExport SEXP _RaspberryPiR_PhotoRes_readMemory(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(PhotoRes_readMemory(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// PhotoRes_freeMemory
+void PhotoRes_freeMemory();
+RcppExport SEXP _RaspberryPiR_PhotoRes_freeMemory() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    PhotoRes_freeMemory();
+    return R_NilValue;
+END_RCPP
+}
 // testing_writeMemory
 void testing_writeMemory();
 RcppExport SEXP _RaspberryPiR_testing_writeMemory() {
@@ -148,6 +212,12 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RaspberryPiR_DHT11_writeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_writeMemory, 3},
+    {"_RaspberryPiR_DHT11_readMemory", (DL_FUNC) &_RaspberryPiR_DHT11_readMemory, 1},
+    {"_RaspberryPiR_DHT11_freeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_freeMemory, 0},
+    {"_RaspberryPiR_PhotoRes_writeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_writeMemory, 3},
+    {"_RaspberryPiR_PhotoRes_readMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_readMemory, 1},
+    {"_RaspberryPiR_PhotoRes_freeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_freeMemory, 0},
     {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
     {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 0},
     {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},

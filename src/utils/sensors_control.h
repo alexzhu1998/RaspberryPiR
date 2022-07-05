@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <chrono> // for measuring real execution time
 #include <thread> // for sleep
+#include <string>
+#include <sstream>
 #include <R.h>
 #include <Rdefines.h> //R_ToplevelExec()
 #include <R_ext/Utils.h> // R_CheckUserInterrupt()

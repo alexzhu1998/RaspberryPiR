@@ -9,10 +9,10 @@ time_t Sensor::get_raw_time() {
 std::string Sensor::to_time_string(time_t rawtime) {
     char datetime[DATE_STRING_SIZE];
     
-    struct tm * timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strcpy(datetime,asctime(timeinfo));
+    struct tm timeinfo;
+    
+    localtime_r(&rawtime, &timeinfo);
+    asctime_r(&timeinfo,datetime);
     
     return std::string(datetime);
 }

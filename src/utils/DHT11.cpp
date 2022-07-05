@@ -2,11 +2,11 @@
 
 
 
-DHT11_Operator::DHT11_Operator() {
+DHT11_Operator::DHT11_Operator(int _pin): pin(_pin) {
     wiringPiSetup();
 }
 
-int DHT11_Operator::readSensor(int pin, int wakeupDelay) {
+int DHT11_Operator::readSensor(int wakeupDelay) {
     int mask = 0x80;
     int idx = 0;
     int32_t t,loopCnt;
@@ -86,10 +86,10 @@ int DHT11_Operator::readSensor(int pin, int wakeupDelay) {
     return DHTLIB_OK;
 }
 
-int DHT11_Operator::readDHT11Once(int pin){
+int DHT11_Operator::readDHT11Once(){
     int rv ;
     uint8_t checksum;
-    rv = readSensor(pin,DHTLIB_DHT11_WAKEUP);
+    rv = readSensor(DHTLIB_DHT11_WAKEUP);
     if(rv != DHTLIB_OK){
         humidity = DHTLIB_INVALID_VALUE;
         temperature = DHTLIB_INVALID_VALUE;
@@ -103,10 +103,10 @@ int DHT11_Operator::readDHT11Once(int pin){
     return DHTLIB_OK;
 }
 
-int DHT11_Operator::readDHT11(int pin){
+int DHT11_Operator::readDHT11(){
 	int chk = DHTLIB_INVALID_VALUE;
 	for (int i = 0; i < 15; i++){
-		chk = readDHT11Once(pin);	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
+		chk = readDHT11Once();	//read DHT11 and get a return value. Then determine whether data read is normal according to the return value.
 		if(chk == DHTLIB_OK){
 			return DHTLIB_OK;
 		}
@@ -115,66 +115,113 @@ int DHT11_Operator::readDHT11(int pin){
 	return chk;
 }
 
-// void DHT11::writeMemory(int pin) {
-//     open_write();
-//     map_write();
-//     int i = 0;
-//     int chk;
-//     TimeVar start;
-//     DHT11_Operator dht;
-//     for (;!pending_interrupt();++i) {
-//         if (i == BLOCK_LENGTH) {
-//             i = 0;
-//             ptr_obj->complete = true;
-//         }
-//         Rcpp::Rcout <<  "Block No: " << ptr_obj->index << std::endl;
-//         start = timeNow();
-//         // assigning values
-//         chk = dht.readDHT11(pin);
-//         data_obj->raw_time[i] = get_raw_time();
-//         data_obj->data1[i] = static_cast<double>(dht.temperature);
-//         data_obj->data2[i] = static_cast<double>(dht.humidity);
-//         double elapsed = intervalDuration(timeNow()-start);
-//         Rcpp::Rcout << "Humidity is " << data_obj->data2[i]  << "%," << "\t Temperature is " << data_obj->data1[i]  << "*C" << std::endl;
-//         millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
-//         Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
-//         ptr_obj->index = i;
-        
-//     }
-//     Rcpp::Rcout << "End Writing" << std::endl;
 
-//     Rcpp::Rcout << "Freeing Memory" << std::endl;
-//     freeMemory();
-// }
-
-// Rcpp::List DHT11::readMemory(int n) {
-//     init_read();
-//     Rcpp::CharacterVector datetime;
-//     Rcpp::NumericVector temp;
-//     Rcpp::NumericVector hum;
-
-//     int cur = ptr_obj->index;
+void DHT11::writeMemory(int pin, int len) {
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_WRITE);
+    int n_datapts = 2;
+    DataPtr source_dp(n_datapts,len);
+    DataBlock source_db(n_datapts,len,REGULAR_SENSOR_TYPE);
     
-//     Rcpp::Rcout << cur << std::endl;
-//     for (int i =0 ; i < n;++i) {
-//         if (cur-i < 0) {
-//             if (ptr_obj->complete) {
-//                 cur = BLOCK_LENGTH+i-1;
-//             } else {
-//                 Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
-//                 break;
-//             }
-//         }
+    sharedmem.map_data_ptr(&source_dp);
+    sharedmem.map_data_obj(source_dp.allocated_memory,&source_db);
+
+    int i = 0, chk;
+    TimeVar start;
+    DHT11_Operator dht(pin);
+    for (;!pending_interrupt();i++) {
+        if (i == sharedmem.dp->block_length) {
+            i = 0;
+            sharedmem.dp->complete = 1;
+        }
+        Rcpp::Rcout <<  "Block No: " << i << std::endl;
+        start = timeNow();
+        // assigning values
+        chk = dht.readDHT11();
+        sharedmem.db->raw_time[i] = static_cast<time_t>(get_raw_time());
+        Rcpp::Rcout << "Time: " << to_time_string(sharedmem.db->raw_time[i]) << std::endl;
+        sharedmem.db->sensor_data[n_datapts*i] = static_cast<double>(dht.temperature);
+        sharedmem.db->sensor_data[n_datapts*i+1] = static_cast<double>(dht.humidity);
+        double elapsed = intervalDuration(timeNow()-start);
+        Rcpp::Rcout << "Humidity is " << sharedmem.db->sensor_data[n_datapts*i+1]  << "%," << "\t Temperature is " << sharedmem.db->sensor_data[n_datapts*i]  << "*C" << std::endl;
+        millisleep((unsigned int)std::max((timeBetweenAcquisition-elapsed),(double)0));
+        Rcpp::Rcout <<  "Time Elapsed: " << intervalDuration(timeNow()-start) << " ms"<< std::endl;
+        sharedmem.dp->cur_index = i;
         
-//         std::string t = to_time_string(data_obj->raw_time[cur-i]);
-//         Rcpp::Rcout << data_obj->data1[cur-i] << data_obj->data2[cur-i] << std::endl;
-//         datetime.push_back(t);
-//         temp.push_back(static_cast<double>(data_obj->data1[cur-i]));
-//         hum.push_back(static_cast<double>(data_obj->data2[cur-i]));
-//     }
-//     return Rcpp::List::create(
-//         Rcpp::Named("datetime") = datetime,
-//         Rcpp::Named("temperature") = temp,
-//         Rcpp::Named("humidity") = hum
-//     ); 
-// }
+    }
+
+    sharedmem.freeMemory();
+}
+
+
+
+Rcpp::List DHT11::readMemory(int n) {
+    
+    SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_READ);
+    
+
+    
+
+    DataBlock* dbRead = new DataBlock(sharedmem.dp->num_data_points,sharedmem.dp->block_length,REGULAR_SENSOR_TYPE); // no need to delete because this gets overwritten by mmap
+    sharedmem.retrieve_data_ptr(sizeof(DataPtr)); //retrieve memory from data ptr (which is statically assigned) 
+    Rcpp::Rcout << "Block Length: " << sharedmem.dp->block_length << " Number of Data Pts: " << sharedmem.dp->num_data_points << std::endl;
+    Rcpp::Rcout << "Allocated Memory: "<< sharedmem.dp->allocated_memory << std::endl;
+    sharedmem.retrieve_data_obj(sharedmem.dp->allocated_memory, dbRead); // retrieve memory from data block (which is dynamically assigned)
+    Rcpp::Rcout << "Sensor data offset is " << sharedmem.db->sensor_data_offset << std::endl;
+    int n_datapts = sharedmem.dp->num_data_points;
+    // Checking error
+    if (n > sharedmem.dp->block_length) {
+        Rcpp::Rcout << "Error: Read Memory Block Length exceeded Write Memory Block Length" << std::endl; 
+        return Rcpp::List::create(
+            Rcpp::Named("Error") = Rcpp::NumericVector(1)
+        );
+    } else if (n <= 0) {
+        Rcpp::Rcout << "Error: Read Memory Block Length negative" << std::endl; 
+        return Rcpp::List::create(
+            Rcpp::Named("Error") = Rcpp::NumericVector(1)
+        );
+    }
+
+    int cur = sharedmem.dp->cur_index;
+    
+    if (cur - n < 0 && sharedmem.dp->complete == 0) {
+        Rcpp::Rcout << "Error: Length of Read Memory Block exceeded current position" << std::endl;
+        return Rcpp::List::create(
+            Rcpp::Named("Error") = Rcpp::NumericVector(1)
+        );
+    }
+    
+    Rcpp::CharacterVector datetime;
+    Rcpp::NumericVector temp;
+    Rcpp::NumericVector hum;
+
+
+    // for (int i =0; i < 50; i++) {
+    //     Rcpp::Rcout << i << "Data points: " <<  dbRead->sensor_data[i]<< " " << dbRead->sensor_data << std::endl;
+    //     // Rcpp::Rcout << (double)(*(dbRead->sensor_data + 5)) << std::endl;
+    // }
+    int i = cur - n;
+    i += cur - n < 0 ? sharedmem.dp->block_length : 0;
+    for (; i != cur ;++i) {
+        if (i == sharedmem.dp->block_length) {
+            if (sharedmem.dp->complete) {
+                i = 0;
+            } else {
+                Rcpp::Rcout << "Reach end of memory_block, terminating..." << std::endl;
+                break;
+            }
+        }
+        
+        time_t x = dbRead->raw_time[i];
+        std::string t = to_time_string(x);
+        
+        // Rcpp::Rcout << dbRead->raw_time[i] << " " << to_time_string(dbRead->raw_time[i]) <<" " << dbRead->sensor_data[n_datapts*i] << " " <<  dbRead->sensor_data[n_datapts*i+1] << std::endl;
+        datetime.push_back(t);
+        temp.push_back(static_cast<double>(dbRead->sensor_data[n_datapts*i]));
+        hum.push_back(static_cast<double>(dbRead->sensor_data[n_datapts*i+1]));
+    }
+    return Rcpp::List::create(
+        Rcpp::Named("datetime") = datetime,
+        Rcpp::Named("temperature") = temp,
+        Rcpp::Named("humidity") = hum
+    ); 
+}

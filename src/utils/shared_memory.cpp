@@ -2,10 +2,6 @@
 
 
 
-// Implementing our own malloc
-
-// Our own free
-
 DataBlock::DataBlock(int _num_data_points, int _block_length,int type): num_data_points(_num_data_points),block_length(_block_length) {
     // if (type == REGULAR_SENSOR_TYPE) {
     //     // block size refers to how many data points will be gathered per iteration
@@ -52,6 +48,8 @@ void SharedMemory::open_write() {
     fd = shm_open(shmpath,O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
     fd_ptr = shm_open(shmpath_ptr,O_CREAT | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
     if (fd == -1 || fd_ptr == -1){
+        Rcpp::Rcout << fd << " " <<  fd_ptr << std::endl;
+        Rcpp::Rcout << shmpath << " " <<  shmpath_ptr << std::endl;
         shm_unlink(shmpath);
         shm_unlink(shmpath_ptr);
         handle_error("open_write fd shm_open");
@@ -63,6 +61,7 @@ void SharedMemory::open_read() {
     fd = shm_open(shmpath, O_RDONLY, S_IRUSR|S_IWUSR);
     fd_ptr = shm_open(shmpath_ptr, O_RDONLY, S_IRUSR|S_IWUSR);
     if (fd == -1 || fd_ptr == -1){
+        Rcpp::Rcout << fd << " " <<  fd_ptr << std::endl;
         handle_error("open_read fd shm_open");
     }
 }
@@ -121,7 +120,7 @@ void SharedMemory::retrieve_data_obj(size_t mmap_size, DataBlock* source) {
         handle_error("mmap db");
     memcpy(source,db,sizeof(DataBlock));
     
-    source->raw_time = (time_t*)((char*)(db) + db->sensor_data_offset);
+    source->raw_time = (time_t*)((char*)(db) + source->sensor_data_offset);
     source->sensor_data = (double*)((char*)(db)+source->sensor_data_offset + sizeof(time_t)* db->block_length);
     if (source->success == 1) {
         Rcpp::Rcout << "Data Object successfully captured" << std::endl;
@@ -140,6 +139,7 @@ void SharedMemory::retrieve_data_obj(size_t mmap_size, DataBlock* source) {
 
 
 void SharedMemory::freeMemory() {
+    Rcpp::Rcout << "Free Memory: " << shmpath << std::endl;
     shm_unlink(shmpath);
     shm_unlink(shmpath_ptr);
 }
