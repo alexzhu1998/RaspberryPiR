@@ -1,3 +1,0 @@
-useDynLib(RaspberryPiR, .registration=TRUE)
-import(Rcpp)
-exportPattern("^[[:alpha:]]+")
