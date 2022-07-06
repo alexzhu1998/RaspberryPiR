@@ -1,4 +1,0 @@
-useDynLib(Tester, .registration=TRUE)
-import(Rcpp)
-export(rcpp_hello_world)
-export(testingDHT)
