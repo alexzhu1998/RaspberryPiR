@@ -3,5 +3,4 @@
 .RData
 .Ruserdata
 **.o
-src/*.so
-src/*.dll
+**.so
