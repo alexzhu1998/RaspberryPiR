@@ -33,13 +33,44 @@ DataPtr::DataPtr(int _num_data_points,int _block_length):block_length(_block_len
     allocated_memory = sizeof(time_t)*_block_length + sizeof(double)*_block_length*_num_data_points + sizeof(int)+ sizeof(DataBlock);
 }
 
-
-SharedMemory::SharedMemory(const char* _shmpath, const char* _shmpath_ptr, int writeFlag):shmpath(_shmpath),shmpath_ptr(_shmpath_ptr) {
+SharedMemory::SharedMemory(const char* _shmpath, const char* _shmpath_ptr, int writeFlag, int dataFlag):shmpath(_shmpath),shmpath_ptr(_shmpath_ptr),wFlag(writeFlag),dFlag(dataFlag) {
     if (writeFlag==SHM_WRITE) {
         open_write();
+
+        if (dataFlag == DATA_RASPICAM) {
+            DataPtr source_dp = DataPtr(WIDTH,HEIGHT,1,CAM_BLOCK_LENGTH);
+            map_DataPtr(&source_dp,sizeof(DataPtr));
+            CameraBlock source_cb;
+            source_cb.success = 1;
+            map_CameraBlock(&source_cb,sizeof(CameraBlock));
+        } else if (dataFlag == 1) {
+            DataPtr source_dp = DataPtr(1,BLOCK_LENGTH,DATA_PHOTORES);
+            map_DataPtr(&source_dp,sizeof(DataPtr));
+            DataBlock1 source_db1;
+            source_db1.success = 1;
+            map_DataBlock1(&source_db1,sizeof(DataBlock1));
+        } else if (dataFlag == 2) {
+            DataPtr source_dp = DataPtr(2,BLOCK_LENGTH,DATA_DHT11);
+            map_DataPtr(&source_dp,sizeof(DataPtr));
+            DataBlock2 source_db2;
+            source_db2.success = 1;
+            map_DataBlock2(&source_db2,sizeof(DataBlock2));
+        }
     } else if (writeFlag == SHM_READ){
         open_read();
+        retrieve_DataPtr(sizeof(DataPtr));
+        if (dataFlag == DATA_RASPICAM) {
+            retrieve_CameraBlock(sizeof(CameraBlock));
+        } else if (dataFlag == 1) {
+            retrieve_DataBlock1(sizeof(DataBlock1));
+        } else if (dataFlag == 2) {
+            retrieve_DataBlock2(sizeof(DataBlock2));
+        }
+    } else if (writeFlag == SHM_SCAN) {
+        open_read();
+        retrieve_DataPtr(sizeof(DataPtr));
     }
+
     
 }
 
@@ -110,6 +141,16 @@ void SharedMemory::retrieve_data_ptr(size_t mmap_size) {
     dp = static_cast<DataPtr*>(mmap(NULL,mmap_size, PROT_READ,MAP_SHARED,fd_ptr,0));
     if (dp == MAP_FAILED)
         handle_error("mmap ptr_obj");
+}
+
+void SharedMemory::retrieve_DataBlock1(size_t mmap_size) {
+    db1 = static_cast<DataBlock1*>(mmap(NULL,mmap_size, PROT_READ,MAP_SHARED,fd,0));
+    if (db1 == MAP_FAILED)
+        handle_error("mmap data_obj");
+    
+    if (db1->success != 1) {
+        handle_error("map_data_obj memcpy error");
+    }
     
 }
 
@@ -137,6 +178,9 @@ void SharedMemory::retrieve_data_obj(size_t mmap_size, DataBlock* source) {
     
 }
 
+int SharedMemory::retrieve_DataPtrIndex() {
+    return dp->cur_index;
+}
 
 void SharedMemory::freeMemory() {
     Rcpp::Rcout << "Free Memory: " << shmpath << std::endl;

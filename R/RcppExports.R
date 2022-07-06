@@ -29,8 +29,8 @@ testing_writeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_testing_writeMemory`))
 }
 
-testing_readMemory <- function() {
-    .Call(`_RaspberryPiR_testing_readMemory`)
+testing_readMemory <- function(x = 5L) {
+    .Call(`_RaspberryPiR_testing_readMemory`, x)
 }
 
 testing_freeMemory <- function() {
@@ -43,6 +43,10 @@ testingDHT <- function(pin = 0L) {
 
 testingPhotoRes <- function(pin = 7L) {
     .Call(`_RaspberryPiR_testingPhotoRes`, pin)
+}
+
+testingMQ2 <- function(pin = 0L, SPICLK = 14L, SPIMISO = 13L, SPIMOSI = 12L, SPICS = 10L, mq2_dpin = 25L, mq2_apin = 0L) {
+    .Call(`_RaspberryPiR_testingMQ2`, pin, SPICLK, SPIMISO, SPIMOSI, SPICS, mq2_dpin, mq2_apin)
 }
 
 simpleCapture <- function(path = "/home/pi/Pictures/raspicam_image.ppm", width = 1L, height = 1L) {

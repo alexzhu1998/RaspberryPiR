@@ -1,10 +1,27 @@
 #include "utils/DHT11.h"
 #include "utils/PhotoRes.h"
 #include "utils/RPiCam.h"
+#include "utils/PhotoRes.h"
+#include "utils/MQ2.h"
 // #include "utils/shared_memory.h"
 
 
+// Each Sensor is wrapped with an R function. There are writeMemory, readMemory, freeMemory and scanPointer. 
+// SENSOR_writeMemory 
+//      timeDelay - Amount of delay in ms for each interval
+//      pin information - Various GPIO Pin Required for each circuit 
+// SENSOR_readMemory 
+//      n which is the number of block memory
+// SENSOR_freeMemory 
+// SENSOR_scanPointer
 
+// [[Rcpp::export]]
+void DHT11_writeMemory(Rcpp::NumericVector timeDelay = 1000,Rcpp::NumericVector pin = 0) {
+    
+    DHT11 sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(pin[0]);
+}
 
 // [[Rcpp::export]]
 void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
@@ -65,6 +82,71 @@ void PhotoRes_freeMemory() {
 //     return sensor.readMemory(n[0]);
 // }
 
+// [[Rcpp::export]]
+Rcpp::NumericVector PhotoRes_scanPointer() {
+    SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_SCAN,DATA_PHOTORES);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
+
+// [[Rcpp::export]]
+void MQ2_writeMemory(Rcpp::NumericVector timeDelay = 1000, Rcpp::NumericVector SPICLK = 14, Rcpp::NumericVector SPIMISO = 13, Rcpp::NumericVector SPIMOSI = 12, Rcpp::NumericVector SPICS = 10, Rcpp::NumericVector mq2_dpin= 25, Rcpp::NumericVector mq2_apin= 0) {
+    // Is it possible to do this without having to pass the parameter every time?
+    MQ2 sensor;
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory(SPICLK[0], SPIMISO[0], SPIMOSI[0], SPICS[0], mq2_dpin[0], mq2_apin[0]);
+}
+
+// [[Rcpp::export]]
+Rcpp::List MQ2_readMemory(Rcpp::NumericVector n = 1) {
+    MQ2 sensor;
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void MQ2_freeMemory() {
+    SharedMemory sharedmem(MQ2_SHM_PATH,MQ2_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector MQ2_scanPointer() {
+    SharedMemory sharedmem(MQ2_SHM_PATH,MQ2_SHM_PTR_PATH,SHM_SCAN,DATA_MQ2);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
+
+// [[Rcpp::export]]
+void RPiCam_writeMemory(Rcpp::NumericVector timeDelay = 1000) {
+    RPiCam sensor(WIDTH,HEIGHT,CHANNELS);
+    sensor.timeBetweenAcquisition = timeDelay[0];
+    sensor.writeMemory();
+}
+
+// [[Rcpp::export]] 
+Rcpp::List RPiCam_readMemory(Rcpp::NumericVector n = 5) {
+    RPiCam sensor(WIDTH,HEIGHT,CHANNELS);
+    return sensor.readMemory(n[0]);
+}
+
+// [[Rcpp::export]]
+void RPiCam_freeMemory() {
+    SharedMemory sharedmem(RASPICAM_SHM_PATH,RASPICAM_SHM_PTR_PATH,SHM_FREE,DATA_FREE);
+    sharedmem.freeMemory();
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector RPiCam_scanPointer() {
+    SharedMemory sharedmem(RASPICAM_SHM_PATH,RASPICAM_SHM_PTR_PATH,SHM_SCAN,DATA_RASPICAM);
+    Rcpp::NumericVector x;
+    x = Rcpp::NumericVector::create(sharedmem.retrieve_DataPtrIndex());
+    // Rcpp::Rcout << x << std::endl;
+    return x;
+}
 
 /*
 NOTES:
@@ -183,7 +265,7 @@ Rcpp::List testing_readMemory() {
 
 // [[Rcpp::export]]
 void testing_freeMemory() {
-    SharedMemory sharedmem("/samplepath","/sampleptrpath",2);
+    SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_FREE,DATA_FREE);
     sharedmem.freeMemory();
 }
 

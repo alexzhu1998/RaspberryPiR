@@ -84,12 +84,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // testing_readMemory
-Rcpp::List testing_readMemory();
-RcppExport SEXP _RaspberryPiR_testing_readMemory() {
+Rcpp::List testing_readMemory(Rcpp::NumericVector x);
+RcppExport SEXP _RaspberryPiR_testing_readMemory(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(testing_readMemory());
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(testing_readMemory(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,6 +122,23 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
     rcpp_result_gen = Rcpp::wrap(testingPhotoRes(pin));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testingMQ2
+Rcpp::List testingMQ2(Rcpp::NumericVector pin, Rcpp::NumericVector SPICLK, Rcpp::NumericVector SPIMISO, Rcpp::NumericVector SPIMOSI, Rcpp::NumericVector SPICS, Rcpp::NumericVector mq2_dpin, Rcpp::NumericVector mq2_apin);
+RcppExport SEXP _RaspberryPiR_testingMQ2(SEXP pinSEXP, SEXP SPICLKSEXP, SEXP SPIMISOSEXP, SEXP SPIMOSISEXP, SEXP SPICSSEXP, SEXP mq2_dpinSEXP, SEXP mq2_apinSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pin(pinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICLK(SPICLKSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMISO(SPIMISOSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPIMOSI(SPIMOSISEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type SPICS(SPICSSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_dpin(mq2_dpinSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mq2_apin(mq2_apinSEXP);
+    rcpp_result_gen = Rcpp::wrap(testingMQ2(pin, SPICLK, SPIMISO, SPIMOSI, SPICS, mq2_dpin, mq2_apin));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -219,10 +237,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_PhotoRes_readMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_readMemory, 1},
     {"_RaspberryPiR_PhotoRes_freeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_freeMemory, 0},
     {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
-    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 0},
+    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 1},
     {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
+    {"_RaspberryPiR_testingMQ2", (DL_FUNC) &_RaspberryPiR_testingMQ2, 7},
     {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},
     {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
     {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
