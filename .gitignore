@@ -5,5 +5,5 @@
 **.o
 **.so
 src/*.dll
-RaspberryPiR.Rcheck/*
-src/Tester.Rcheck/*
+RaspberryPiR.Rcheck/**
+src/Tester.Rcheck/**
