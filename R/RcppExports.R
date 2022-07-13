@@ -29,8 +29,8 @@ testing_writeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_testing_writeMemory`))
 }
 
-testing_readMemory <- function(x = 5L) {
-    .Call(`_RaspberryPiR_testing_readMemory`, x)
+testing_readMemory <- function() {
+    .Call(`_RaspberryPiR_testing_readMemory`)
 }
 
 testing_freeMemory <- function() {

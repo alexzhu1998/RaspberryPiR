@@ -84,13 +84,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // testing_readMemory
-Rcpp::List testing_readMemory(Rcpp::NumericVector x);
-RcppExport SEXP _RaspberryPiR_testing_readMemory(SEXP xSEXP) {
+Rcpp::List testing_readMemory();
+RcppExport SEXP _RaspberryPiR_testing_readMemory() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(testing_readMemory(x));
+    rcpp_result_gen = Rcpp::wrap(testing_readMemory());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -237,7 +236,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RaspberryPiR_PhotoRes_readMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_readMemory, 1},
     {"_RaspberryPiR_PhotoRes_freeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_freeMemory, 0},
     {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
-    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 1},
+    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 0},
     {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},
     {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
     {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},

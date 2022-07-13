@@ -13,18 +13,10 @@
 #define REGULAR_SENSOR_TYPE         0
 #define RASPI_CAMERA_TYPE           1
 
-// Represents how many data blocks needed except for RaspiCam
-
-#define DATA_RASPICAM               0
-#define DATA_PHOTORES               1
-#define DATA_DHT11                  2
-#define DATA_MQ2                    2
-#define DATA_FREE                   -1
            
 #define SHM_READ                    0
 #define SHM_WRITE                   1
 #define SHM_FREE                    2
-#define SHM_SCAN                    3
 
 
 typedef std::chrono::high_resolution_clock::time_point TimeVar;
@@ -95,7 +87,7 @@ struct DataPtr {
     int image_size;
 
     DataPtr(int _w, int _h, int _channels,int _block_length);
-    DataPtr(int _num_data_points,int _block_length, int dataFlag);
+    DataPtr(int _num_data_points,int _block_length);
 };
 
 class SharedMemory {
@@ -118,18 +110,7 @@ public:
     void retrieve_data_obj(size_t mmap_size, DataBlock* source);
     void retrieve_data_ptr(size_t mmap_size);
     
-    void unmap_DataPtr(DataPtr* source);
-    void unmap_DataBlock1(DataBlock1* source);
-    void unmap_DataBlock2(DataBlock2* source);
-    void unmap_CameraBlock(CameraBlock* source);
-
-    void retrieve_DataPtr(size_t mmap_size);
-    void retrieve_DataBlock1(size_t mmap_size);
-    void retrieve_DataBlock2(size_t mmap_size);
-    void retrieve_CameraBlock(size_t mmap_size);
-    
-    int retrieve_DataPtrIndex();
-    // void init_read();
+    void init_read();
     void freeMemory();
     
 };

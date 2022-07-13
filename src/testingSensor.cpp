@@ -79,7 +79,7 @@ Rcpp::List simpleCapture(Rcpp::CharacterVector path = "/home/pi/Pictures/raspica
     
     Rcpp::Rcout << "Camera Information:" << std::endl;
     Rcpp::Rcout << "Width: "<< Camera.getWidth() << " Height: " << Camera.getHeight() << std::endl;
-	Rcpp::Rcout << "ImageBufferSize: " << rpicam.image_len << std::endl;
+	Rcpp::Rcout << "ImageBufferSize: " << rpicam.len << std::endl;
     
     rpicam.capture(Camera);
     

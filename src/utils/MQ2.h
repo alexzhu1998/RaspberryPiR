@@ -32,7 +32,7 @@ class MQ2: public Sensor {
             timeBetweenAcquisition = 1000;
         }
         void info();
-        void writeMemory(int _SPICLK, int _SPIMISO, int _SPIMOSI, int _SPICS, int _mq2_dpin, int _mq2_apin);
+        void writeMemory(int _SPICLK, int _SPIMISO, int _SPIMOSI, int _SPICS, int _mq2_dpin, int _mq2_apin, int len);
         Rcpp::List readMemory(int n);
         void killProcess();
 };
