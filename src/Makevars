@@ -2,21 +2,6 @@
 # WIRINGPI_CFLAGS = @WIRINGPI_CFLAGS@
 # WIRINGPI_LIBS 	= @WIRINGPI_LIBS@
 
-
-SRC_DIR = utils
-# standard arguments for R
-PKG_CPPFLAGS = -I/usr/lib -I/usr/local/include $(patsubst %,-I"%",$(SRC_DIR))
-PKG_LIBS = -L"/usr/lib/" -lwiringPi -lraspicam -lrt -lpthread
-
-
-
-# if you dont add these two lines, then makevars will compile whatever thats in src/ but not in subdirectory, 
-# if you added this line, then makevars will compile ONLY these cpp files.
-# SOURCES_CPP = DHTLib/DHT11.cpp shmem/shared_memory.cpp
-
-
-OBJECTS = $(foreach dir,$(SRC_DIR),$(patsubst $(dir)/%.cpp, $(dir)/%.o, $(wildcard $(dir)/*.cpp))) $(patsubst %.cpp, %.o, $(wildcard *.cpp))
-
 # Origianl NAMESPACE
 # useDynLib(Tester, .registration=TRUE)
 # exportPattern("^[[:alpha:]]+")
@@ -30,3 +15,20 @@ OBJECTS = $(foreach dir,$(SRC_DIR),$(patsubst $(dir)/%.cpp, $(dir)/%.o, $(wildca
 # R CMD check
 # Need to configure NAMESPACE manually
 # Need Rcpp::compileAttributes('~/Honours/RaspberryPiR') before R CMD INSTALL
+
+############### For Normal Development
+# SRC_DIR = utils
+# # standard arguments for R
+# PKG_CPPFLAGS = -I/usr/lib -I/usr/local/include $(patsubst %,-I"%",$(SRC_DIR))
+# PKG_LIBS = -L"/usr/lib/" -lwiringPi -lraspicam -lrt -lpthread
+# # if you dont add these two lines, then makevars will compile whatever thats in src/ but not in subdirectory, 
+# # if you added this line, then makevars will compile ONLY these cpp files.
+# SOURCES_CPP = DHTLib/DHT11.cpp shmem/shared_memory.cpp
+# OBJECTS = $(foreach dir,$(SRC_DIR),$(patsubst $(dir)/%.cpp, $(dir)/%.o, $(wildcard $(dir)/*.cpp))) $(patsubst %.cpp, %.o, $(wildcard *.cpp))
+
+
+############### For CRAN
+PKG_CPPFLAGS = -I/usr/lib -I/usr/local/include -I/utils
+PKG_LIBS = -L"/usr/lib/" -lwiringPi -lraspicam -lrt -lpthread
+SOURCES_CPP = utils/shared_memory.cpp utils/sensors_control.cpp utils/DHT11.cpp utils/MQ2.cpp utils/PhotoRes.cpp utils/RPiCam.cpp shmem_user.cpp testingSensor.cpp wiringPiLib.cpp
+OBJECTS = $(SOURCES_CPP:.cpp=.o)

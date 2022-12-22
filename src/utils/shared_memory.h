@@ -25,7 +25,7 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 #define millisleep(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
 #define handle_error(msg) \
-           do { perror(msg); exit(EXIT_FAILURE); } while (0)
+           do { perror(msg); Rcpp::stop("Failure"); } while (0)
 
 // class DataBlock {
 // public:

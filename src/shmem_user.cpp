@@ -6,7 +6,15 @@
 
 
 
-
+//' Write Data into Memory for DHT11 Sensor
+//' 
+//' This function returns NULL. 
+//' It is a separate instance 
+//' everything else as FALSE.
+//'
+//' @param pin An integer vector, specifying the pin for connecting the DHT11 sensor.
+//' @param length An integer vector, specifying the amount of memory
+//' @export
 // [[Rcpp::export]]
 void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
     // Is it possible to do this without having to pass the parameter every time?
@@ -15,18 +23,39 @@ void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length =
     sensor.writeMemory(pin[0], length[0]);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
     DHT11 sensor;
     return sensor.readMemory(n[0]);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void DHT11_freeMemory() {
     SharedMemory sharedmem(DHT11_SHM_PATH,DHT11_SHM_PTR_PATH,SHM_FREE);
     sharedmem.freeMemory();
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
     // Is it possible to do this without having to pass the parameter every time?
@@ -35,12 +64,26 @@ void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::IntegerVector lengt
     sensor.writeMemory(pin[0], length[0]);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n = 1) {
     PhotoRes sensor;
     return sensor.readMemory(n[0]);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void PhotoRes_freeMemory() {
     SharedMemory sharedmem(PHOTORES_SHM_PATH,PHOTORES_SHM_PTR_PATH,SHM_FREE);
@@ -81,6 +124,13 @@ Fix OOP
 Fix Share with User Information  
 */
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void testing_writeMemory() {
     
@@ -141,6 +191,13 @@ Questions for Pavlo:
 2. 
 */
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
     SharedMemory sharedmem("/samplepath","/sampleptrpath",SHM_READ);
@@ -182,6 +239,13 @@ Rcpp::List testing_readMemory() {
     );
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void testing_freeMemory() {
     SharedMemory sharedmem("/samplepath","/sampleptrpath",2);

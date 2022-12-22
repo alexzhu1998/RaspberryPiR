@@ -2,7 +2,7 @@ Package: RaspberryPiR
 Type: Package
 Title: R package for collecting and analysing streaming data on Raspberry Pi
 Version: 1.0
-Date: 2020-12-22
+Date: 2022-11-08
 Author: Pierre Lafaye de Micheaux
         Pavlo Mozharovskyi
         Fabien Navarro

@@ -7,6 +7,7 @@
 #define PinStart    0
 #define PinEnd      31
 
+
 void WarningHelperExceedRange(int val, int start, int end, std::string function_name) {
     if (val < start || val > end) {
         Rcpp::stop("Input %s greater than %i or less than %i",function_name,end,start);
@@ -36,11 +37,25 @@ void WarningHelperIsBoolean(int val, std::string function_name) {
         Rcpp::stop("Input %s is not Logical",function_name);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void LL_wiringPiSetup(){
     wiringPiSetup();
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void LL_pinMode(Rcpp::IntegerVector pin, Rcpp::StringVector mode){
     std::string function_name = "pinMode";
@@ -55,6 +70,13 @@ void LL_pinMode(Rcpp::IntegerVector pin, Rcpp::StringVector mode){
     
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void LL_digitalWrite(Rcpp::IntegerVector pin, Rcpp::LogicalVector mode){
     std::string function_name = "digitalWrite";
@@ -63,6 +85,13 @@ void LL_digitalWrite(Rcpp::IntegerVector pin, Rcpp::LogicalVector mode){
     digitalWrite(pin[0],mode[0]);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector LL_digitalRead(Rcpp::IntegerVector pin){
     std::string function_name = "digitalRead";
@@ -74,6 +103,13 @@ Rcpp::IntegerVector LL_digitalRead(Rcpp::IntegerVector pin){
     return x;
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 void LL_pullUpDnControl(Rcpp::IntegerVector pin, Rcpp::StringVector pud) {
     std::string function_name = "pullUpDnControl";
@@ -87,12 +123,26 @@ void LL_pullUpDnControl(Rcpp::IntegerVector pin, Rcpp::StringVector pud) {
     }
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector LL_millis() {
     double x = (double) millis();
     return Rcpp::NumericVector::create(x);
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector LL_micros() {
     double x = (double) micros();

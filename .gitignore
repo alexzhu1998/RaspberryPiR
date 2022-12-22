@@ -7,3 +7,4 @@
 src/*.dll
 RaspberryPiR.Rcheck/**
 src/Tester.Rcheck/**
+.DS_Store

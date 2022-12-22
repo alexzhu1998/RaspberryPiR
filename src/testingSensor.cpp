@@ -3,6 +3,13 @@
 #include "utils/RPiCam.h"
 #include "utils/MQ2.h"
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List testingDHT (Rcpp::NumericVector pin = 0) {
     DHT11_Operator dht(pin[0]);
@@ -29,6 +36,13 @@ Rcpp::List testingDHT (Rcpp::NumericVector pin = 0) {
     );
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List testingPhotoRes (Rcpp::NumericVector pin = 7) {
     PhotoRes_Operator phoR(pin[0]);
@@ -49,6 +63,13 @@ Rcpp::List testingPhotoRes (Rcpp::NumericVector pin = 7) {
     );
 }
 
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List testingMQ2 (Rcpp::NumericVector pin = 0,Rcpp::NumericVector SPICLK = 14, Rcpp::NumericVector SPIMISO = 13, Rcpp::NumericVector SPIMOSI = 12, Rcpp::NumericVector SPICS = 10, Rcpp::NumericVector mq2_dpin= 25, Rcpp::NumericVector mq2_apin= 0) {
     MQ2_Operator mq2(SPICLK[0], SPIMISO[0], SPIMOSI[0], SPICS[0], mq2_dpin[0], mq2_apin[0]);
@@ -70,7 +91,13 @@ Rcpp::List testingMQ2 (Rcpp::NumericVector pin = 0,Rcpp::NumericVector SPICLK = 
     );
 }
 
-
+//' Dummy Docs
+//' 
+//' This function returns XYZ. 
+//' BLAHBLAH
+//'
+//' @param BLAH
+//' @export
 // [[Rcpp::export]]
 Rcpp::List simpleCapture(Rcpp::CharacterVector path = "/home/pi/Pictures/raspicam_image.ppm", Rcpp::NumericVector width = 1, Rcpp::NumericVector height = 1) {
     RPiCam_Operator rpicam = RPiCam_Operator(raspicam::RASPICAM_FORMAT_GRAY,width[0],height[0],Rcpp::as<std::string>(path[0]));
