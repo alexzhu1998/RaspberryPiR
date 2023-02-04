@@ -14,6 +14,7 @@
 //'
 //' @param pin An integer vector, specifying the pin for connecting the DHT11 sensor.
 //' @param length An integer vector, specifying the amount of memory
+//' @param timeDelay An integer vector, specifying the number of milliseconds for delay.
 //' @export
 // [[Rcpp::export]]
 void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
@@ -23,12 +24,11 @@ void DHT11_writeMemory(Rcpp::NumericVector pin = 0, Rcpp::IntegerVector length =
     sensor.writeMemory(pin[0], length[0]);
 }
 
-//' Dummy Docs
+//' Read Data from Shared Memory for DHT11 Sensor
 //' 
-//' This function returns XYZ. 
-//' BLAHBLAH
+//' This function returns an integer vector. 
 //'
-//' @param BLAH
+//' @param n An integer vector, specifying number of data points to read from the shared memory. 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
@@ -36,12 +36,10 @@ Rcpp::List DHT11_readMemory(Rcpp::NumericVector n = 1) {
     return sensor.readMemory(n[0]);
 }
 
-//' Dummy Docs
+//' Free Data from Shared Memory for DHT11 Sensor
 //' 
-//' This function returns XYZ. 
-//' BLAHBLAH
+//' This function returns NULL
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 void DHT11_freeMemory() {
@@ -49,12 +47,15 @@ void DHT11_freeMemory() {
     sharedmem.freeMemory();
 }
 
-//' Dummy Docs
+//' Write Data into Memory for Photo-Resistor Sensor
 //' 
-//' This function returns XYZ. 
-//' BLAHBLAH
+//' This function returns NULL. 
+//' It is a separate instance 
+//' everything else as FALSE.
 //'
-//' @param BLAH
+//' @param pin An integer vector, specifying the pin for connecting the DHT11 sensor.
+//' @param length An integer vector, specifying the amount of memory
+//' @param timeDelay An integer vector, specifying the number of milliseconds for delay.
 //' @export
 // [[Rcpp::export]]
 void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::IntegerVector length = 100, Rcpp::IntegerVector timeDelay = 1000) {
@@ -64,12 +65,11 @@ void PhotoRes_writeMemory(Rcpp::NumericVector pin = 7, Rcpp::IntegerVector lengt
     sensor.writeMemory(pin[0], length[0]);
 }
 
-//' Dummy Docs
+//' Read Data from Shared Memory for Photo Resistor Sensor
 //' 
-//' This function returns XYZ. 
-//' BLAHBLAH
+//' This function returns an integer vector. 
 //'
-//' @param BLAH
+//' @param n An integer vector, specifying number of data points to read from the shared memory. 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n = 1) {
@@ -77,12 +77,10 @@ Rcpp::List PhotoRes_readMemory(Rcpp::NumericVector n = 1) {
     return sensor.readMemory(n[0]);
 }
 
-//' Dummy Docs
+//' Free Data from Shared Memory for Photo Resistor Sensor
 //' 
-//' This function returns XYZ. 
-//' BLAHBLAH
+//' This function returns NULL
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 void PhotoRes_freeMemory() {
@@ -129,7 +127,6 @@ Fix Share with User Information
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 void testing_writeMemory() {
@@ -196,7 +193,6 @@ Questions for Pavlo:
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 Rcpp::List testing_readMemory() {
@@ -244,7 +240,6 @@ Rcpp::List testing_readMemory() {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 void testing_freeMemory() {

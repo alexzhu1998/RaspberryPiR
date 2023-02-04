@@ -9,61 +9,59 @@
 #'
 #' @param pin An integer vector, specifying the pin for connecting the DHT11 sensor.
 #' @param length An integer vector, specifying the amount of memory
+#' @param timeDelay An integer vector, specifying the number of milliseconds for delay.
 #' @export
 DHT11_writeMemory <- function(pin = 0L, length = 100L, timeDelay = 1000L) {
     invisible(.Call(`_RaspberryPiR_DHT11_writeMemory`, pin, length, timeDelay))
 }
 
-#' Dummy Docs
+#' Read Data from Shared Memory for DHT11 Sensor
 #' 
-#' This function returns XYZ. 
-#' BLAHBLAH
+#' This function returns an integer vector. 
 #'
-#' @param BLAH
+#' @param n An integer vector, specifying number of data points to read from the shared memory. 
 #' @export
 DHT11_readMemory <- function(n = 1L) {
     .Call(`_RaspberryPiR_DHT11_readMemory`, n)
 }
 
-#' Dummy Docs
+#' Free Data from Shared Memory for DHT11 Sensor
 #' 
-#' This function returns XYZ. 
-#' BLAHBLAH
+#' This function returns NULL
 #'
-#' @param BLAH
 #' @export
 DHT11_freeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_DHT11_freeMemory`))
 }
 
-#' Dummy Docs
+#' Write Data into Memory for Photo-Resistor Sensor
 #' 
-#' This function returns XYZ. 
-#' BLAHBLAH
+#' This function returns NULL. 
+#' It is a separate instance 
+#' everything else as FALSE.
 #'
-#' @param BLAH
+#' @param pin An integer vector, specifying the pin for connecting the DHT11 sensor.
+#' @param length An integer vector, specifying the amount of memory
+#' @param timeDelay An integer vector, specifying the number of milliseconds for delay.
 #' @export
 PhotoRes_writeMemory <- function(pin = 7L, length = 100L, timeDelay = 1000L) {
     invisible(.Call(`_RaspberryPiR_PhotoRes_writeMemory`, pin, length, timeDelay))
 }
 
-#' Dummy Docs
+#' Read Data from Shared Memory for Photo Resistor Sensor
 #' 
-#' This function returns XYZ. 
-#' BLAHBLAH
+#' This function returns an integer vector. 
 #'
-#' @param BLAH
+#' @param n An integer vector, specifying number of data points to read from the shared memory. 
 #' @export
 PhotoRes_readMemory <- function(n = 1L) {
     .Call(`_RaspberryPiR_PhotoRes_readMemory`, n)
 }
 
-#' Dummy Docs
+#' Free Data from Shared Memory for Photo Resistor Sensor
 #' 
-#' This function returns XYZ. 
-#' BLAHBLAH
+#' This function returns NULL
 #'
-#' @param BLAH
 #' @export
 PhotoRes_freeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_PhotoRes_freeMemory`))
@@ -74,7 +72,6 @@ PhotoRes_freeMemory <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 testing_writeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_testing_writeMemory`))
@@ -85,7 +82,6 @@ testing_writeMemory <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 testing_readMemory <- function() {
     .Call(`_RaspberryPiR_testing_readMemory`)
@@ -96,7 +92,6 @@ testing_readMemory <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 testing_freeMemory <- function() {
     invisible(.Call(`_RaspberryPiR_testing_freeMemory`))
@@ -107,7 +102,7 @@ testing_freeMemory <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector 
 #' @export
 testingDHT <- function(pin = 0L) {
     .Call(`_RaspberryPiR_testingDHT`, pin)
@@ -118,7 +113,7 @@ testingDHT <- function(pin = 0L) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector 
 #' @export
 testingPhotoRes <- function(pin = 7L) {
     .Call(`_RaspberryPiR_testingPhotoRes`, pin)
@@ -129,7 +124,13 @@ testingPhotoRes <- function(pin = 7L) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector 
+#' @param SPICLK An integer vector 
+#' @param SPIMISO An integer vector 
+#' @param SPIMOSI An integer vector 
+#' @param SPICS An integer vector 
+#' @param mq2_dpin An integer vector 
+#' @param mq2_apin An integer vector 
 #' @export
 testingMQ2 <- function(pin = 0L, SPICLK = 14L, SPIMISO = 13L, SPIMOSI = 12L, SPICS = 10L, mq2_dpin = 25L, mq2_apin = 0L) {
     .Call(`_RaspberryPiR_testingMQ2`, pin, SPICLK, SPIMISO, SPIMOSI, SPICS, mq2_dpin, mq2_apin)
@@ -140,7 +141,9 @@ testingMQ2 <- function(pin = 0L, SPICLK = 14L, SPIMISO = 13L, SPIMOSI = 12L, SPI
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param path An integer vector 
+#' @param width An integer vector 
+#' @param height An integer vector 
 #' @export
 simpleCapture <- function(path = "/home/pi/Pictures/raspicam_image.ppm", width = 1L, height = 1L) {
     .Call(`_RaspberryPiR_simpleCapture`, path, width, height)
@@ -151,7 +154,6 @@ simpleCapture <- function(path = "/home/pi/Pictures/raspicam_image.ppm", width =
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 LL_wiringPiSetup <- function() {
     invisible(.Call(`_RaspberryPiR_LL_wiringPiSetup`))
@@ -162,7 +164,8 @@ LL_wiringPiSetup <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector 
+#' @param mode A string vector
 #' @export
 LL_pinMode <- function(pin, mode) {
     invisible(.Call(`_RaspberryPiR_LL_pinMode`, pin, mode))
@@ -173,7 +176,8 @@ LL_pinMode <- function(pin, mode) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector
+#' @param mode A logical vector 
 #' @export
 LL_digitalWrite <- function(pin, mode) {
     invisible(.Call(`_RaspberryPiR_LL_digitalWrite`, pin, mode))
@@ -184,7 +188,7 @@ LL_digitalWrite <- function(pin, mode) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector
 #' @export
 LL_digitalRead <- function(pin) {
     .Call(`_RaspberryPiR_LL_digitalRead`, pin)
@@ -195,7 +199,8 @@ LL_digitalRead <- function(pin) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
+#' @param pin An integer vector
+#' @param pud A string vector
 #' @export
 LL_pullUpDnControl <- function(pin, pud) {
     invisible(.Call(`_RaspberryPiR_LL_pullUpDnControl`, pin, pud))
@@ -206,7 +211,6 @@ LL_pullUpDnControl <- function(pin, pud) {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 LL_millis <- function() {
     .Call(`_RaspberryPiR_LL_millis`)
@@ -217,7 +221,6 @@ LL_millis <- function() {
 #' This function returns XYZ. 
 #' BLAHBLAH
 #'
-#' @param BLAH
 #' @export
 LL_micros <- function() {
     .Call(`_RaspberryPiR_LL_micros`)

@@ -1,3 +1,7 @@
+#' List Active Processes
+#'
+#' Prints out some general information about the current status of the sensors
+#' @return NULL
 listActive <- function () { 
     print("Files at Mmap Location: ")
     ExistingMmapFiles <- system("ls /dev/shm/")

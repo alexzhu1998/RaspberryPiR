@@ -8,7 +8,7 @@
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List testingDHT (Rcpp::NumericVector pin = 0) {
@@ -41,7 +41,7 @@ Rcpp::List testingDHT (Rcpp::NumericVector pin = 0) {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List testingPhotoRes (Rcpp::NumericVector pin = 7) {
@@ -68,7 +68,13 @@ Rcpp::List testingPhotoRes (Rcpp::NumericVector pin = 7) {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector 
+//' @param SPICLK An integer vector 
+//' @param SPIMISO An integer vector 
+//' @param SPIMOSI An integer vector 
+//' @param SPICS An integer vector 
+//' @param mq2_dpin An integer vector 
+//' @param mq2_apin An integer vector 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List testingMQ2 (Rcpp::NumericVector pin = 0,Rcpp::NumericVector SPICLK = 14, Rcpp::NumericVector SPIMISO = 13, Rcpp::NumericVector SPIMOSI = 12, Rcpp::NumericVector SPICS = 10, Rcpp::NumericVector mq2_dpin= 25, Rcpp::NumericVector mq2_apin= 0) {
@@ -96,7 +102,9 @@ Rcpp::List testingMQ2 (Rcpp::NumericVector pin = 0,Rcpp::NumericVector SPICLK = 
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param path An integer vector 
+//' @param width An integer vector 
+//' @param height An integer vector 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List simpleCapture(Rcpp::CharacterVector path = "/home/pi/Pictures/raspicam_image.ppm", Rcpp::NumericVector width = 1, Rcpp::NumericVector height = 1) {

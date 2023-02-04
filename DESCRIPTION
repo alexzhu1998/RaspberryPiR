@@ -2,7 +2,7 @@ Package: RaspberryPiR
 Type: Package
 Title: R package for collecting and analysing streaming data on Raspberry Pi
 Version: 1.0
-Date: 2022-11-08
+Date: 2023-02-04
 Author: Pierre Lafaye de Micheaux
         Pavlo Mozharovskyi
         Fabien Navarro
@@ -16,3 +16,4 @@ Imports: Rcpp (>= 1.0.5)
 LinkingTo: Rcpp
 URL: https://github.com/alexzhu1998/RaspberryPiR
 BugReports: https://github.com/alexzhu1998/RaspberryPiR/issues
+RoxygenNote: 7.1.1

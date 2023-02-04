@@ -227,32 +227,3 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_RaspberryPiR_DHT11_writeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_writeMemory, 3},
-    {"_RaspberryPiR_DHT11_readMemory", (DL_FUNC) &_RaspberryPiR_DHT11_readMemory, 1},
-    {"_RaspberryPiR_DHT11_freeMemory", (DL_FUNC) &_RaspberryPiR_DHT11_freeMemory, 0},
-    {"_RaspberryPiR_PhotoRes_writeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_writeMemory, 3},
-    {"_RaspberryPiR_PhotoRes_readMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_readMemory, 1},
-    {"_RaspberryPiR_PhotoRes_freeMemory", (DL_FUNC) &_RaspberryPiR_PhotoRes_freeMemory, 0},
-    {"_RaspberryPiR_testing_writeMemory", (DL_FUNC) &_RaspberryPiR_testing_writeMemory, 0},
-    {"_RaspberryPiR_testing_readMemory", (DL_FUNC) &_RaspberryPiR_testing_readMemory, 0},
-    {"_RaspberryPiR_testing_freeMemory", (DL_FUNC) &_RaspberryPiR_testing_freeMemory, 0},
-    {"_RaspberryPiR_testingDHT", (DL_FUNC) &_RaspberryPiR_testingDHT, 1},
-    {"_RaspberryPiR_testingPhotoRes", (DL_FUNC) &_RaspberryPiR_testingPhotoRes, 1},
-    {"_RaspberryPiR_testingMQ2", (DL_FUNC) &_RaspberryPiR_testingMQ2, 7},
-    {"_RaspberryPiR_simpleCapture", (DL_FUNC) &_RaspberryPiR_simpleCapture, 3},
-    {"_RaspberryPiR_LL_wiringPiSetup", (DL_FUNC) &_RaspberryPiR_LL_wiringPiSetup, 0},
-    {"_RaspberryPiR_LL_pinMode", (DL_FUNC) &_RaspberryPiR_LL_pinMode, 2},
-    {"_RaspberryPiR_LL_digitalWrite", (DL_FUNC) &_RaspberryPiR_LL_digitalWrite, 2},
-    {"_RaspberryPiR_LL_digitalRead", (DL_FUNC) &_RaspberryPiR_LL_digitalRead, 1},
-    {"_RaspberryPiR_LL_pullUpDnControl", (DL_FUNC) &_RaspberryPiR_LL_pullUpDnControl, 2},
-    {"_RaspberryPiR_LL_millis", (DL_FUNC) &_RaspberryPiR_LL_millis, 0},
-    {"_RaspberryPiR_LL_micros", (DL_FUNC) &_RaspberryPiR_LL_micros, 0},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_RaspberryPiR(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-}

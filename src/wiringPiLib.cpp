@@ -42,7 +42,6 @@ void WarningHelperIsBoolean(int val, std::string function_name) {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 void LL_wiringPiSetup(){
@@ -54,7 +53,8 @@ void LL_wiringPiSetup(){
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector 
+//' @param mode A string vector
 //' @export
 // [[Rcpp::export]]
 void LL_pinMode(Rcpp::IntegerVector pin, Rcpp::StringVector mode){
@@ -75,7 +75,8 @@ void LL_pinMode(Rcpp::IntegerVector pin, Rcpp::StringVector mode){
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector
+//' @param mode A logical vector 
 //' @export
 // [[Rcpp::export]]
 void LL_digitalWrite(Rcpp::IntegerVector pin, Rcpp::LogicalVector mode){
@@ -90,7 +91,7 @@ void LL_digitalWrite(Rcpp::IntegerVector pin, Rcpp::LogicalVector mode){
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector LL_digitalRead(Rcpp::IntegerVector pin){
@@ -108,7 +109,8 @@ Rcpp::IntegerVector LL_digitalRead(Rcpp::IntegerVector pin){
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
+//' @param pin An integer vector
+//' @param pud A string vector
 //' @export
 // [[Rcpp::export]]
 void LL_pullUpDnControl(Rcpp::IntegerVector pin, Rcpp::StringVector pud) {
@@ -128,7 +130,6 @@ void LL_pullUpDnControl(Rcpp::IntegerVector pin, Rcpp::StringVector pud) {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector LL_millis() {
@@ -141,7 +142,6 @@ Rcpp::NumericVector LL_millis() {
 //' This function returns XYZ. 
 //' BLAHBLAH
 //'
-//' @param BLAH
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector LL_micros() {
